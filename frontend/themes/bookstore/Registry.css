@@ -1,0 +1,14 @@
+.RegistryButton, .logInButton{
+    background:  var(--lumo-primary-color);
+    padding: 1.5rem;
+    color: white;
+
+}
+.RegistryView{
+    background-color: #233348;
+}
+
+.registrationContent, .registerFields{
+   background-color: white;
+   border-radius: 10px;
+}

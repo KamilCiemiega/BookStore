@@ -1,0 +1,13 @@
+.LogInView {
+    background-color: #233348;
+}
+.registrationContent{
+    background-color: white;
+    padding: 1.5rem;
+}
+
+.RegistrybButton {
+    background:  var(--lumo-primary-color);
+    color: white;
+    cursor: pointer;
+}
