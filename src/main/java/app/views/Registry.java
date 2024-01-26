@@ -1,11 +1,12 @@
 package app.views;
 
-import app.service.RegisterService;
+import app.service.AuthenticationService;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -17,7 +18,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility;
 @Route("Registration")
 public class Registry extends VerticalLayout implements ViewConfigurator {
 
-    private final RegisterService registerService;
+    private final AuthenticationService  authenticationService ;
 
     private H1 header = new H1("Complete the provided fields");
     private TextField firstName = new TextField("First name");
@@ -26,8 +27,8 @@ public class Registry extends VerticalLayout implements ViewConfigurator {
     private PasswordField password = new PasswordField("Password");
     private PasswordField confirmPassword = new PasswordField("Confirm Password");
 
-    public Registry(RegisterService registerService) {
-        this.registerService = registerService;
+    public Registry(AuthenticationService authenticationService ) {
+        this.authenticationService = authenticationService;
         configureView();
 
         add(header, registerFields(), registration());
@@ -110,9 +111,12 @@ public class Registry extends VerticalLayout implements ViewConfigurator {
         if (!isValidPassword(passwordValue, confirmPasswordValue)) {
             handleValidationFailure(confirmPassword, "Passwords do not match");
         }
-
         if (areAllFieldsValid()) {
-            RegisterService.insertData(emailValue, firstNameValue, lastNameValue, passwordValue);
+            boolean registrationSuccess =  authenticationService.insertData(firstNameValue, lastNameValue, passwordValue, emailValue);
+            if (registrationSuccess) {
+                Notification.show("Registration successful!");
+                UI.getCurrent().navigate("");
+            }
         }
     }
 
@@ -138,7 +142,7 @@ public class Registry extends VerticalLayout implements ViewConfigurator {
     }
 
     private boolean isValidPassword(String password, String confirmPassword) {
-        return isEmpty(password) || (isEmpty(confirmPassword) && password.equals(confirmPassword));
+        return  password.equals(confirmPassword);
     }
 
     private boolean areAllFieldsValid() {
