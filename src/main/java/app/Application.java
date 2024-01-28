@@ -5,9 +5,7 @@ import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
-import javax.sql.DataSource;
+;
 
 
 /**
@@ -20,7 +18,6 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @Theme(value = "bookstore")
 public class Application implements AppShellConfigurator {
-
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
