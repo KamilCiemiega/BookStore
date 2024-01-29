@@ -1,5 +1,10 @@
 package app.service;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.server.SessionExpiredException;
+import com.vaadin.flow.server.VaadinRequest;
+import com.vaadin.flow.server.VaadinSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,28 +52,66 @@ public class AuthenticationService {
     }
     public boolean authenticateUser(String email, String password) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT password FROM users WHERE email_address = ?";
+            String sql = "SELECT first_name, password FROM users WHERE email_address = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         String storedPassword = resultSet.getString("password");
-                        if(password.equals(storedPassword)){
-                            logger.info("Authentication successful for user with email: {}", email);
-                            return true;
-                        }else {
+                        if (password.equals(storedPassword)) {
+                            String firstName = resultSet.getString("first_name");
+                            try {
+                                VaadinRequest currentRequest = VaadinRequest.getCurrent();
+                                VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
+                                String sessionId = vaadinSession.getSession().getId();
+                                SessionManager.loginUser(sessionId, firstName);
+                                return true;
+                            } catch (SessionExpiredException e) {
+                                handleSessionExpired();
+                            }
+                        } else {
                             logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
                         }
-
-                    }else {
+                    } else {
                         logger.warn("No user found in the database with email: {}", email);
                     }
                 }
             }
         } catch (SQLException e) {
-            logger.error("Error during user authentication", e);
-
+            logger.error("Error during user authentication. Email: {}", email, e);
         }
         return false;
     }
+    private void handleSessionExpired() {
+        Notification.show("Your session has expired. Please log in again.", 3000, Notification.Position.MIDDLE);
+        UI.getCurrent().navigate("");
+        logger.info("Session expired");
+    }
+
+//    public boolean authenticateUser(String email, String password) {
+//        try (Connection connection = dataSource.getConnection()) {
+//            String sql = "SELECT first_name, password FROM users WHERE email_address = ?";
+//            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+//                preparedStatement.setString(1, email);
+//                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+//                    if (resultSet.next()) {
+//                        String storedPassword = resultSet.getString("password");
+//                        if(password.equals(storedPassword)){
+//                            logger.info("Authentication successful for user with email: {}", email);
+//                            return true;
+//                        }else {
+//                            logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
+//                        }
+//
+//                    }else {
+//                        logger.warn("No user found in the database with email: {}", email);
+//                    }
+//                }
+//            }
+//        } catch (SQLException e) {
+//            logger.error("Error during user authentication", e);
+//
+//        }
+//        return false;
+//    }
 }
