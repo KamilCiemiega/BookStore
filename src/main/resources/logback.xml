@@ -1,0 +1,33 @@
+<configuration>
+
+    <!-- Konfiguracja ogólnego logowania do pliku logs.log -->
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>logs/logs.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Konfiguracja logowania typu ERROR do pliku errors.log -->
+    <appender name="errorFile" class="ch.qos.logback.core.FileAppender">
+        <file>logs/errors.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- Dodanie loggerów korzystających z powyższych konfiguracji -->
+    <logger name="app.service.AuthenticationService" level="DEBUG" />
+
+    <!-- Konfiguracja korzenia logów -->
+    <root level="DEBUG">
+        <appender-ref ref="file" />
+        <appender-ref ref="errorFile" />
+    </root>
+
+</configuration>

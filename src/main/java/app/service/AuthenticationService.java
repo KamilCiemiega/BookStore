@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Service
-public class AuthenticationService  {
+public class AuthenticationService {
 
     private final DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
@@ -34,12 +34,16 @@ public class AuthenticationService  {
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
-                return rowsAffected > 0;
+                if (rowsAffected > 0) {
+                    logger.info("Inserted data into the database: First Name={}, Last Name={}, Email={}", firstName, lastName, email);
+                    return true;
+                }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Can't insert data to Database", e);
             return false;
         }
+        return false;
     }
     public boolean authenticateUser(String email, String password) {
         try (Connection connection = dataSource.getConnection()) {
@@ -49,12 +53,21 @@ public class AuthenticationService  {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         String storedPassword = resultSet.getString("password");
-                        return password.equals(storedPassword);
+                        if(password.equals(storedPassword)){
+                            logger.info("Authentication successful for user with email: {}", email);
+                            return true;
+                        }else {
+                            logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
+                        }
+
+                    }else {
+                        logger.warn("No user found in the database with email: {}", email);
                     }
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Error during user authentication", e);
+
         }
         return false;
     }
