@@ -52,7 +52,7 @@ public class AuthenticationService {
     }
     public boolean authenticateUser(String email, String password) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT first_name, password FROM users WHERE email_address = ?";
+            String sql = "SELECT first_name, last_name, password, email_address FROM users WHERE email_address = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -60,14 +60,17 @@ public class AuthenticationService {
                         String storedPassword = resultSet.getString("password");
                         if (password.equals(storedPassword)) {
                             String firstName = resultSet.getString("first_name");
+                            String lastName = resultSet.getString("last_name");
                             try {
                                 VaadinRequest currentRequest = VaadinRequest.getCurrent();
                                 VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
                                 String sessionId = vaadinSession.getSession().getId();
-                                SessionManager.loginUser(sessionId, firstName);
+                                SessionManager.loginUser(sessionId, firstName, lastName, email );
                                 return true;
                             } catch (SessionExpiredException e) {
-                                handleSessionExpired();
+                                Notification.show("Your session has expired because you have been inactive for 30 minutes. Please log in again.", 3000, Notification.Position.TOP_CENTER);
+                                UI.getCurrent().navigate("");
+                                logger.info("Session expired for user with Email: {}", email);
                             }
                         } else {
                             logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
@@ -82,36 +85,5 @@ public class AuthenticationService {
         }
         return false;
     }
-    private void handleSessionExpired() {
-        Notification.show("Your session has expired. Please log in again.", 3000, Notification.Position.MIDDLE);
-        UI.getCurrent().navigate("");
-        logger.info("Session expired");
-    }
 
-//    public boolean authenticateUser(String email, String password) {
-//        try (Connection connection = dataSource.getConnection()) {
-//            String sql = "SELECT first_name, password FROM users WHERE email_address = ?";
-//            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-//                preparedStatement.setString(1, email);
-//                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-//                    if (resultSet.next()) {
-//                        String storedPassword = resultSet.getString("password");
-//                        if(password.equals(storedPassword)){
-//                            logger.info("Authentication successful for user with email: {}", email);
-//                            return true;
-//                        }else {
-//                            logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
-//                        }
-//
-//                    }else {
-//                        logger.warn("No user found in the database with email: {}", email);
-//                    }
-//                }
-//            }
-//        } catch (SQLException e) {
-//            logger.error("Error during user authentication", e);
-//
-//        }
-//        return false;
-//    }
 }

@@ -4,16 +4,15 @@ import app.service.AuthenticationService;
 import app.service.SessionManager;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.login.AbstractLogin;
 import com.vaadin.flow.component.login.LoginForm;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.SessionExpiredException;
-import com.vaadin.flow.server.VaadinRequest;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,22 +78,6 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
 
     private void configureLoginForm() {
         loginForm.addLoginListener(this::handleLogin);
-    }
-
-    private void handleLogout() {
-
-        try {
-            VaadinRequest currentRequest = VaadinRequest.getCurrent();
-            VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
-            String sessionId = vaadinSession.getSession().getId();
-            SessionManager.logoutUser(sessionId);
-
-
-            Notification.show("Logout successful", 3000, Notification.Position.TOP_CENTER);
-            UI.getCurrent().navigate("login");
-        } catch (SessionExpiredException e) {
-
-        }
     }
 
 }
