@@ -1,5 +1,6 @@
 package app.service;
 
+
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.server.SessionExpiredException;
@@ -8,6 +9,7 @@ import com.vaadin.flow.server.VaadinSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 
@@ -24,7 +26,7 @@ public class AuthenticationService {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
     @Autowired
-    public AuthenticationService (DataSource dataSource) {
+    public AuthenticationService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -65,7 +67,6 @@ public class AuthenticationService {
                                 VaadinRequest currentRequest = VaadinRequest.getCurrent();
                                 VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
                                 String sessionId = vaadinSession.getSession().getId();
-                                SessionManager.loginUser(sessionId, firstName, lastName, email );
                                 return true;
                             } catch (SessionExpiredException e) {
                                 Notification.show("Your session has expired because you have been inactive for 30 minutes. Please log in again.", 3000, Notification.Position.TOP_CENTER);
@@ -85,5 +86,4 @@ public class AuthenticationService {
         }
         return false;
     }
-
 }
