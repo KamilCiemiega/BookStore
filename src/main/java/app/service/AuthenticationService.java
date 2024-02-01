@@ -9,7 +9,6 @@ import com.vaadin.flow.server.VaadinSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 
@@ -25,6 +24,10 @@ public class AuthenticationService {
     private final DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String sessionId;
     @Autowired
     public AuthenticationService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -67,6 +70,10 @@ public class AuthenticationService {
                                 VaadinRequest currentRequest = VaadinRequest.getCurrent();
                                 VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
                                 String sessionId = vaadinSession.getSession().getId();
+                                this.firstName = firstName;
+                                this.lastName = lastName;
+                                this.email = email;
+                                this.sessionId = sessionId;
                                 return true;
                             } catch (SessionExpiredException e) {
                                 Notification.show("Your session has expired because you have been inactive for 30 minutes. Please log in again.", 3000, Notification.Position.TOP_CENTER);
@@ -85,5 +92,21 @@ public class AuthenticationService {
             logger.error("Error during user authentication. Email: {}", email, e);
         }
         return false;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSessionId() {
+        return sessionId;
     }
 }
