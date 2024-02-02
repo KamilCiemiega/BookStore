@@ -1,0 +1,9 @@
+.sideNavButton{
+    background: #7699b3;
+    color: #405971;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+    height: 30px
+}
