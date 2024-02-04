@@ -27,8 +27,7 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
     private final String email;
 
     private final String sessionId;
-  private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
-
+    private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
 
     public SideNavigation(AuthenticationService authenticationService ) {
         this.name = authenticationService.getFirstName();
@@ -62,10 +61,11 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         messagesNav.addItem(new SideNavItem("Trash", LogIn.class, VaadinIcon.TRASH.create()));
 
 
-        Button accountSettingsButton = createButton("Account settings", VaadinIcon.USER);
+//        Button accountSettingsButton = createButton("Account settings", VaadinIcon.USER);
         Button usersButton = createButton("Users", VaadinIcon.GROUP);
         Button permissionsButton = createButton("Permissions", VaadinIcon.KEY);
-
+        Button accountSettingsButton = new Button("Account settings");
+        accountSettingsButton.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
 
 
         sideNavContainer.add(messagesNav,  createItem("Account"), accountSettingsButton, usersButton, permissionsButton);
@@ -87,7 +87,7 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
     private Button createButton(String label, VaadinIcon icon) {
         Button button = new Button(label, icon.create());
         button.setClassName("sideNavButton");
-        button.addClickListener(e -> UserPanel.changeView(label));
+        button.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
         return button;
     }
     private void logInUser(String firstName, String lastName, String email, String sessionId) {
