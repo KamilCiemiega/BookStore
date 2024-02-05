@@ -1,33 +1,33 @@
 <configuration>
 
-    <!-- Konfiguracja ogólnego logowania do pliku logs.log -->
-    <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>logs/ogs.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+<!--    &lt;!&ndash; Konfiguracja ogólnego logowania do pliku logs.log &ndash;&gt;-->
+<!--    <appender name="file" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>logs/ogs.log</file>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--    </appender>-->
 
-    <!-- Konfiguracja logowania typu ERROR do pliku errors.log -->
-    <appender name="errorFile" class="ch.qos.logback.core.FileAppender">
-        <file>logs/rrors.log</file>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>ERROR</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-    </appender>
+<!--    &lt;!&ndash; Konfiguracja logowania typu ERROR do pliku errors.log &ndash;&gt;-->
+<!--    <appender name="errorFile" class="ch.qos.logback.core.FileAppender">-->
+<!--        <file>logs/rrors.log</file>-->
+<!--        <encoder>-->
+<!--            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+<!--        </encoder>-->
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>ERROR</level>-->
+<!--            <onMatch>ACCEPT</onMatch>-->
+<!--            <onMismatch>DENY</onMismatch>-->
+<!--        </filter>-->
+<!--    </appender>-->
 
-    <!-- Dodanie loggerów korzystających z powyższych konfiguracji -->
-    <logger name="app.service.AuthenticationService" level="DEBUG" />
+<!--    &lt;!&ndash; Dodanie loggerów korzystających z powyższych konfiguracji &ndash;&gt;-->
+<!--    <logger name="app.service.AuthenticationService" level="DEBUG" />-->
 
-    <!-- Konfiguracja korzenia logów -->
-    <root level="DEBUG">
-        <appender-ref ref="file" />
-        <appender-ref ref="errorFile" />
-    </root>
+<!--    &lt;!&ndash; Konfiguracja korzenia logów &ndash;&gt;-->
+<!--    <root level="DEBUG">-->
+<!--        <appender-ref ref="file" />-->
+<!--        <appender-ref ref="errorFile" />-->
+<!--    </root>-->
 
 </configuration>
