@@ -7,3 +7,14 @@
     margin: 0;
     height: 30px
 }
+H1 {
+    font-size: 16px;
+    color: #405971;
+}
+.arrowDownIcon {
+    font-size: 10px;
+    margin-top: 3px;
+}
+.sideNav{
+    width: 100%;
+}

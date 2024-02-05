@@ -65,7 +65,7 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
 
         if (loginSuccessful) {
             Notification.show("Login successful", 3000, Notification.Position.TOP_CENTER);
-            UI.getCurrent().navigate("SideNavContainer");
+            UI.getCurrent().navigate("UserPanel");
             logger.info("Authentication successful for user with email: {}", email);
         } else {
             Notification.show("Login failed. Please check your credentials.", 3000, Notification.Position.TOP_CENTER);

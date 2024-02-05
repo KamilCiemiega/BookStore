@@ -1,0 +1,6 @@
+vaadin-form-layout{
+    width: 25%
+}
+vaadin-text-field, vaadin-password-field, vaadin-email-field{
+    margin-top: 10%
+}

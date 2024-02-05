@@ -3,3 +3,12 @@
     background: #7699b3;
     box-shadow: 8px 8px 24px -18px rgba(66, 68, 90, 1);
 }
+.contentContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    spacing: 0;
+}

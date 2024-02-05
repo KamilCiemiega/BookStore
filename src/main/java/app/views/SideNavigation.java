@@ -1,11 +1,8 @@
 package app.views;
 
 import app.service.AuthenticationService;
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -13,7 +10,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
-import org.postgresql.util.LruCache;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -42,52 +38,64 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
 
     @Override
     public void configureView() {
-        ViewConfigurator.super.configureView();
-        getElement().getStyle().set("align-items", "");
-        getElement().getStyle().set("justify-content", "");
+        setPadding(false);
+        setSpacing(false);
     }
 
     private VerticalLayout sideNavContainer() {
         VerticalLayout sideNavContainer = new VerticalLayout();
         sideNavContainer.addClassName("sideNav");
-        sideNavContainer.setWidth("12%");
+        Icon MessageArrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
+        MessageArrowDownIcon.setClassName("arrowDownIcon");
+        Icon AccountArrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
+        AccountArrowDownIcon.setClassName("arrowDownIcon");
+
+        HorizontalLayout messageContainer = new HorizontalLayout();
+        H1 messageLabel = new H1("Message");
+        messageContainer.add(messageLabel, MessageArrowDownIcon);
 
 
-        SideNav messagesNav = new SideNav();
-        messagesNav.setLabel("Messages");
-        messagesNav.setCollapsible(true);
-        messagesNav.addItem(new SideNavItem("Inbox", LogIn.class, VaadinIcon.INBOX.create()));
-        messagesNav.addItem(new SideNavItem("Sent", LogIn.class, VaadinIcon.PAPERPLANE.create()));
-        messagesNav.addItem(new SideNavItem("Trash", LogIn.class, VaadinIcon.TRASH.create()));
+        Button inboxButton = createButton("Inbox", VaadinIcon.INBOX);
+        Button paperplaneButton = createButton("Paperplane", VaadinIcon.PAPERPLANE);
+        Button trashButton = createButton("Trash", VaadinIcon.TRASH);
 
+        HorizontalLayout accountContainer = new HorizontalLayout();
+        H1 accountLabel = new H1("Account");
 
-//        Button accountSettingsButton = createButton("Account settings", VaadinIcon.USER);
+        accountContainer.add(accountLabel, AccountArrowDownIcon);
+
         Button usersButton = createButton("Users", VaadinIcon.GROUP);
         Button permissionsButton = createButton("Permissions", VaadinIcon.KEY);
-        Button accountSettingsButton = new Button("Account settings");
-        accountSettingsButton.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
+        Button accountSettingsButton = createButton("Account settings", VaadinIcon.USER);
 
-
-        sideNavContainer.add(messagesNav,  createItem("Account"), accountSettingsButton, usersButton, permissionsButton);
+        sideNavContainer.add(
+                messageContainer,
+                inboxButton,
+                paperplaneButton,
+                trashButton,
+                accountContainer,
+                usersButton,
+                permissionsButton,
+                accountSettingsButton);
 
         return sideNavContainer;
     }
 
 
-    private Div createItem(String label) {
-        HorizontalLayout itemLayout = new HorizontalLayout();
-        itemLayout.setAlignItems(Alignment.CENTER);
-
-        Icon arrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
-        arrowDownIcon.setSize("12px");
-        itemLayout.add(arrowDownIcon, new Text(label));
-
-        return new Div(itemLayout);
-    }
     private Button createButton(String label, VaadinIcon icon) {
         Button button = new Button(label, icon.create());
         button.setClassName("sideNavButton");
-        button.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
+        switch (label){
+            case "Account settings":
+                button.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
+            break;
+            case "Permissions":
+            break;
+            case "Users":
+            default:
+               new AccountSettings();
+
+        }
         return button;
     }
     private void logInUser(String firstName, String lastName, String email, String sessionId) {
