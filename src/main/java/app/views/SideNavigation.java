@@ -1,6 +1,7 @@
 package app.views;
 
 import app.service.AuthenticationService;
+import app.service.UserContext;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
@@ -17,21 +18,11 @@ import java.util.Map;
 
 @Route(value = "SideNavContainer")
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
-
-    private final String name;
-    private final String lastName;
-    private final String email;
-
-    private final String sessionId;
     private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
 
-    public SideNavigation(AuthenticationService authenticationService ) {
-        this.name = authenticationService.getFirstName();
-        this.lastName = authenticationService.getLastName();
-        this.email = authenticationService.getEmail();
-        this.sessionId = authenticationService.getSessionId();
+    public SideNavigation() {
         configureView();
-        logInUser(name, lastName,email,sessionId);
+        logInUser();
         add(sideNavContainer());
 
     }
@@ -98,7 +89,13 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         }
         return button;
     }
-    private void logInUser(String firstName, String lastName, String email, String sessionId) {
+    private void logInUser() {
+        String firstName = UserContext.getFirstName();
+        String lastName = UserContext.getLastName();
+        String email = UserContext.getEmail();
+        String sessionId = UserContext.getSesionId();
+
+        System.out.println(firstName + lastName + email + sessionId);
 
         Map<String, String> userAttributes = new HashMap<>();
         if (sessionId != null && firstName != null && lastName != null && email != null) {
@@ -110,7 +107,8 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         }
     }
 
-    private void removeUser(String sessionId) {
+    private void removeUser() {
+        String sessionId = UserContext.getSesionId();
         loggedInUsers.remove(sessionId);
     }
 }

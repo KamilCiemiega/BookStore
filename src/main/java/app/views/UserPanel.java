@@ -12,8 +12,8 @@ public class UserPanel extends HorizontalLayout implements ViewConfigurator{
     private static final VerticalLayout contentContainer = new VerticalLayout();
     private final AccountSettings accountSettings = new AccountSettings();
 
-    public UserPanel(AuthenticationService authenticationService) {
-        sideNavigation = new SideNavigation(authenticationService);
+    public UserPanel() {
+        sideNavigation = new SideNavigation();
         configureView();
         contentContainer.addClassName("contentContainer");
         add(sideNavigation, contentContainer);

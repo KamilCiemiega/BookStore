@@ -10,8 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,11 +22,6 @@ public class AuthenticationService {
 
     private final DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
-
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String sessionId;
     @Autowired
     public AuthenticationService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -35,11 +29,14 @@ public class AuthenticationService {
 
     public boolean insertData(String firstName, String lastName, String password, String email) {
         try (Connection connection = dataSource.getConnection()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(password);
+
             String sql = "INSERT INTO users (first_name, last_name, password, email_address) VALUES (?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, firstName);
                 preparedStatement.setString(2, lastName);
-                preparedStatement.setString(3, password);
+                preparedStatement.setString(3, hashedPassword);
                 preparedStatement.setString(4, email);
 
                 int rowsAffected = preparedStatement.executeUpdate();
@@ -70,10 +67,10 @@ public class AuthenticationService {
                                 VaadinRequest currentRequest = VaadinRequest.getCurrent();
                                 VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
                                 String sessionId = vaadinSession.getSession().getId();
-                                this.firstName = firstName;
-                                this.lastName = lastName;
-                                this.email = email;
-                                this.sessionId = sessionId;
+                                UserContext.setFirstName(firstName);
+                                UserContext.setLastName(lastName);
+                                UserContext.setEmail(email);
+                                UserContext.setSesionId(sessionId);
                                 return true;
                             } catch (SessionExpiredException e) {
                                 Notification.show("Your session has expired because you have been inactive for 30 minutes. Please log in again.", 3000, Notification.Position.TOP_CENTER);
@@ -81,32 +78,19 @@ public class AuthenticationService {
                                 logger.info("Session expired for user with Email: {}", email);
                             }
                         } else {
+                            Notification.show("Authentication failed. Incorrect email or password.");
                             logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
                         }
                     } else {
+                        Notification.show("No user found in the database with email: {}"+ email);
                         logger.warn("No user found in the database with email: {}", email);
                     }
                 }
             }
         } catch (SQLException e) {
+            Notification.show("Error during user authentication. Email: {}" + email);
             logger.error("Error during user authentication. Email: {}", email, e);
         }
         return false;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getSessionId() {
-        return sessionId;
     }
 }
