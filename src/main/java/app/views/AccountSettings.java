@@ -1,35 +1,28 @@
 package app.views;
 
-import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 
-import java.awt.*;
-
-public class AccountSettings extends HorizontalLayout implements ViewConfigurator {
+public class AccountSettings extends HorizontalLayout {
     public AccountSettings() {
-        configureView();
+        setPadding(false);
+        setSpacing(false);
+        setSizeFull();
         add(changeAccountData());
     }
 
-    @Override
-    public void configureView() {
-        ViewConfigurator.super.configureView();
-        setPadding(false);
-        setSpacing(false);
-    }
+    private VerticalLayout changeAccountData(){
 
-    private HorizontalLayout changeAccountData(){
-
-        HorizontalLayout horizontalLayout = new HorizontalLayout();
+        VerticalLayout formVerticalLayout = new VerticalLayout();
+        formVerticalLayout.addClassName("formVerticalLayout");
 
         FormLayout formLayout = new FormLayout();
         TextField nameField = new TextField("Name");
         TextField surnameField = new TextField("Surname");
-        PasswordField passwordField = new PasswordField("Password");
         TextField emailField = new TextField("Email");
 
         formLayout.setColspan(nameField, 2);
@@ -38,18 +31,19 @@ public class AccountSettings extends HorizontalLayout implements ViewConfigurato
         formLayout.add(surnameField);
         formLayout.setColspan(emailField, 4);
         formLayout.add(emailField);
-        formLayout.setColspan(passwordField, 5);
-        formLayout.add(passwordField);
 
-//        Button changePasswordButton = new Button("Change Password");
-//        changePasswordButton.addClickListener(event -> {
-//            // Tutaj dodaj logikę do otwarcia dialogu zmiany hasła
-//            ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
-//            changePasswordDialog.open();
-//        });
 
-        horizontalLayout.add(formLayout);
+        Button changePasswordButton = new Button("Change Password");
+        changePasswordButton.addClassName("changePasswordButton");
+        changePasswordButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
+           changePasswordButton.addClickListener(event -> {
+            // Tutaj dodaj logikę do otwarcia dialogu zmiany hasła
+            ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
+            changePasswordDialog.open();
+        });
+        formVerticalLayout.setHorizontalComponentAlignment(Alignment.CENTER, formLayout);
+        formVerticalLayout.add(formLayout, changePasswordButton);
 
-        return horizontalLayout;
+        return formVerticalLayout;
     }
 }

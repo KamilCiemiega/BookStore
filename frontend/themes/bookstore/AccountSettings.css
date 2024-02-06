@@ -2,5 +2,13 @@ vaadin-form-layout{
     width: 25%
 }
 vaadin-text-field, vaadin-password-field, vaadin-email-field{
-    margin-top: 10%
+    margin-top: 15%
+}
+.formVerticalLayout{
+    display:flex;
+    align-items: center;
+}
+.changePasswordButton{
+    cursor: pointer;
+    margin-top: 5%;
 }

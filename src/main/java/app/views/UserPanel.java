@@ -8,16 +8,16 @@ import com.vaadin.flow.router.Route;
 
 @Route(value = "UserPanel")
 public class UserPanel extends HorizontalLayout implements ViewConfigurator{
-    private final SideNavigation sideNavigation;
-    private static final VerticalLayout contentContainer = new VerticalLayout();
+    private SideNavigation sideNavigation;
+    private final VerticalLayout contentContainer = new VerticalLayout();
     private final AccountSettings accountSettings = new AccountSettings();
 
     public UserPanel() {
-        sideNavigation = new SideNavigation();
+        sideNavigation = new SideNavigation(this);
         configureView();
         contentContainer.addClassName("contentContainer");
-        add(sideNavigation, contentContainer);
         contentContainer.add(accountSettings);
+        add(sideNavigation, contentContainer);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class UserPanel extends HorizontalLayout implements ViewConfigurator{
         setSpacing(false);
     }
 
-    public static void changeView(Component component) {
+    public void changeView(Component component) {
         contentContainer.removeAll();
         contentContainer.add(component);
     }

@@ -1,28 +1,27 @@
 package app.views;
 
-import app.service.AuthenticationService;
 import app.service.UserContext;
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.sidenav.SideNav;
-import com.vaadin.flow.component.sidenav.SideNavItem;
 import com.vaadin.flow.router.Route;
 
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Route(value = "SideNavContainer")
+@Route(value = "SideNavigation")
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
     private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
+    private UserPanel userPanel;
 
-    public SideNavigation() {
+    public SideNavigation(UserPanel userPanel) {
+        this.userPanel = userPanel;
         configureView();
-        logInUser();
+        logInUserData();
         add(sideNavContainer());
 
     }
@@ -78,24 +77,26 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         button.setClassName("sideNavButton");
         switch (label){
             case "Account settings":
-                button.addClickListener(e -> UserPanel.changeView(new AccountSettings()));
+                button.addClickListener(e -> changeView(new AccountSettings()));
             break;
             case "Permissions":
             break;
             case "Users":
             default:
                new AccountSettings();
-
         }
         return button;
     }
-    private void logInUser() {
+
+    public void changeView(Component component) {
+        userPanel.changeView(component);
+    }
+    private void logInUserData() {
         String firstName = UserContext.getFirstName();
         String lastName = UserContext.getLastName();
         String email = UserContext.getEmail();
         String sessionId = UserContext.getSesionId();
 
-        System.out.println(firstName + lastName + email + sessionId);
 
         Map<String, String> userAttributes = new HashMap<>();
         if (sessionId != null && firstName != null && lastName != null && email != null) {

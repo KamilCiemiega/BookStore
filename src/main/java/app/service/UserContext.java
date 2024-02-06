@@ -7,6 +7,7 @@ public class UserContext {
 
     private static String sesionId;
 
+
     public static String getFirstName() {
         return firstName;
     }
