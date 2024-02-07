@@ -1,18 +1,16 @@
-package app.views;
+package app.views.UserPanel.AccountSettings;
 
+import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
-import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 
-public class ChangePasswordDialog extends Dialog {
-    public ChangePasswordDialog() {
+public class ChangePasswordOverflow extends Dialog {
+    public ChangePasswordOverflow() {
         setCloseOnEsc(false);
 
         VerticalLayout verticalLayout = new VerticalLayout();
@@ -25,14 +23,7 @@ public class ChangePasswordDialog extends Dialog {
         confirmPassword.setRequiredIndicatorVisible(true);
 
         Button saveButton = new Button("Save", event -> {
-            if (password.isEmpty() || confirmPassword.isEmpty()) {
-                Notification.show("Both password fields are required.").open();
-            } else if (!password.getValue().equals(confirmPassword.getValue())) {
-                Notification.show("Passwords do not match.").open();
-            } else {
-
-                close();
-            }
+            validatePasswordFields(password, confirmPassword);
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button cancelButton = new Button("Cancel", event -> close());
@@ -48,8 +39,20 @@ public class ChangePasswordDialog extends Dialog {
         add(verticalLayout );
     }
 
-    private void changePassword(){
+    private void validatePasswordFields(PasswordField passwordField, PasswordField confirmPasswordField) {
+        if (passwordField.isEmpty() || confirmPasswordField.isEmpty()) {
+            handleValidationFailure(passwordField, "Both password fields are required.");
+            handleValidationFailure(confirmPasswordField, "Both password fields are required.");
+        } else if (!passwordField.getValue().equals(confirmPasswordField.getValue())) {
+            handleValidationFailure(confirmPasswordField, "Passwords do not match.");
+        } else {
+            close();
+        }
+    }
 
+    private void handleValidationFailure(HasValidation field, String errorMessage) {
+        field.setInvalid(true);
+        field.setErrorMessage(errorMessage);
     }
 
 

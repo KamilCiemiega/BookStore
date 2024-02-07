@@ -1,6 +1,8 @@
-package app.views;
+package app.views.UserPanel;
 
 import app.service.UserContext;
+import app.views.UserPanel.AccountSettings.AccountSettings;
+import app.views.ViewConfigurator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;

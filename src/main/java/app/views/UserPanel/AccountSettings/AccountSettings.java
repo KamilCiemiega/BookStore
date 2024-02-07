@@ -1,4 +1,4 @@
-package app.views;
+package app.views.UserPanel.AccountSettings;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -38,8 +38,8 @@ public class AccountSettings extends HorizontalLayout {
         changePasswordButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
            changePasswordButton.addClickListener(event -> {
             // Tutaj dodaj logikę do otwarcia dialogu zmiany hasła
-            ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
-            changePasswordDialog.open();
+            ChangePasswordOverflow changePasswordOverflow = new ChangePasswordOverflow();
+            changePasswordOverflow.open();
         });
         formVerticalLayout.setHorizontalComponentAlignment(Alignment.CENTER, formLayout);
         formVerticalLayout.add(formLayout, changePasswordButton);
