@@ -7,8 +7,29 @@ vaadin-text-field, vaadin-password-field, vaadin-email-field{
 .formVerticalLayout{
     display:flex;
     align-items: center;
+
 }
 .changePasswordButton{
     cursor: pointer;
     margin-top: 5%;
+}
+.userIcon{
+    width: 100%;
+    height: 100%
+}
+.userIconDiv{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #7699b3;
+}
+.pictureContainer{
+    width: 100%;
+    align-items: center;
+}
+.picture{
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 15%;
 }

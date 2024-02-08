@@ -11,9 +11,11 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 @Route(value = "SideNavigation")
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
@@ -85,7 +87,6 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
             break;
             case "Users":
             default:
-               new AccountSettings();
         }
         return button;
     }
