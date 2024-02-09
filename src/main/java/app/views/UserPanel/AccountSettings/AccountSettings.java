@@ -28,7 +28,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 
 import app.service.AccountSettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +36,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AccountSettings extends VerticalLayout {
-    @Autowired
-    private AccountSettingsService accountSettingsService;
-    @Autowired
-    private DataSource dataSource;
+
     TextField nameField = new TextField("Name");
     TextField surnameField = new TextField("Surname");
     EmailField emailField = new EmailField("Email");
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
 
-    public AccountSettings() {
+    @Autowired
+   private AccountSettingsService accountSettingsService;
+    public AccountSettings(AccountSettingsService accountSettingsService) {
+        this.accountSettingsService = accountSettingsService;
         AccountSettingsStyle();
         add(pictureSection(),changeAccountData());
     }
@@ -106,15 +105,11 @@ public class AccountSettings extends VerticalLayout {
 
                 Files.copy(inputStream, targetPath);
                 inputStream.close();
-                String imagePath = targetPath.toString();
-                try{
-                    if (accountSettingsService != null){
-                        System.out.println(event.getFileName() + imagePath);
-                        accountSettingsService.addAccountImagePath(event.getFileName(), imagePath);
-                    }
-                }catch (SQLException e){
-                    logger.error("error when adding path and filename");
-                }
+//                String imagePath = targetPath.toString();
+                System.out.println(event.getFileName());
+                accountSettingsService.addAccountImagePath(event.getFileName());
+
+
                 uploadedImage.setSrc(new StreamResource(event.getFileName(), () -> buffer.getInputStream(event.getFileName())));
                 uploadedImage.setVisible(true);
                 userIconDiv.remove(userIcon);

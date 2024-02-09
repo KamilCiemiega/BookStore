@@ -20,17 +20,16 @@ public class AccountSettingsService {
         this.dataSource = dataSource;
     }
 
-    public boolean addAccountImagePath(String fileName, String filePath) throws SQLException {
+    public boolean addAccountImagePath(String fileName){
         try (Connection connection = dataSource.getConnection()){
-            String sql = "INSERT INTO file_path (file_name, file_path) VALUES (?, ?)";
+            String sql = "INSERT INTO file_path (file_name) VALUES (?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)){
                 preparedStatement.setString(1, fileName);
-                preparedStatement.setString(2, filePath);
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    logger.info("Inserted data into the database:File Name{}. File Path{}", fileName, filePath);
+                    logger.info("Inserted data into the database:File Name{}.", fileName);
                     return true;
                 }else {
                     logger.error("Failed to insert data into the database: No rows affected.");

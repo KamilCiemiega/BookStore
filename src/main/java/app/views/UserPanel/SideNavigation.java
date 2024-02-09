@@ -1,5 +1,6 @@
 package app.views.UserPanel;
 
+import app.service.AccountSettingsService;
 import app.service.UserContext;
 import app.views.UserPanel.AccountSettings.AccountSettings;
 import app.views.ViewConfigurator;
@@ -11,8 +12,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,8 +22,9 @@ import java.util.Map;
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
     private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
     private UserPanel userPanel;
-
-    public SideNavigation(UserPanel userPanel) {
+    private AccountSettingsService accountSettingsService;
+    public SideNavigation(UserPanel userPanel, AccountSettingsService accountSettingsService) {
+        this. accountSettingsService = accountSettingsService;
         this.userPanel = userPanel;
         configureView();
         logInUserData();
@@ -81,7 +83,7 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         button.setClassName("sideNavButton");
         switch (label){
             case "Account settings":
-                button.addClickListener(e -> changeView(new AccountSettings()));
+                button.addClickListener(e -> changeView(new AccountSettings(accountSettingsService)));
             break;
             case "Permissions":
             break;
