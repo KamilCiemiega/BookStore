@@ -57,6 +57,13 @@ public class AccountSettings extends VerticalLayout {
         setSizeFull();
         getStyle().set("display", "flex");
     }
+    private void AccountSettingsStyle2(){
+        setPadding(false);
+        setSpacing(false);
+        setSizeFull();
+        getStyle().set("display", "flex");
+    }
+
 
     private HorizontalLayout pictureSection(){
         HorizontalLayout pictureContainer = new HorizontalLayout();
