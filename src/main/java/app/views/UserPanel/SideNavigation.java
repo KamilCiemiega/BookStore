@@ -1,5 +1,6 @@
 package app.views.UserPanel;
 
+import app.service.AccountSettingsService;
 import app.service.UserContext;
 import app.views.UserPanel.AccountSettings.AccountSettings;
 import app.views.ViewConfigurator;
@@ -21,9 +22,10 @@ import java.util.Map;
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
     private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
     private UserPanel userPanel;
-
-    public SideNavigation(UserPanel userPanel) {
+    private final AccountSettingsService accountSettingsService;
+    public SideNavigation(UserPanel userPanel, AccountSettingsService accountSettingsService) {
         this.userPanel = userPanel;
+        this.accountSettingsService = accountSettingsService;
         configureView();
         logInUserData();
         add(sideNavContainer());
@@ -81,7 +83,7 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         button.setClassName("sideNavButton");
         switch (label){
             case "Account settings":
-                button.addClickListener(e -> changeView(new AccountSettings()));
+                button.addClickListener(e -> changeView(new AccountSettings(accountSettingsService)));
             break;
             case "Permissions":
             break;

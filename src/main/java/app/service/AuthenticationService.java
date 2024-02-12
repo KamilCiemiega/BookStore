@@ -93,4 +93,20 @@ public class AuthenticationService {
         }
         return false;
     }
+    public Long getUserIdByEmail(String email) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "SELECT id FROM users WHERE email_address = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, email);
+                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if (resultSet.next()) {
+                        return resultSet.getLong("id");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Can't retrieve user ID from the database", e);
+        }
+        return null;
+    }
 }

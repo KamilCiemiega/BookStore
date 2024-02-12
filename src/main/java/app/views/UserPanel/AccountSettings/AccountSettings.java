@@ -1,6 +1,5 @@
 package app.views.UserPanel.AccountSettings;
 
-import app.service.AuthenticationService;
 import app.service.UserContext;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -22,42 +21,34 @@ import com.vaadin.flow.server.StreamResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
+
 
 import app.service.AccountSettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component
 public class AccountSettings extends VerticalLayout {
-    @Autowired
-    private AccountSettingsService accountSettingsService;
-    @Autowired
-    private DataSource dataSource;
     TextField nameField = new TextField("Name");
     TextField surnameField = new TextField("Surname");
     EmailField emailField = new EmailField("Email");
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccountSettings.class);
 
-    public AccountSettings() {
+    private final AccountSettingsService accountSettingsService;
+    public AccountSettings(AccountSettingsService accountSettingsService) {
+        this.accountSettingsService = accountSettingsService;
         AccountSettingsStyle();
         add(pictureSection(),changeAccountData());
     }
 
     private void AccountSettingsStyle(){
-        setPadding(false);
-        setSpacing(false);
-        setSizeFull();
-        getStyle().set("display", "flex");
-    }
-    private void AccountSettingsStyle2(){
         setPadding(false);
         setSpacing(false);
         setSizeFull();
@@ -78,67 +69,114 @@ public class AccountSettings extends VerticalLayout {
         Div userIconDiv = new Div();
         userIconDiv.addClassName("userIconDiv");
         userIconDiv.add(userIcon);
+        Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
+        deleteButton.addClickListener(e -> delateImage());
+        Div uploadContainer = new Div(uploadImage(userIconDiv, userIcon), deleteButton);
 
         picture.add(profilePicture,userIconDiv);
 
-        pictureContainer.add(picture, uploadImage(userIconDiv, userIcon));
+        pictureContainer.add(picture, uploadContainer);
 
         return  pictureContainer;
     }
-    private Upload uploadImage(Div userIconDiv, Icon userIcon ){
+
+
+    private Upload uploadImage(Div userIconDiv, Icon userIcon) {
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
         upload.setAcceptedFileTypes("image/jpeg", "image/png");
+        upload.setMaxFiles(1);
         upload.addFileRejectedListener(event -> {
             String errorMessage = event.getErrorMessage();
             logger.warn(event.getErrorMessage());
-            Notification notification = Notification.show(errorMessage, 5000,
-                    Notification.Position.TOP_CENTER);
+            Notification notification = createNotification(errorMessage, NotificationVariant.LUMO_ERROR);
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            notification.open();
         });
-        Image uploadedImage  = new Image();
+        Image uploadedImage = new Image();
         upload.addSucceededListener(event -> {
             try {
                 InputStream inputStream = buffer.getInputStream(event.getFileName());
-                String uploadDirectory = "C:\\Users\\Kamil\\Desktop\\Java\\BookStore\\upload";
+                String uploadDirectory = "C:\\Users\\Kamil\\Desktop\\Java\\BookStore\\upload\\";
                 Path targetPath = Paths.get(uploadDirectory, event.getFileName());
 
                 if (Files.exists(targetPath)) {
-                    String errorMessage = "File with this name already exists";
-                    Notification notification = Notification.show(errorMessage, 5000, Notification.Position.TOP_CENTER);
-                    notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                    Notification notification = createNotification("File with this name already exists", NotificationVariant.LUMO_WARNING);
+                    notification.open();
                     logger.info("File with this name already exists");
                     return;
                 }
 
                 Files.copy(inputStream, targetPath);
                 inputStream.close();
-                String imagePath = targetPath.toString();
-                try{
-                    if (accountSettingsService != null){
-                        System.out.println(event.getFileName() + imagePath);
-                        accountSettingsService.addAccountImagePath(event.getFileName(), imagePath);
-                    }
-                }catch (SQLException e){
-                    logger.error("error when adding path and filename");
-                }
-                uploadedImage.setSrc(new StreamResource(event.getFileName(), () -> buffer.getInputStream(event.getFileName())));
+                accountSettingsService.addAccountImage(event.getFileName());
+
+                StreamResource resource = getStreamResource(uploadDirectory);
+
+                uploadedImage.setSrc(resource);
                 uploadedImage.setVisible(true);
                 userIconDiv.remove(userIcon);
-                userIconDiv.add(uploadedImage);
-
-            } catch (IOException e){
-                System.out.println(e);
-                Notification notification = Notification.show("An unexpected error occurred", 5000,
-                        Notification.Position.TOP_CENTER);
-                notification.addThemeVariants(NotificationVariant.LUMO_WARNING);
+                if (resource != null) {
+                    userIconDiv.add(uploadedImage);
+                } else {
+                    userIconDiv.add(VaadinIcon.USER.create());
+                }
+            } catch (IOException e) {
+                Notification notification = createNotification("Couldn't save image to the database, please contact with support", NotificationVariant.LUMO_ERROR);
+                notification.open();
                 logger.error("Couldn't save image to the database", e);
             }
         });
         return upload;
     }
 
+    private StreamResource getStreamResource(String basePath) {
+        String fileName = accountSettingsService.getAccountImageName();
+        String fullPath = basePath + fileName;
+        delateImage(fileName);
 
+        File file = new File(fullPath);
+        URI fileURI = file.toURI();
+
+        if (!file.exists()) {
+            Notification notification = createNotification("The image file does not exist", NotificationVariant.LUMO_ERROR);
+            notification.open();
+            logger.error("The image file does not exist at the path: {}", fullPath);
+            return null;
+        }
+
+        return new StreamResource(file.getName(), () -> {
+            try {
+                return Files.newInputStream(file.toPath());
+            } catch (IOException e) {
+                Notification notification = createNotification("We can't display your image please contact with support", NotificationVariant.LUMO_WARNING);
+                notification.open();
+                logger.error("Can't find the image on the Path {}", fullPath, e);
+                return null;
+            }
+        });
+    }
+    private void deleteImage(){
+        String fileName = accountSettingsService.getAccountImageName();
+        if (fileName != null && !fileName.isEmpty()) {
+            boolean deletedFromDatabase = accountSettingsService.deleteAccountImage(fileName);
+            if (deletedFromDatabase) {
+                Notification notification = createNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
+                notification.open();
+                logger.info("Image deleted successfully");
+            } else {
+                Notification notification = createNotification("Something were wrong after truing to delete image. Please Contact with support", NotificationVariant.LUMO_ERROR);
+                notification.open();
+                logger.error("Can't delete the image");
+            }
+        }
+    }
+
+    public static Notification createNotification(String message, NotificationVariant variant) {
+        Notification notification = new Notification(message, 5000, Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(variant);
+        return notification;
+    }
     private VerticalLayout changeAccountData(){
 
         VerticalLayout formVerticalLayout = new VerticalLayout();
@@ -176,22 +214,21 @@ public class AccountSettings extends VerticalLayout {
         return formVerticalLayout;
     }
     private void setValueToFields(String typeOfTextField) {
-        UserContext userContext = new UserContext();
 
         switch (typeOfTextField) {
             case "Name":
-                if (userContext.getFirstName() != null) {
-                    nameField.setValue(userContext.getFirstName());
+                if (UserContext.getFirstName() != null) {
+                    nameField.setValue(UserContext.getFirstName());
                 }
                 break;
             case "SurName":
-                if (userContext.getLastName() != null) {
-                    surnameField.setValue(userContext.getLastName());
+                if (UserContext.getLastName() != null) {
+                    surnameField.setValue(UserContext.getLastName());
                 }
                 break;
             case "Email":
-                if (userContext.getEmail() != null) {
-                    emailField.setValue(userContext.getEmail());
+                if (UserContext.getEmail() != null) {
+                    emailField.setValue(UserContext.getEmail());
                 }
                 break;
             default:
