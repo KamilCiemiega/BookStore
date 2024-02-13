@@ -6,6 +6,7 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -53,6 +54,7 @@ public class AccountSettings extends VerticalLayout {
         setSpacing(false);
         setSizeFull();
         getStyle().set("display", "flex");
+        getStyle().set("align-items", "center");
     }
 
 
@@ -69,9 +71,15 @@ public class AccountSettings extends VerticalLayout {
         Div userIconDiv = new Div();
         userIconDiv.addClassName("userIconDiv");
         userIconDiv.add(userIcon);
+        HorizontalLayout deleteImageContainer = new HorizontalLayout();
+        deleteImageContainer.addClassName("deleteImageContainer");
+        Span deleteImage = new Span("Delete Image");
         Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
-        deleteButton.addClickListener(e -> delateImage());
-        Div uploadContainer = new Div(uploadImage(userIconDiv, userIcon), deleteButton);
+        deleteButton.getStyle().set("background", "white");
+        deleteImageContainer.add(deleteImage,deleteButton);
+        deleteButton.addClickListener(e -> deleteImage());
+        Div uploadContainer = new Div(uploadImage(userIconDiv, userIcon), deleteImageContainer);
+        uploadContainer.addClassName("uploadContainer");
 
         picture.add(profilePicture,userIconDiv);
 
@@ -84,6 +92,7 @@ public class AccountSettings extends VerticalLayout {
     private Upload uploadImage(Div userIconDiv, Icon userIcon) {
         MultiFileMemoryBuffer buffer = new MultiFileMemoryBuffer();
         Upload upload = new Upload(buffer);
+        upload.addClassName("customUpload");
         upload.setAcceptedFileTypes("image/jpeg", "image/png");
         upload.setMaxFiles(1);
         upload.addFileRejectedListener(event -> {
@@ -101,8 +110,6 @@ public class AccountSettings extends VerticalLayout {
                 Path targetPath = Paths.get(uploadDirectory, event.getFileName());
 
                 if (Files.exists(targetPath)) {
-                    Notification notification = createNotification("File with this name already exists", NotificationVariant.LUMO_WARNING);
-                    notification.open();
                     logger.info("File with this name already exists");
                     return;
                 }
@@ -118,9 +125,14 @@ public class AccountSettings extends VerticalLayout {
                 userIconDiv.remove(userIcon);
                 if (resource != null) {
                     userIconDiv.add(uploadedImage);
-                } else {
+                    if (deleteImage()) {
+                        userIconDiv.add(VaadinIcon.USER.create());
+                    }
+                }
+                    else {
                     userIconDiv.add(VaadinIcon.USER.create());
                 }
+
             } catch (IOException e) {
                 Notification notification = createNotification("Couldn't save image to the database, please contact with support", NotificationVariant.LUMO_ERROR);
                 notification.open();
@@ -133,7 +145,6 @@ public class AccountSettings extends VerticalLayout {
     private StreamResource getStreamResource(String basePath) {
         String fileName = accountSettingsService.getAccountImageName();
         String fullPath = basePath + fileName;
-        delateImage(fileName);
 
         File file = new File(fullPath);
         URI fileURI = file.toURI();
@@ -156,20 +167,31 @@ public class AccountSettings extends VerticalLayout {
             }
         });
     }
-    private void deleteImage(){
+    private boolean deleteImage(){
         String fileName = accountSettingsService.getAccountImageName();
         if (fileName != null && !fileName.isEmpty()) {
             boolean deletedFromDatabase = accountSettingsService.deleteAccountImage(fileName);
             if (deletedFromDatabase) {
-                Notification notification = createNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
-                notification.open();
-                logger.info("Image deleted successfully");
+                String uploadDirectory = "C:\\Users\\Kamil\\Desktop\\Java\\BookStore\\upload\\";
+                Path filePath = Paths.get(uploadDirectory, fileName);
+                try {
+                    Files.delete(filePath);
+                    Notification notification = createNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
+                    notification.open();
+                    logger.info("Image deleted successfully");
+                    return true;
+                } catch (IOException e) {
+                    Notification notification = createNotification("Failed to delete the image file", NotificationVariant.LUMO_ERROR);
+                    notification.open();
+                    logger.error("Failed to delete the image file", e);
+                }
             } else {
-                Notification notification = createNotification("Something were wrong after truing to delete image. Please Contact with support", NotificationVariant.LUMO_ERROR);
+                Notification notification = createNotification("Something went wrong while trying to delete the image from the database. Please contact support.", NotificationVariant.LUMO_ERROR);
                 notification.open();
-                logger.error("Can't delete the image");
+                logger.error("Failed to delete the image from the database");
             }
         }
+        return false;
     }
 
     public static Notification createNotification(String message, NotificationVariant variant) {
@@ -180,11 +202,12 @@ public class AccountSettings extends VerticalLayout {
     private VerticalLayout changeAccountData(){
 
         VerticalLayout formVerticalLayout = new VerticalLayout();
+        formVerticalLayout.getStyle().set("width", "30%");
         formVerticalLayout.addClassName("formVerticalLayout");
 
         FormLayout formLayout = new FormLayout();
-        Button button = new Button("Edit");
-
+        Button buttonEdit = new Button("Edit");
+        buttonEdit.getStyle().set("color", "black");
         nameField.setEnabled(false);
         setValueToFields("Name");
         surnameField.setEnabled(false);
@@ -198,7 +221,7 @@ public class AccountSettings extends VerticalLayout {
         formLayout.add(surnameField);
         formLayout.setColspan(emailField, 4);
         formLayout.add(emailField);
-        formLayout.add(button);
+        formLayout.add(buttonEdit);
 
 
         Button changePasswordButton = new Button("Change Password");
@@ -209,7 +232,7 @@ public class AccountSettings extends VerticalLayout {
             changePasswordOverflow.open();
         });
         formVerticalLayout.setHorizontalComponentAlignment(Alignment.CENTER, formLayout);
-        formVerticalLayout.add(button, formLayout, changePasswordButton);
+        formVerticalLayout.add(buttonEdit, formLayout, changePasswordButton);
 
         return formVerticalLayout;
     }
