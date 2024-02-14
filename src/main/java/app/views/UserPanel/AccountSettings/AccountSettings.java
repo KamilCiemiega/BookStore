@@ -77,7 +77,13 @@ public class AccountSettings extends VerticalLayout {
         Button deleteButton = new Button(new Icon(VaadinIcon.TRASH));
         deleteButton.getStyle().set("background", "white");
         deleteImageContainer.add(deleteImage,deleteButton);
-        deleteButton.addClickListener(e -> deleteImage());
+        deleteButton.addClickListener(e -> {
+         if(deleteImage()){
+             userIconDiv.removeAll();
+             userIconDiv.add(userIcon);
+             uploadImage(userIconDiv, userIcon);
+         }
+        });
         Div uploadContainer = new Div(uploadImage(userIconDiv, userIcon), deleteImageContainer);
         uploadContainer.addClassName("uploadContainer");
 
@@ -110,6 +116,8 @@ public class AccountSettings extends VerticalLayout {
                 Path targetPath = Paths.get(uploadDirectory, event.getFileName());
 
                 if (Files.exists(targetPath)) {
+                    Notification notification = createNotification("File with this name already exists", NotificationVariant.LUMO_WARNING);
+                    notification.open();
                     logger.info("File with this name already exists");
                     return;
                 }
@@ -125,11 +133,7 @@ public class AccountSettings extends VerticalLayout {
                 userIconDiv.remove(userIcon);
                 if (resource != null) {
                     userIconDiv.add(uploadedImage);
-                    if (deleteImage()) {
-                        userIconDiv.add(VaadinIcon.USER.create());
-                    }
-                }
-                    else {
+                } else {
                     userIconDiv.add(VaadinIcon.USER.create());
                 }
 
@@ -176,6 +180,7 @@ public class AccountSettings extends VerticalLayout {
                 Path filePath = Paths.get(uploadDirectory, fileName);
                 try {
                     Files.delete(filePath);
+
                     Notification notification = createNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
                     notification.open();
                     logger.info("Image deleted successfully");
@@ -207,6 +212,9 @@ public class AccountSettings extends VerticalLayout {
 
         FormLayout formLayout = new FormLayout();
         Button buttonEdit = new Button("Edit");
+        buttonEdit.addClickListener(e -> {
+
+        });
         buttonEdit.getStyle().set("color", "black");
         nameField.setEnabled(false);
         setValueToFields("Name");
@@ -235,6 +243,10 @@ public class AccountSettings extends VerticalLayout {
         formVerticalLayout.add(buttonEdit, formLayout, changePasswordButton);
 
         return formVerticalLayout;
+    }
+
+    private void setEnabledFields(){
+
     }
     private void setValueToFields(String typeOfTextField) {
 
