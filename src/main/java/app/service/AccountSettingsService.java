@@ -50,26 +50,24 @@ public class AccountSettingsService {
             }
         }
     }
-    public String getAccountImageName() {
-        String fileName = null;
-        try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT file_name FROM profile_picture";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        fileName = resultSet.getString("file_name");
+
+        public String getAccountImageName(Integer userId){
+            String fileName = null;
+            try (Connection connection = dataSource.getConnection()) {
+                String sql = "SELECT file_name FROM profile_picture WHERE user_id = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                    preparedStatement.setInt(1, userId);
+                    try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                        if (resultSet.next()) {
+                            fileName = resultSet.getString("file_name");
+                        }
                     }
-                } catch (SQLException e) {
-                    logger.error("Failed to retrieve data from ResultSet", e);
                 }
             } catch (SQLException e) {
-                logger.error("Failed to execute SQL query", e);
+                logger.error("Failed to retrieve account image name for user ID: " + userId, e);
             }
-        } catch (SQLException e) {
-            logger.error("Can't connect to the Database", e);
+            return fileName;
         }
-        return fileName;
-    }
 
     public boolean deleteAccountImage(String fileName) {
         String userEmail = UserContext.getEmail();
@@ -99,6 +97,52 @@ public class AccountSettingsService {
             return false;
         } else {
             return false;
+        }
+    }
+
+    public void updateUserData(String name, String surname, String email, Integer id) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "UPDATE users SET first_name = ?, last_name = ?, email_address = ? WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, name);
+                preparedStatement.setString(2, surname);
+                preparedStatement.setString(3, email);
+                preparedStatement.setInt(4, id);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    logger.info("Updated data in the database for ID: {}", id);
+                } else {
+                    logger.error("No data found to update in the database for ID: {}", id);
+                }
+            } catch (SQLException e) {
+                logger.error("Failed to execute SQL query", e);
+            }
+        } catch (SQLException e) {
+            logger.error("Can't connect to the Database", e);
+        }
+    }
+    public void updateUserPassword(String password, Integer id) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "UPDATE users SET password = ? WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                System.out.println(password + id);
+                preparedStatement.setString(1, password);
+                preparedStatement.setInt(2, id);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+
+                if (rowsAffected > 0) {
+                    logger.info("Updated password in the database for ID: {}", id);
+                } else {
+                    logger.error("No data found to update in the database for ID: {}", id);
+                }
+            } catch (SQLException e) {
+                logger.error("Failed to execute SQL query", e);
+            }
+        } catch (SQLException e) {
+            logger.error("Can't connect to the Database", e);
         }
     }
 }

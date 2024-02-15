@@ -4,6 +4,8 @@ public class UserContext {
     private static String firstName;
     private static String lastName;
     private static String email;
+    private static String password;
+    private static Integer userID;
 
     private static String sesionId;
 
@@ -24,6 +26,18 @@ public class UserContext {
         return sesionId;
     }
 
+    public static Integer getUserID() {
+        return userID;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setUserID(Integer userID) {
+        UserContext.userID = userID;
+    }
+
     public static void setLastName(String lastName) {
         UserContext.lastName = lastName;
     }
@@ -38,5 +52,9 @@ public class UserContext {
 
     public static void setFirstName(String firstName) {
         UserContext.firstName = firstName;
+    }
+
+    public static void setPassword(String password) {
+        UserContext.password = password;
     }
 }

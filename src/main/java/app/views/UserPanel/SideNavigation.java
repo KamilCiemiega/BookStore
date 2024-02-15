@@ -3,6 +3,7 @@ package app.views.UserPanel;
 import app.service.AccountSettingsService;
 import app.service.UserContext;
 import app.views.UserPanel.AccountSettings.AccountSettings;
+import app.views.UserPanel.Users.Users;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
@@ -85,9 +86,10 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
             case "Account settings":
                 button.addClickListener(e -> changeView(new AccountSettings(accountSettingsService)));
             break;
-            case "Permissions":
-            break;
             case "Users":
+                button.addClickListener(e -> changeView(new Users()));
+            break;
+            case "":
             default:
         }
         return button;

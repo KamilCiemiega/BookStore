@@ -147,7 +147,7 @@ public class AccountSettings extends VerticalLayout {
     }
 
     private StreamResource getStreamResource(String basePath) {
-        String fileName = accountSettingsService.getAccountImageName();
+        String fileName = accountSettingsService.getAccountImageName(UserContext.getUserID());
         String fullPath = basePath + fileName;
 
         File file = new File(fullPath);
@@ -172,7 +172,7 @@ public class AccountSettings extends VerticalLayout {
         });
     }
     private boolean deleteImage(){
-        String fileName = accountSettingsService.getAccountImageName();
+        String fileName = accountSettingsService.getAccountImageName(UserContext.getUserID());
         if (fileName != null && !fileName.isEmpty()) {
             boolean deletedFromDatabase = accountSettingsService.deleteAccountImage(fileName);
             if (deletedFromDatabase) {
@@ -209,18 +209,27 @@ public class AccountSettings extends VerticalLayout {
         VerticalLayout formVerticalLayout = new VerticalLayout();
         formVerticalLayout.getStyle().set("width", "30%");
         formVerticalLayout.addClassName("formVerticalLayout");
+        setFieldsEnabled(false);
 
         FormLayout formLayout = new FormLayout();
         Button buttonEdit = new Button("Edit");
         buttonEdit.addClickListener(e -> {
-
+            if (buttonEdit.getText().equals("Edit")) {
+                setFieldsEnabled(true);
+                buttonEdit.setText("Save");
+            } else {
+                setFieldsEnabled(false);
+                saveFormData();
+                buttonEdit.setText("Edit");
+            }
+        });
+        Button saveButton = new Button("Save");
+        saveButton.addClickListener(e -> {
+            setFieldsEnabled(false);
         });
         buttonEdit.getStyle().set("color", "black");
-        nameField.setEnabled(false);
         setValueToFields("Name");
-        surnameField.setEnabled(false);
         setValueToFields("SurName");
-        emailField.setEnabled(false);
         setValueToFields("Email");
 
         formLayout.setColspan(nameField, 2);
@@ -236,7 +245,7 @@ public class AccountSettings extends VerticalLayout {
         changePasswordButton.addClassName("changePasswordButton");
         changePasswordButton.addThemeVariants(ButtonVariant.LUMO_CONTRAST);
            changePasswordButton.addClickListener(event -> {
-            ChangePasswordOverflow changePasswordOverflow = new ChangePasswordOverflow();
+            ChangePasswordOverflow changePasswordOverflow = new ChangePasswordOverflow(accountSettingsService);
             changePasswordOverflow.open();
         });
         formVerticalLayout.setHorizontalComponentAlignment(Alignment.CENTER, formLayout);
@@ -245,8 +254,20 @@ public class AccountSettings extends VerticalLayout {
         return formVerticalLayout;
     }
 
-    private void setEnabledFields(){
+    private void setFieldsEnabled(boolean enabled) {
+        nameField.setEnabled(enabled);
+        surnameField.setEnabled(enabled);
+        emailField.setEnabled(enabled);
+    }
+    private void saveFormData() {
+        String name = nameField.getValue();
+        String surname = surnameField.getValue();
+        String email = emailField.getValue();
+        Integer id = UserContext.getUserID();
 
+        accountSettingsService.updateUserData(name, surname, email, id);
+        Notification notification = createNotification("Data saved successfully", NotificationVariant.LUMO_SUCCESS);
+        notification.open();
     }
     private void setValueToFields(String typeOfTextField) {
 
