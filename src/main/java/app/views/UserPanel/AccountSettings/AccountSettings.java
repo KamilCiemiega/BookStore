@@ -1,6 +1,8 @@
 package app.views.UserPanel.AccountSettings;
 
 import app.service.UserContext;
+import app.views.UserPanel.UserPanel;
+import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -18,6 +20,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
 import com.vaadin.flow.component.html.Image;
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +39,7 @@ import org.springframework.stereotype.Component;
 
 
 @Component
+@Route(value = "accountSettings", layout = UserPanel.class)
 public class AccountSettings extends VerticalLayout {
     TextField nameField = new TextField("Name");
     TextField surnameField = new TextField("Surname");
@@ -125,6 +129,7 @@ public class AccountSettings extends VerticalLayout {
                 Files.copy(inputStream, targetPath);
                 inputStream.close();
                 accountSettingsService.addAccountImage(event.getFileName());
+                String fileName = accountSettingsService.getAccountImageName(UserContext.getUserID());
 
                 StreamResource resource = getStreamResource(uploadDirectory);
 
@@ -217,16 +222,13 @@ public class AccountSettings extends VerticalLayout {
             if (buttonEdit.getText().equals("Edit")) {
                 setFieldsEnabled(true);
                 buttonEdit.setText("Save");
-            } else {
+            } else if(validateFormData()){
                 setFieldsEnabled(false);
                 saveFormData();
                 buttonEdit.setText("Edit");
             }
         });
-        Button saveButton = new Button("Save");
-        saveButton.addClickListener(e -> {
-            setFieldsEnabled(false);
-        });
+
         buttonEdit.getStyle().set("color", "black");
         setValueToFields("Name");
         setValueToFields("SurName");
@@ -265,9 +267,42 @@ public class AccountSettings extends VerticalLayout {
         String email = emailField.getValue();
         Integer id = UserContext.getUserID();
 
-        accountSettingsService.updateUserData(name, surname, email, id);
-        Notification notification = createNotification("Data saved successfully", NotificationVariant.LUMO_SUCCESS);
-        notification.open();
+        if(validateFormData()) {
+            accountSettingsService.updateUserData(name, surname, email, id);
+            Notification notification = createNotification("Data saved successfully", NotificationVariant.LUMO_SUCCESS);
+            notification.open();
+        } else if (name.equals(UserContext.getFirstName()) && surname.equals(UserContext.getLastName()) && email.equals(UserContext.getEmail())) {
+            logger.info("User data doesn't change");
+        }
+    }
+
+    private boolean validateFormData(){
+        String name = nameField.getValue();
+        String surname = surnameField.getValue();
+        String email = emailField.getValue();
+
+        if(name.isEmpty()){
+            handleValidationFailure(nameField, "Name field can't be empty");
+            logger.info("Name field can't be empty");
+            return false;
+        }else if (surname.isEmpty()){
+            handleValidationFailure(surnameField, "surName field can't be empty");
+            logger.info("surName field can't be empty");
+            return false;
+        }else if (email.isEmpty()){
+            handleValidationFailure(emailField, "Email field can't be empty");
+            logger.info("Email field can't be empty");
+            return false;
+        }else if (!email.contains("@")){
+            handleValidationFailure(emailField, "Email is not valid");
+            logger.info("Email is not valid");
+            return false;
+        }
+        return true;
+    }
+    private void handleValidationFailure(HasValidation field, String errorMessage) {
+        field.setInvalid(true);
+        field.setErrorMessage(errorMessage);
     }
     private void setValueToFields(String typeOfTextField) {
 

@@ -1,28 +1,33 @@
 package app.views.UserPanel.Users;
 
+import app.Model.User;
 import app.service.UsersService;
-import app.views.ViewConfigurator;
+import app.views.UserPanel.UserPanel;
+import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vaadin.flow.router.Route;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
+import java.util.List;
+
 @Component
+@Route(value = "Users", layout = UserPanel.class)
 public class Users extends VerticalLayout {
 
-//    @Autowired
-//    private UsersService usersService;
-
-    public Users() {
+    private final UsersService usersService;
+    private User user;
+    public Users(UsersService usersService) {
+        this.usersService = usersService;
         removeAll();
         setWidthFull();
         setHeight("100px");
 
-        add(Header(), createUserComponent());
+
+        add(Header(),createUserComponent());
     }
 
     private Div Header(){
@@ -35,10 +40,25 @@ public class Users extends VerticalLayout {
         return headerContainer;
     }
 
-    private HorizontalLayout createUserComponent() {
-        HorizontalLayout userLayout = new HorizontalLayout();
-//        usersService.getUsers();
+    private Grid<User> createUserComponent() {
+            Grid<User> grid = new Grid<>(User.class);
+            grid.setItems(usersService.getUsers());
 
-        return userLayout;
+            // Dodaj kolumny do tabeli
+            grid.addColumn(User::getFirstName).setHeader("First Name");
+            grid.addColumn(User::getLastName).setHeader("Last Name");
+            grid.addColumn(User::getEmail).setHeader("Email");
+            grid.addColumn(User::getPassword).setHeader("Password");
+            grid.addColumn(User::getRoleName).setHeader("Role Name");
+
+            // Dodaj edycję po kliknięciu na wiersz
+            grid.addItemClickListener(event -> {
+                User user = event.getItem();
+                // Dodaj tutaj logikę edycji użytkownika po kliknięciu w wiersz
+                System.out.println("Selected user: " + user.getFirstName() + " " + user.getLastName());
+            });
+
+            return  grid;
+
     }
 }

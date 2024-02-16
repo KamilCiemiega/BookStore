@@ -2,6 +2,7 @@ package app.views.UserPanel;
 
 import app.service.AccountSettingsService;
 import app.service.UserContext;
+import app.service.UsersService;
 import app.views.UserPanel.AccountSettings.AccountSettings;
 import app.views.UserPanel.Users.Users;
 import app.views.ViewConfigurator;
@@ -13,6 +14,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -22,11 +24,8 @@ import java.util.Map;
 @Route(value = "SideNavigation")
 public class SideNavigation extends HorizontalLayout implements ViewConfigurator {
     private Map<String, Map<String, String>> loggedInUsers = new HashMap<>();
-    private UserPanel userPanel;
-    private final AccountSettingsService accountSettingsService;
-    public SideNavigation(UserPanel userPanel, AccountSettingsService accountSettingsService) {
-        this.userPanel = userPanel;
-        this.accountSettingsService = accountSettingsService;
+
+    public SideNavigation() {
         configureView();
         logInUserData();
         add(sideNavContainer());
@@ -61,9 +60,15 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
 
         accountContainer.add(accountLabel, AccountArrowDownIcon);
 
-        Button usersButton = createButton("Users", VaadinIcon.GROUP);
-        Button permissionsButton = createButton("Permissions", VaadinIcon.KEY);
-        Button accountSettingsButton = createButton("Account settings", VaadinIcon.USER);
+        RouterLink usersLink = new RouterLink();
+        Button usersButton = createNavigationButton("Users", Users.class, VaadinIcon.GROUP);
+        usersLink.add(usersButton);
+
+        RouterLink accountSettingsLink = new RouterLink();
+        Button accountSettingsButton = createNavigationButton("accountSettings", AccountSettings.class, VaadinIcon.GROUP);
+        accountSettingsLink.add(accountSettingsButton);
+
+
 
         sideNavContainer.add(
                 messageContainer,
@@ -71,32 +76,23 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
                 paperplaneButton,
                 trashButton,
                 accountContainer,
-                usersButton,
-                permissionsButton,
-                accountSettingsButton);
+                usersLink,
+                accountSettingsLink
+                );
 
         return sideNavContainer;
     }
 
-
+    private Button createNavigationButton(String label, Class<? extends Component> targetClass, VaadinIcon icon) {
+        Button button = new Button(label, icon.create());
+        button.setClassName("sideNavButton");
+        button.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate(targetClass)));
+        return button;
+    }
     private Button createButton(String label, VaadinIcon icon) {
         Button button = new Button(label, icon.create());
         button.setClassName("sideNavButton");
-        switch (label){
-            case "Account settings":
-                button.addClickListener(e -> changeView(new AccountSettings(accountSettingsService)));
-            break;
-            case "Users":
-                button.addClickListener(e -> changeView(new Users()));
-            break;
-            case "":
-            default:
-        }
         return button;
-    }
-
-    public void changeView(Component component) {
-        userPanel.changeView(component);
     }
     private void logInUserData() {
         String firstName = UserContext.getFirstName();

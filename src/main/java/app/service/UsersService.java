@@ -18,7 +18,6 @@ import java.util.List;
 public class UsersService {
     private final DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
-
     @Autowired
     public UsersService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -29,17 +28,20 @@ public class UsersService {
         System.out.println(userList);
 
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT first_name, last_name, email, password FROM users";
+            String sql = "select u.first_name,u.last_name, u.password, u.email_address, r.role_name from users u\n" +
+                    "join roles r on r.id = u.role_id";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
                         String firstName = resultSet.getString("first_name");
                         String lastName = resultSet.getString("last_name");
-                        String email = resultSet.getString("email");
+                        String email = resultSet.getString("email_address");
                         String password = resultSet.getString("password");
+                        String roleName = resultSet.getString("role_name");
 
-                        User user = new User(firstName, lastName, email, password);
+                        User user = new User(firstName, lastName, email, password, roleName);
                         userList.add(user);
+                        System.out.println(user);
                     }
                 }
             }

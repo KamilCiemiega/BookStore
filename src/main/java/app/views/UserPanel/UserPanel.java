@@ -14,11 +14,10 @@ import com.vaadin.flow.router.Route;
 public class UserPanel extends AppLayout implements ViewConfigurator {
     private SideNavigation sideNavigation;
     private final VerticalLayout contentContainer = new VerticalLayout();
-    private final AccountSettingsService accountSettingsService;
+
     public UserPanel(AccountSettingsService accountSettingsService) {
         DrawerToggle toggle = new DrawerToggle();
-        this.accountSettingsService = accountSettingsService;
-        sideNavigation = new SideNavigation(this, accountSettingsService);
+        sideNavigation = new SideNavigation();
         contentContainer.addClassName("contentContainer");
         AccountSettings accountSettings = new AccountSettings(accountSettingsService);
         contentContainer.add(accountSettings);
@@ -32,12 +31,5 @@ public class UserPanel extends AppLayout implements ViewConfigurator {
         setContent(contentContainer);
 
 
-    }
-
-
-
-    public void changeView(Component component) {
-        contentContainer.removeAll();
-        contentContainer.add(component);
     }
 }

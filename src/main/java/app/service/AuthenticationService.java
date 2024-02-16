@@ -81,7 +81,6 @@ public class AuthenticationService {
                                 logger.info("Session expired for user with Email: {}", email);
                             }
                         } else {
-                            Notification.show("Authentication failed. Incorrect email or password.");
                             logger.warn("Authentication failed for user with email: {}. Incorrect password.", email);
                         }
                     } else {
