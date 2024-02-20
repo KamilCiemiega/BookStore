@@ -77,4 +77,25 @@ public class UsersService {
             logger.error("Can't connect to the Database", e);
         }
     }
+    public void insertNewUser(String firstName, String lastName, String password, String emailAddress, int roleId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "INSERT INTO users (first_name, last_name, password, email_address, role_id) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, firstName);
+                preparedStatement.setString(2, lastName);
+                preparedStatement.setString(3, password);
+                preparedStatement.setString(4, emailAddress);
+                preparedStatement.setInt(5, roleId);
+
+                int rowsInserted = preparedStatement.executeUpdate();
+                if (rowsInserted > 0) {
+                    logger.info("A new user was inserted successfully!");
+                }
+            } catch (SQLException e) {
+                logger.error("Failed to execute SQL query", e);
+            }
+        } catch (SQLException e) {
+            logger.error("Can't connect to the Database", e);
+        }
+    }
 }
