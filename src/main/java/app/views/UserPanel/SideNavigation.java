@@ -67,8 +67,6 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         Button accountSettingsButton = createNavigationButton("accountSettings", AccountSettings.class, VaadinIcon.GROUP);
         accountSettingsLink.add(accountSettingsButton);
 
-
-
         sideNavContainer.add(
                 messageContainer,
                 inboxButton,

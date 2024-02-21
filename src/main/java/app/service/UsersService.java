@@ -77,6 +77,25 @@ public class UsersService {
             logger.error("Can't connect to the Database", e);
         }
     }
+    public void deleteUser(Integer userId) {
+        try (Connection connection = dataSource.getConnection()) {
+            String sql = "DELETE FROM users WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, userId);
+
+                int rowsAffected = preparedStatement.executeUpdate();
+                if (rowsAffected > 0) {
+                    logger.info("Deleted user with ID: {}", userId);
+                } else {
+                    logger.error("Can't delete user from database with ID: {}", userId);
+                }
+            } catch (SQLException e) {
+                logger.error("Failed to execute SQL query", e);
+            }
+        } catch (SQLException e) {
+            logger.error("Can't connect to the Database", e);
+        }
+    }
     public void insertNewUser(String firstName, String lastName, String password, String emailAddress, int roleId) {
         try (Connection connection = dataSource.getConnection()) {
             String sql = "INSERT INTO users (first_name, last_name, password, email_address, role_id) VALUES (?, ?, ?, ?, ?)";

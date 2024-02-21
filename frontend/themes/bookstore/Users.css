@@ -5,7 +5,7 @@ vaadin-text-field{
 .addNewUser{
     color: black;
 }
-.button, .saveButton {
+.editAndSaveButton, .emptyFormButton, .deleteButton {
     color: black;
     margin-left: 10px;
 }
@@ -16,11 +16,11 @@ vaadin-text-field{
 }
 .userContainer{
 background: #7699b3;
-    height: 45%;
     width: 75%;
     border-radius: 14px;
     display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
