@@ -23,12 +23,12 @@ public class BookService {
     }
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT id, book_name, code, price, last_update FROM books";
+        String sql = "SELECT book_id, book_name, code, price, last_update FROM books";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("book_id");
                 String bookName = resultSet.getString("book_name");
                 String code = resultSet.getString("code");
                 BigDecimal price = resultSet.getBigDecimal("price");

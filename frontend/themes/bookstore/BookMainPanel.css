@@ -1,0 +1,32 @@
+.BookMainPanel{
+    height:100%;
+    padding: 0;
+}
+vaadin-split-layout {
+    width:100%;
+    height:100%;
+}
+vaadin-grid{
+    height: 100%;
+}
+
+vaadin-grid::part(header-cell){
+    background:#565656;
+    color: white;
+}
+vaadin-grid::part(body-cell){
+    border: solid 0.2px #c9c9c9;
+}
+
+vaadin-grid::part(selected-row){
+    background:#565656;
+}
+vaadin-grid::part(cell-content-checkbox){
+    background:#565656;
+}
+vaadin-grid::part(row):hover{
+    background:#565656;
+}
+
+
+

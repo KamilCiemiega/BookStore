@@ -33,7 +33,9 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
 
     @Override
     public void configureView() {
-        ViewConfigurator.super.configureView();
+        setSizeFull();
+        setAlignItems(Alignment.CENTER);
+        setJustifyContentMode(JustifyContentMode.CENTER);
         addClassName("LogInView");
     }
 

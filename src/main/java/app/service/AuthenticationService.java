@@ -54,7 +54,7 @@ public class AuthenticationService {
     }
     public boolean authenticateUser(String email, String password) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT id, first_name, last_name, password, email_address FROM users WHERE email_address = ?";
+            String sql = "SELECT user_id, first_name, last_name, password, email_address FROM users WHERE email_address = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -63,7 +63,7 @@ public class AuthenticationService {
                         if (password.equals(storedPassword)) {
                             String firstName = resultSet.getString("first_name");
                             String lastName = resultSet.getString("last_name");
-                            Integer userID = resultSet.getInt("id");
+                            Integer userID = resultSet.getInt("user_id");
                             try {
                                 VaadinRequest currentRequest = VaadinRequest.getCurrent();
                                 VaadinSession vaadinSession = currentRequest.getService().findVaadinSession(currentRequest);
@@ -96,12 +96,12 @@ public class AuthenticationService {
     }
     public Long getUserIdByEmail(String email) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "SELECT id FROM users WHERE email_address = ?";
+            String sql = "SELECT user_id FROM users WHERE email_address = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, email);
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
-                        return resultSet.getLong("id");
+                        return resultSet.getLong("user_id");
                     }
                 }
             }

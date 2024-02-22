@@ -100,21 +100,21 @@ public class AccountSettingsService {
         }
     }
 
-    public void updateUserData(String name, String surname, String email, Integer id) {
+    public void updateUserData(String name, String surname, String email, Integer user_id) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "UPDATE users SET first_name = ?, last_name = ?, email_address = ? WHERE id = ?";
+            String sql = "UPDATE users SET first_name = ?, last_name = ?, email_address = ? WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, surname);
                 preparedStatement.setString(3, email);
-                preparedStatement.setInt(4, id);
+                preparedStatement.setInt(4, user_id);
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    logger.info("Updated data in the database for ID: {}", id);
+                    logger.info("Updated data in the database for ID: {}", user_id);
                 } else {
-                    logger.error("No data found to update in the database for ID: {}", id);
+                    logger.error("No data found to update in the database for ID: {}", user_id);
                 }
             } catch (SQLException e) {
                 logger.error("Failed to execute SQL query", e);
@@ -123,20 +123,20 @@ public class AccountSettingsService {
             logger.error("Can't connect to the Database", e);
         }
     }
-    public void updateUserPassword(String password, Integer id) {
+    public void updateUserPassword(String password, Integer userId) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "UPDATE users SET password = ? WHERE id = ?";
+            String sql = "UPDATE users SET password = ? WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                System.out.println(password + id);
+
                 preparedStatement.setString(1, password);
-                preparedStatement.setInt(2, id);
+                preparedStatement.setInt(2, userId);
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    logger.info("Updated password in the database for ID: {}", id);
+                    logger.info("Updated password in the database for ID: {}", userId);
                 } else {
-                    logger.error("No data found to update in the database for ID: {}", id);
+                    logger.error("No data found to update in the database for ID: {}", userId);
                 }
             } catch (SQLException e) {
                 logger.error("Failed to execute SQL query", e);

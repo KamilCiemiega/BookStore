@@ -12,3 +12,7 @@
     padding: 0;
     spacing: 0;
 }
+.userPanelTitle{
+    font-size: var(--lumo-font-size-l);
+    margin:0;
+}

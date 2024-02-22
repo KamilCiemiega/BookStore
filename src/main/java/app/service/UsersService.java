@@ -28,12 +28,12 @@ public class UsersService {
         System.out.println(userList);
 
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "select u.id, u.first_name,u.last_name, u.password, u.email_address, r.role_name from users u\n" +
-                    "join roles r on r.id = u.role_id";
+            String sql = "select u.user_id, u.first_name,u.last_name, u.password, u.email_address, r.role_name from users u\n" +
+                    "join roles r on r.role_id = u.role_id";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     while (resultSet.next()) {
-                        Integer userId = resultSet.getInt("id");
+                        Integer userId = resultSet.getInt("user_id");
                         String firstName = resultSet.getString("first_name");
                         String lastName = resultSet.getString("last_name");
                         String email = resultSet.getString("email_address");
@@ -52,23 +52,23 @@ public class UsersService {
         return userList;
     }
 
-    public void updateUserData(String name, String surname, String email, String password, Integer roleId, Integer id) {
+    public void updateUserData(String name, String surname, String email, String password, Integer roleId, Integer userId) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "UPDATE users SET first_name = ?, last_name = ?, password = ?, email_address = ?, role_id = ?  WHERE id = ?";
+            String sql = "UPDATE users SET first_name = ?, last_name = ?, password = ?, email_address = ?, role_id = ?  WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, surname);
                 preparedStatement.setString(3, password);
                 preparedStatement.setString(4, email);
                 preparedStatement.setInt(5, roleId);
-                preparedStatement.setInt(6, id);
+                preparedStatement.setInt(6, userId);
 
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    logger.info("Updated data in the database for ID: {}", id);
+                    logger.info("Updated data in the database for ID: {}", userId);
                 } else {
-                    logger.error("No data found to update in the database for ID: {}", id);
+                    logger.error("No data found to update in the database for ID: {}", userId);
                 }
             } catch (SQLException e) {
                 logger.error("Failed to execute SQL query", e);
@@ -79,7 +79,7 @@ public class UsersService {
     }
     public void deleteUser(Integer userId) {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "DELETE FROM users WHERE id = ?";
+            String sql = "DELETE FROM users WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setInt(1, userId);
 
