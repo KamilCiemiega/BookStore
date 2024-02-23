@@ -4,6 +4,7 @@ import app.service.AccountSettingsService;
 import app.service.UserContext;
 import app.service.UsersService;
 import app.views.UserPanel.AccountSettings.AccountSettings;
+import app.views.UserPanel.Books.BookMainPanel;
 import app.views.UserPanel.Users.Users;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.Component;
@@ -40,24 +41,24 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
     private VerticalLayout sideNavContainer() {
         VerticalLayout sideNavContainer = new VerticalLayout();
         sideNavContainer.addClassName("sideNav");
-        Icon MessageArrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
-        MessageArrowDownIcon.setClassName("arrowDownIcon");
-        Icon AccountArrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
-        AccountArrowDownIcon.setClassName("arrowDownIcon");
 
-        HorizontalLayout messageContainer = new HorizontalLayout();
-        H1 messageLabel = new H1("Message");
-        messageContainer.add(messageLabel, MessageArrowDownIcon);
+        Icon arrowDownIconAccount = createArrowDownIcon();
+        Icon arrowDownIconBooks = createArrowDownIcon();
 
 
-        Button inboxButton = createButton("Inbox", VaadinIcon.INBOX);
-        Button paperplaneButton = createButton("Paperplane", VaadinIcon.PAPERPLANE);
-        Button trashButton = createButton("Trash", VaadinIcon.TRASH);
+        HorizontalLayout booksContainer = new HorizontalLayout();
+        H1 booksLabel = new H1("Books");
+
+        booksContainer.add(booksLabel, arrowDownIconBooks);
+
+        RouterLink bookListLink = new RouterLink();
+        Button bookListButton = createNavigationButton("Books list", BookMainPanel.class, VaadinIcon.BOOK);
+        bookListLink.add(bookListButton);
 
         HorizontalLayout accountContainer = new HorizontalLayout();
         H1 accountLabel = new H1("Account");
 
-        accountContainer.add(accountLabel, AccountArrowDownIcon);
+        accountContainer.add(accountLabel, arrowDownIconAccount);
 
         RouterLink usersLink = new RouterLink();
         Button usersButton = createNavigationButton("Users", Users.class, VaadinIcon.GROUP);
@@ -68,10 +69,8 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
         accountSettingsLink.add(accountSettingsButton);
 
         sideNavContainer.add(
-                messageContainer,
-                inboxButton,
-                paperplaneButton,
-                trashButton,
+                booksContainer,
+                bookListLink,
                 accountContainer,
                 usersLink,
                 accountSettingsLink
@@ -79,24 +78,23 @@ public class SideNavigation extends HorizontalLayout implements ViewConfigurator
 
         return sideNavContainer;
     }
-
+    private Icon createArrowDownIcon() {
+        Icon arrowDownIcon = VaadinIcon.CHEVRON_DOWN.create();
+        arrowDownIcon.setClassName("arrowDownIcon");
+        return arrowDownIcon;
+    }
     private Button createNavigationButton(String label, Class<? extends Component> targetClass, VaadinIcon icon) {
         Button button = new Button(label, icon.create());
         button.setClassName("sideNavButton");
         button.addClickListener(e -> getUI().ifPresent(ui -> ui.navigate(targetClass)));
         return button;
     }
-    private Button createButton(String label, VaadinIcon icon) {
-        Button button = new Button(label, icon.create());
-        button.setClassName("sideNavButton");
-        return button;
-    }
+
     private void logInUserData() {
         String firstName = UserContext.getFirstName();
         String lastName = UserContext.getLastName();
         String email = UserContext.getEmail();
         String sessionId = UserContext.getSesionId();
-
 
         Map<String, String> userAttributes = new HashMap<>();
         if (sessionId != null && firstName != null && lastName != null && email != null) {

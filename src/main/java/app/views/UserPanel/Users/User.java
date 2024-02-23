@@ -1,4 +1,4 @@
-package app.Model;
+package app.views.UserPanel.Users;
 
 public class User {
     private Integer userId;

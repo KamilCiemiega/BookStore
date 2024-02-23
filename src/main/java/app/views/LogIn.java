@@ -68,7 +68,7 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
 
         if (loginSuccessful) {
             Notification.show("Login successful", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            UI.getCurrent().navigate("UserPanel");
+            UI.getCurrent().navigate("BookMainPanel");
             logger.info("Authentication successful for user with email: {}", email);
         } else {
             Notification.show("Login failed. Please check your credentials.", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_WARNING);

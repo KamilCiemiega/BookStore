@@ -1,6 +1,5 @@
 package app.views.UserPanel.Users;
 
-import app.Model.User;
 import app.service.UsersService;
 import app.views.UserPanel.UserPanel;
 import com.vaadin.flow.component.combobox.ComboBox;
