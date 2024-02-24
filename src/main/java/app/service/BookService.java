@@ -33,6 +33,7 @@ public class BookService {
                 String code = resultSet.getString("code");
                 BigDecimal price = resultSet.getBigDecimal("price");
                 Timestamp lastUpdate = resultSet.getTimestamp("last_update");
+
                 books.add(new Book(id, bookName, code, price, lastUpdate));
             }
         } catch (SQLException e) {
@@ -40,4 +41,52 @@ public class BookService {
         }
         return books;
     }
+    public boolean bookExistsByCode(String code) {
+        String sql = "SELECT COUNT(*) FROM books WHERE code = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, code);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Failed to check if book exists by code");
+        }
+        return false;
+    }
+
+    public boolean bookExistsByName(String name) {
+        String sql = "SELECT COUNT(*) FROM books WHERE book_name = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Failed to check if book exists by name");
+        }
+        return false;
+    }
+
+    public void insertBook(String bookName, Integer code, BigDecimal price) {
+        String sql = "INSERT INTO books (book_name, code, price) VALUES (?, ?, ?)";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, bookName);
+            preparedStatement.setInt(2, code);
+            preparedStatement.setBigDecimal(3, price);
+            int rowsAffected = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("Failed to insert book into database");
+        }
+    }
+
+
 }

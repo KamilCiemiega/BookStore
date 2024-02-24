@@ -1,20 +1,36 @@
 package app.views.UserPanel.Books.BookCreator;
 
+import app.service.BookService;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-import java.awt.*;
+import java.math.BigDecimal;
+import java.util.Map;
 
 
 @Route(value = "BookCreator", layout = UserPanel.class)
 public class BookCreator extends VerticalLayout implements ViewConfigurator {
-    public BookCreator() {
+    private TextField codeField;
+    private TextField nameField;
+    private TextField assortmentField;
+    private TextField priceField;
+    private ComboBox<String> discountComboBox;
+    private final BookService bookService;
+    private ValidateAndAddBook validateAndAddBook;
+    public BookCreator(BookService bookService) {
+        this.bookService = bookService;
+        validateAndAddBook = new ValidateAndAddBook(bookService);
         configureView();
         add(bookCreatorContainer());
     }
@@ -28,38 +44,91 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     private VerticalLayout bookCreatorContainer() {
         VerticalLayout container = new VerticalLayout();
 
-        Button save = new Button();
+        HorizontalLayout buttonContainer = new HorizontalLayout();
+        Button backButton = new Button("Back");
+        backButton.addClassName("backButton");
+        backButton.addClickListener(e -> UI.getCurrent().navigate("BookMainPanel"));
+
+        buttonContainer.add(backButton, savaAndClose());
 
         TabSheet tabSheet = new TabSheet();
         tabSheet.add("Book Parameters", bookParameters());
         tabSheet.add("Book Price", bookPrice());
 
-        container.add(tabSheet);
+
+        container.add(buttonContainer, tabSheet);
         return container;
+    }
+    private Button savaAndClose() {
+        Button saveAndClose = new Button("Save and Close");
+        saveAndClose.addClassName("saveAndClose");
+
+        saveAndClose.addClickListener(e -> {
+            validateAndAddBook.validateBookData(
+                    codeField.getValue(),
+                    nameField.getValue(),
+                    assortmentField.getValue(),
+                    new BigDecimal(priceField.getValue()),
+                    discountComboBox.getValue()
+            );
+            displayErrorMessage(validateAndAddBook.getErrors());
+            UI.getCurrent().navigate("BookMainPanel");
+        });
+        return saveAndClose;
+    }
+
+    private Notification createNotification(String message, boolean isSuccess) {
+        Notification notification = new Notification(message, 5000, Notification.Position.TOP_CENTER);
+        if (isSuccess) {
+            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        } else {
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+        return notification;
+    }
+    private void displayErrorMessage(Map<String, String> errors) {
+        for (String fieldName : errors.keySet()) {
+            String errorMessage = errors.get(fieldName);
+            switch (fieldName) {
+                case "code":
+                    codeField.setInvalid(true);
+                    codeField.setErrorMessage(errorMessage);
+                    break;
+                case "name":
+                    nameField.setInvalid(true);
+                    nameField.setErrorMessage(errorMessage);
+                    break;
+                case "codeDuplicate":
+                    codeField.setInvalid(true);
+                    codeField.setErrorMessage(errorMessage);
+                    break;
+                case "nameDuplicate":
+                    nameField.setInvalid(true);
+                    nameField.setErrorMessage(errorMessage);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();
 
-        TextField code = new TextField();
-        code.setRequired(true);
-        bookFormLayout.addFormItem(code, "Code");
+        codeField = new TextField();
+        codeField.setRequired(true);
+        bookFormLayout.addFormItem(codeField, "Code");
 
-        TextField hiddenCode = new TextField();
-        hiddenCode.setVisible(false);
-        bookFormLayout.addFormItem(hiddenCode, "");
+        bookFormLayout.addFormItem(createHiddenTextField(), "");
 
-        TextField name = new TextField();
-        name.setRequired(true);
-        bookFormLayout.addFormItem(name, "Name");
+        nameField = new TextField();
+        nameField.setRequired(true);
+        bookFormLayout.addFormItem(nameField, "Name");
 
-        TextField hiddenName = new TextField();
-        hiddenName.setVisible(false);
-        bookFormLayout.addFormItem(hiddenName, "");
+        bookFormLayout.addFormItem(createHiddenTextField(), "");
 
-
-        TextField assortment = new TextField();
-        bookFormLayout.addFormItem(assortment, "Assortment");
+        assortmentField = new TextField();
+        bookFormLayout.addFormItem(assortmentField, "Assortment");
 
         return bookFormLayout;
     }
@@ -68,18 +137,22 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         FormLayout priceFormLayout = new FormLayout();
         priceFormLayout.addClassName("priceFormLayout");
 
-        TextField price = new TextField();
-        price.addClassName("priceTextField");
-        priceFormLayout.addFormItem(price, "Price");
+        priceField = new TextField();
+        priceField.addClassName("priceTextField");
+        priceFormLayout.addFormItem(priceField, "Price");
 
-        TextField hiddenPrice = new TextField();
-        hiddenPrice.setVisible(false);
-        priceFormLayout.addFormItem(hiddenPrice, "");
+        priceFormLayout.addFormItem(createHiddenTextField(), "");
 
-        ComboBox<String> discountComboBox = new ComboBox<>();
+        discountComboBox = new ComboBox<>();
         discountComboBox.setItems("amount discount", "percentage discount");
         priceFormLayout.addFormItem(discountComboBox, "Choose discount");
 
         return priceFormLayout;
+    }
+
+    TextField createHiddenTextField(){
+        TextField hiddenTextField = new TextField();
+        hiddenTextField.setVisible(false);
+        return hiddenTextField;
     }
 }

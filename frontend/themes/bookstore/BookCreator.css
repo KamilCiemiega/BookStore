@@ -4,3 +4,8 @@
 .priceFormLayout{
     width: 100%;
 }
+.saveAndClose, .backButton{
+    background: #7699b3;
+        color: white;
+        font-weight: 400;
+}
