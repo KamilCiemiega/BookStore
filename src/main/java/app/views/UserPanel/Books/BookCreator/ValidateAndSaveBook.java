@@ -6,18 +6,18 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ValidateAndAddBook {
-    private final BookService bookService;
-    private final Map<String, String> errors;
-    private boolean dataBaseStatus;
-    public ValidateAndAddBook(BookService bookService) {
+public abstract class ValidateAndSaveBook {
+    protected final BookService bookService;
+    protected final Map<String, String> errors;
+    protected boolean dataBaseStatus;
+    public ValidateAndSaveBook(BookService bookService) {
         this.bookService = bookService;
         this.errors = new HashMap<>();
 
     }
 
     public void validateBookData(String codeValue, String nameValue, String assortmentValue,
-                                 String priceValue, String discountValue ){
+                                 String priceValue){
         BigDecimal priceBigDecimal = validatePrice(priceValue);
         if(codeValue.isEmpty()){
             errors.put("code", "Code field cannot be empty");
@@ -38,17 +38,9 @@ public class ValidateAndAddBook {
         if(bookService.bookExistsByName(nameValue)){
             errors.put("nameDuplicate", "Book with that name already exist");
         }
-        if(errors.isEmpty()){
-            try {
-                sendDataToDatabase(codeValue, nameValue,priceBigDecimal);
-                this.dataBaseStatus = true;
-            }catch (Exception e){
-                errors.put("databaseError", "Error while trying to add data to database");
-                this.dataBaseStatus = false;
-            }
-
-        }
     }
+    abstract protected void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue);
+
     public void clearErrors(){
         errors.clear();
     }
@@ -58,11 +50,6 @@ public class ValidateAndAddBook {
             } catch (NumberFormatException e) {
                 return null;
             }
-    }
-
-    private void sendDataToDatabase(String codeValue, String nameValue,
-                                    BigDecimal priceValue){
-            bookService.insertBook(nameValue,Integer.parseInt(codeValue), priceValue);
     }
 
     public Map<String, String> getErrors() {

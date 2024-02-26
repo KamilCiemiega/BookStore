@@ -5,7 +5,6 @@ import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
@@ -15,28 +14,20 @@ import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 
 @Route(value = "BookCreator", layout = UserPanel.class)
 public class BookCreator extends VerticalLayout implements ViewConfigurator {
-    private TextField codeField;
-    private TextField nameField;
+    protected TextField codeField;
+    protected TextField nameField;
+    protected TextField priceField;
     private TextField assortmentField;
-    private TextField priceField;
-    private ComboBox<String> discountComboBox;
-    private final BookService bookService;
-    private final ValidateAndAddBook validateAndAddBook;
+    private final AddBook addBook;
     public BookCreator(BookService bookService) {
-        this.bookService = bookService;
-        validateAndAddBook = new ValidateAndAddBook(bookService);
+        addBook = new AddBook(bookService);
         configureView();
         add(bookCreatorContainer());
-
-//        codeField.addValueChangeListener(event -> clearErrorMessages());
-//        nameField.addValueChangeListener(event -> clearErrorMessages());
-//        priceField.addValueChangeListener(event -> validateAndAddBook.clearErrors("priceNumber"));
     }
 
     @Override
@@ -68,16 +59,15 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         saveAndClose.addClassName("saveAndClose");
 
         saveAndClose.addClickListener(e -> {
-            validateAndAddBook.validateBookData(
+            addBook.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
-                    priceField.getValue(),
-                    discountComboBox.getValue()
+                    priceField.getValue()
             );
-            displayErrorMessage(validateAndAddBook.getErrors());
-            if (validateAndAddBook.getDataBaseStatus()){
-                System.out.println(validateAndAddBook.getDataBaseStatus());
+            displayErrorMessage(addBook.getErrors());
+            if (addBook.getDataBaseStatus()){
+
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.open();
@@ -125,9 +115,9 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         clearErrorMessages();
     }
     private void clearErrorMessages() {
-        validateAndAddBook.clearErrors();
+        addBook.clearErrors();
     }
-    private FormLayout bookParameters() {
+    protected FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();
 
         codeField = new TextField();
@@ -155,12 +145,6 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         priceField = new TextField();
         priceField.addClassName("priceTextField");
         priceFormLayout.addFormItem(priceField, "Price");
-
-        priceFormLayout.addFormItem(createHiddenTextField(), "");
-
-        discountComboBox = new ComboBox<>();
-        discountComboBox.setItems("amount discount", "percentage discount");
-        priceFormLayout.addFormItem(discountComboBox, "Choose discount");
 
         return priceFormLayout;
     }

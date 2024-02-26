@@ -2,6 +2,7 @@ package app.views.UserPanel.Books;
 
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.BookCreator;
+import app.views.UserPanel.Books.BookCreator.EditBook;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
@@ -15,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Route(value = "BookMainPanel", layout = UserPanel.class)
@@ -60,9 +62,18 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         Grid<Book> grid = new Grid<>(Book.class, false);
         grid.addClassName("allBooksGrid");
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        List<Object[]> bookDataList = new ArrayList<>();
+
         grid.addItemClickListener(e -> {
-                System.out.println(e.getItem());
-//                UI.getCurrent().navigate("BookCreator");
+            bookDataList.add(new Object[] {
+                    e.getItem().getBookName(),
+                    e.getItem().getCode(),
+                    e.getItem().getPrice(),
+                    e.getItem().getLastUpdate()
+            });
+            System.out.println(bookDataList.get(0)[0].toString());
+            new EditBook(bookService, bookDataList);
+            UI.getCurrent().navigate("EditBook");
         });
 
         grid.addColumn(Book::getBookName).setHeader("Name").setSortable(true).setResizable(true);
@@ -80,7 +91,6 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
 
         return grid;
     }
-
 
 
 }
