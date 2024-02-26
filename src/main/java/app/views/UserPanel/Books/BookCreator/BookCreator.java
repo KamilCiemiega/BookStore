@@ -27,12 +27,16 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     private TextField priceField;
     private ComboBox<String> discountComboBox;
     private final BookService bookService;
-    private ValidateAndAddBook validateAndAddBook;
+    private final ValidateAndAddBook validateAndAddBook;
     public BookCreator(BookService bookService) {
         this.bookService = bookService;
         validateAndAddBook = new ValidateAndAddBook(bookService);
         configureView();
         add(bookCreatorContainer());
+
+//        codeField.addValueChangeListener(event -> clearErrorMessages());
+//        nameField.addValueChangeListener(event -> clearErrorMessages());
+//        priceField.addValueChangeListener(event -> validateAndAddBook.clearErrors("priceNumber"));
     }
 
     @Override
@@ -68,25 +72,25 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
-                    new BigDecimal(priceField.getValue()),
+                    priceField.getValue(),
                     discountComboBox.getValue()
             );
             displayErrorMessage(validateAndAddBook.getErrors());
-            UI.getCurrent().navigate("BookMainPanel");
+            if (validateAndAddBook.getDataBaseStatus()){
+                System.out.println(validateAndAddBook.getDataBaseStatus());
+                Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
+                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                notification.open();
+
+                UI.getCurrent().navigate("BookMainPanel");
+            }
+
         });
         return saveAndClose;
     }
 
-    private Notification createNotification(String message, boolean isSuccess) {
-        Notification notification = new Notification(message, 5000, Notification.Position.TOP_CENTER);
-        if (isSuccess) {
-            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        } else {
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-        }
-        return notification;
-    }
     private void displayErrorMessage(Map<String, String> errors) {
+
         for (String fieldName : errors.keySet()) {
             String errorMessage = errors.get(fieldName);
             switch (fieldName) {
@@ -97,6 +101,14 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                 case "name":
                     nameField.setInvalid(true);
                     nameField.setErrorMessage(errorMessage);
+                    break;
+                case "priceNumber":
+                    priceField.setInvalid(true);
+                    priceField.setErrorMessage(errorMessage);
+                    break;
+                case "pricePositiveNumber":
+                    priceField.setInvalid(true);
+                    priceField.setErrorMessage(errorMessage);
                     break;
                 case "codeDuplicate":
                     codeField.setInvalid(true);
@@ -110,8 +122,11 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     break;
             }
         }
+        clearErrorMessages();
     }
-
+    private void clearErrorMessages() {
+        validateAndAddBook.clearErrors();
+    }
     private FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();
 

@@ -17,12 +17,20 @@ public class ValidateAndAddBook {
     }
 
     public void validateBookData(String codeValue, String nameValue, String assortmentValue,
-                                 BigDecimal priceValue, String discountValue ){
+                                 String priceValue, String discountValue ){
+        BigDecimal priceBigDecimal = validatePrice(priceValue);
         if(codeValue.isEmpty()){
             errors.put("code", "Code field cannot be empty");
         }
         if(nameValue.isEmpty()){
             errors.put("name", "Book name field cannot be empty");
+        }
+        if(!priceValue.isEmpty()) {
+            if (priceBigDecimal == null) {
+                errors.put("priceNumber", "Price must be a number");
+            } else if (priceBigDecimal.compareTo(BigDecimal.ZERO) < 0) {
+                errors.put("pricePositiveNumber", "Price must be a positive number");
+            }
         }
         if(bookService.bookExistsByCode(codeValue)){
             errors.put("codeDuplicate", "Book with that code already exist");
@@ -32,7 +40,7 @@ public class ValidateAndAddBook {
         }
         if(errors.isEmpty()){
             try {
-                sendDataToDatabase(codeValue, nameValue,priceValue);
+                sendDataToDatabase(codeValue, nameValue,priceBigDecimal);
                 this.dataBaseStatus = true;
             }catch (Exception e){
                 errors.put("databaseError", "Error while trying to add data to database");
@@ -40,6 +48,16 @@ public class ValidateAndAddBook {
             }
 
         }
+    }
+    public void clearErrors(){
+        errors.clear();
+    }
+    public BigDecimal validatePrice(String priceValue) {
+            try {
+                return new BigDecimal(priceValue);
+            } catch (NumberFormatException e) {
+                return null;
+            }
     }
 
     private void sendDataToDatabase(String codeValue, String nameValue,

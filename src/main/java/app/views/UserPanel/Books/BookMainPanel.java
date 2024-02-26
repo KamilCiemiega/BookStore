@@ -35,6 +35,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private SplitLayout splitLayout(){
         H2 h2 = new H2("Test header");
         SplitLayout splitLayout = new SplitLayout();
+        splitLayout.addClassName("splitLayout");
         splitLayout.addToPrimary(h2);
         splitLayout.addToSecondary(header(), allBooksTable());
         splitLayout.setSplitterPosition(20);
@@ -57,7 +58,12 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
 
     private Grid<Book> allBooksTable(){
         Grid<Book> grid = new Grid<>(Book.class, false);
+        grid.addClassName("allBooksGrid");
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
+        grid.addItemClickListener(e -> {
+                System.out.println(e.getItem());
+//                UI.getCurrent().navigate("BookCreator");
+        });
 
         grid.addColumn(Book::getBookName).setHeader("Name").setSortable(true).setResizable(true);
         grid.addColumn(Book::getCode).setHeader("Code").setSortable(true)

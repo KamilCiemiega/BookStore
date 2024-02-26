@@ -2,6 +2,9 @@
     height:100%;
     padding: 0;
 }
+.splitLayout{
+    overflow-y: hidden;
+}
 vaadin-split-layout {
     width:100%;
     height:100%;
@@ -31,6 +34,11 @@ vaadin-grid::part(row):hover{
     background: #565656;
     color: white;
 }
-
+.allBooksGrid{
+   font-size: 12.5px;
+}
+vaadin-grid::part(cell){
+    cursor: pointer;
+}
 
 
