@@ -2,7 +2,7 @@ package app.views.UserPanel.Books;
 
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.BookCreator;
-import app.views.UserPanel.Books.BookCreator.EditBook;
+import app.views.UserPanel.Books.BookCreator.SelectedBook;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
@@ -16,7 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Route(value = "BookMainPanel", layout = UserPanel.class)
@@ -24,6 +24,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final BookService bookService;
     public BookMainPanel(BookService bookService) {
         this.bookService = bookService;
+
         configureView();
         add(splitLayout());
     }
@@ -62,17 +63,14 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         Grid<Book> grid = new Grid<>(Book.class, false);
         grid.addClassName("allBooksGrid");
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
-        List<Object[]> bookDataList = new ArrayList<>();
 
         grid.addItemClickListener(e -> {
-            bookDataList.add(new Object[] {
-                    e.getItem().getBookName(),
-                    e.getItem().getCode(),
-                    e.getItem().getPrice(),
-                    e.getItem().getLastUpdate()
-            });
-            System.out.println(bookDataList.get(0)[0].toString());
-            new EditBook(bookService, bookDataList);
+            String bookName = e.getItem().getBookName();
+            String code = e.getItem().getCode();
+            BigDecimal price = e.getItem().getPrice();
+
+            SelectedBook selectedBook = new SelectedBook(bookName, code, price);
+            UI.getCurrent().getSession().setAttribute("selectedBook", selectedBook);
             UI.getCurrent().navigate("EditBook");
         });
 

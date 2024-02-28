@@ -6,10 +6,10 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class ValidateAndSaveBook {
-    protected final BookService bookService;
-    protected final Map<String, String> errors;
-    protected boolean dataBaseStatus;
+public class ValidateAndSaveBook {
+    private final BookService bookService;
+    private final Map<String, String> errors;
+    private boolean dataBaseStatus = false;
     public ValidateAndSaveBook(BookService bookService) {
         this.bookService = bookService;
         this.errors = new HashMap<>();
@@ -38,8 +38,15 @@ public abstract class ValidateAndSaveBook {
         if(bookService.bookExistsByName(nameValue)){
             errors.put("nameDuplicate", "Book with that name already exist");
         }
+        if(errors.isEmpty()){
+            dataBaseStatus = true;
+            sendDataToDatabase(codeValue, nameValue, priceBigDecimal);
+        }
+
     }
-    abstract protected void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue);
+    private void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue){
+        bookService.insertBook(nameValue,codeValue, priceValue);
+    }
 
     public void clearErrors(){
         errors.clear();

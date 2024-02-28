@@ -75,16 +75,20 @@ public class BookService {
         return false;
     }
 
-    public void insertBook(String bookName, Integer code, BigDecimal price) {
+    public void insertBook(String bookName, String code, BigDecimal price) {
         String sql = "INSERT INTO books (book_name, code, price) VALUES (?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, bookName);
-            preparedStatement.setInt(2, code);
+            preparedStatement.setString(2, code);
             preparedStatement.setBigDecimal(3, price);
+
             int rowsAffected = preparedStatement.executeUpdate();
+
+            logger.info("New book added to the database. Rows affected: {}", rowsAffected);
+            logger.info("New book added to the database");
         } catch (SQLException e) {
-            logger.error("Failed to insert book into database");
+            logger.error("Failed to insert book into database", e);
         }
     }
 

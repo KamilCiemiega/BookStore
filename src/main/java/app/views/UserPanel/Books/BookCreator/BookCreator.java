@@ -13,7 +13,6 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-
 import java.util.Map;
 
 
@@ -23,9 +22,11 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField nameField;
     protected TextField priceField;
     private TextField assortmentField;
-    private final AddBook addBook;
+
+    private final ValidateAndSaveBook validateAndSaveBook;
+
     public BookCreator(BookService bookService) {
-        addBook = new AddBook(bookService);
+        validateAndSaveBook = new ValidateAndSaveBook(bookService);
         configureView();
         add(bookCreatorContainer());
     }
@@ -54,20 +55,19 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         container.add(buttonContainer, tabSheet);
         return container;
     }
-    private Button savaAndClose() {
+    protected Button savaAndClose() {
         Button saveAndClose = new Button("Save and Close");
         saveAndClose.addClassName("saveAndClose");
 
         saveAndClose.addClickListener(e -> {
-            addBook.validateBookData(
+            validateAndSaveBook.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
                     priceField.getValue()
             );
-            displayErrorMessage(addBook.getErrors());
-            if (addBook.getDataBaseStatus()){
-
+            displayErrorMessage(validateAndSaveBook.getErrors());
+            if (validateAndSaveBook.getDataBaseStatus()){
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.open();
@@ -79,7 +79,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         return saveAndClose;
     }
 
-    private void displayErrorMessage(Map<String, String> errors) {
+    protected void displayErrorMessage(Map<String, String> errors) {
 
         for (String fieldName : errors.keySet()) {
             String errorMessage = errors.get(fieldName);
@@ -115,7 +115,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         clearErrorMessages();
     }
     private void clearErrorMessages() {
-        addBook.clearErrors();
+        validateAndSaveBook.clearErrors();
     }
     protected FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();
@@ -143,6 +143,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         priceFormLayout.addClassName("priceFormLayout");
 
         priceField = new TextField();
+        priceField.setValue("0");
         priceField.addClassName("priceTextField");
         priceFormLayout.addFormItem(priceField, "Price");
 
