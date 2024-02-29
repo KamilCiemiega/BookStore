@@ -1,4 +1,4 @@
-package app.views.UserPanel.Books.BookCreator;
+package app.views.UserPanel.Books.BookCreator.AddBook;
 
 import app.service.BookService;
 import app.views.UserPanel.UserPanel;
@@ -21,12 +21,12 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField codeField;
     protected TextField nameField;
     protected TextField priceField;
-    private TextField assortmentField;
+    protected TextField assortmentField;
 
-    private final ValidateAndSaveBook validateAndSaveBook;
+    private final SendBookToTheDatabase sendBookToTheDatabase;
 
     public BookCreator(BookService bookService) {
-        validateAndSaveBook = new ValidateAndSaveBook(bookService);
+        sendBookToTheDatabase = new SendBookToTheDatabase(bookService);
         configureView();
         add(bookCreatorContainer());
     }
@@ -60,14 +60,14 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         saveAndClose.addClassName("saveAndClose");
 
         saveAndClose.addClickListener(e -> {
-            validateAndSaveBook.validateBookData(
+            sendBookToTheDatabase.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
                     priceField.getValue()
             );
-            displayErrorMessage(validateAndSaveBook.getErrors());
-            if (validateAndSaveBook.getDataBaseStatus()){
+            displayErrorMessage(sendBookToTheDatabase.getErrors());
+            if (sendBookToTheDatabase.getDataBaseStatus()){
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.open();
@@ -114,8 +114,8 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         }
         clearErrorMessages();
     }
-    private void clearErrorMessages() {
-        validateAndSaveBook.clearErrors();
+    protected void clearErrorMessages() {
+        sendBookToTheDatabase.clearErrors();
     }
     protected FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();
@@ -143,7 +143,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         priceFormLayout.addClassName("priceFormLayout");
 
         priceField = new TextField();
-        priceField.setValue("0");
+        priceField.setValue("0.00");
         priceField.addClassName("priceTextField");
         priceFormLayout.addFormItem(priceField, "Price");
 

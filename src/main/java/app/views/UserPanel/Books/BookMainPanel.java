@@ -1,17 +1,15 @@
 package app.views.UserPanel.Books;
 
 import app.service.BookService;
-import app.views.UserPanel.Books.BookCreator.BookCreator;
-import app.views.UserPanel.Books.BookCreator.SelectedBook;
+import app.views.UserPanel.Books.BookCreator.AddBook.AddBookButton;
+import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
+
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.router.Route;
@@ -49,12 +47,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private VerticalLayout header(){
         VerticalLayout headerContainer = new VerticalLayout();
 
-        Button addButton = new Button(new Icon(VaadinIcon.PLUS));
-        addButton.addClickListener(event -> UI.getCurrent().navigate(BookCreator.class));
-        addButton.addClassName("addButton");
-        addButton.getIcon().addClassName("plusIcon");
-
-        headerContainer.add(addButton);
+        headerContainer.add(AddBookButton.addBookButton());
 
         return headerContainer;
     }
@@ -85,6 +78,8 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
 
         List<Book> books = bookService.getAllBooks();
+//        BookSearchHandler searchHandler = new BookSearchHandler(grid, books);
+//        searchHandler.addSearchFilter(searchField);
         grid.setItems(books);
 
         return grid;

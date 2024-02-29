@@ -37,7 +37,7 @@ public class BookService {
                 books.add(new Book(id, bookName, code, price, lastUpdate));
             }
         } catch (SQLException e) {
-            logger.error("Failed while trying to connect to the database");
+            logger.error("Failed while trying to connect to the database", e);
         }
         return books;
     }
@@ -53,7 +53,7 @@ public class BookService {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Failed to check if book exists by code");
+            logger.error("Failed to check if book exists by code",e);
         }
         return false;
     }
@@ -70,7 +70,7 @@ public class BookService {
                 }
             }
         } catch (SQLException e) {
-            logger.error("Failed to check if book exists by name");
+            logger.error("Failed to check if book exists by name", e);
         }
         return false;
     }

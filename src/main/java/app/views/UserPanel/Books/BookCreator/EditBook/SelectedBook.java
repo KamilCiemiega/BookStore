@@ -1,7 +1,6 @@
-package app.views.UserPanel.Books.BookCreator;
+package app.views.UserPanel.Books.BookCreator.EditBook;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class SelectedBook {
     private String bookName;

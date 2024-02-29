@@ -6,19 +6,16 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ValidateAndSaveBook {
-    private final BookService bookService;
-    private final Map<String, String> errors;
-    private boolean dataBaseStatus = false;
-    public ValidateAndSaveBook(BookService bookService) {
-        this.bookService = bookService;
+abstract public class ValidateBook {
+    public final Map<String, String> errors;
+    public BigDecimal priceBigDecimal;
+    public ValidateBook() {
         this.errors = new HashMap<>();
-
     }
 
     public void validateBookData(String codeValue, String nameValue, String assortmentValue,
                                  String priceValue){
-        BigDecimal priceBigDecimal = validatePrice(priceValue);
+        priceBigDecimal = validatePrice(priceValue);
         if(codeValue.isEmpty()){
             errors.put("code", "Code field cannot be empty");
         }
@@ -32,22 +29,8 @@ public class ValidateAndSaveBook {
                 errors.put("pricePositiveNumber", "Price must be a positive number");
             }
         }
-        if(bookService.bookExistsByCode(codeValue)){
-            errors.put("codeDuplicate", "Book with that code already exist");
-        }
-        if(bookService.bookExistsByName(nameValue)){
-            errors.put("nameDuplicate", "Book with that name already exist");
-        }
-        if(errors.isEmpty()){
-            dataBaseStatus = true;
-            sendDataToDatabase(codeValue, nameValue, priceBigDecimal);
-        }
 
     }
-    private void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue){
-        bookService.insertBook(nameValue,codeValue, priceValue);
-    }
-
     public void clearErrors(){
         errors.clear();
     }
@@ -63,7 +46,5 @@ public class ValidateAndSaveBook {
         return errors;
     }
 
-    public boolean getDataBaseStatus() {
-        return dataBaseStatus;
-    }
+
 }
