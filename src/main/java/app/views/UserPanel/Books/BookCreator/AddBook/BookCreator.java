@@ -65,6 +65,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     nameField.getValue(),
                     assortmentField.getValue(),
                     priceField.getValue()
+                    //testowy komentarz
             );
             displayErrorMessage(sendBookToTheDatabase.getErrors());
             if (sendBookToTheDatabase.getDataBaseStatus()){
