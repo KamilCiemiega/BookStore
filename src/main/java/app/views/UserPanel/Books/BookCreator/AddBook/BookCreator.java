@@ -65,7 +65,6 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     nameField.getValue(),
                     assortmentField.getValue(),
                     priceField.getValue()
-                    //testowy komentarz
             );
             displayErrorMessage(sendBookToTheDatabase.getErrors());
             if (sendBookToTheDatabase.getDataBaseStatus()){
@@ -75,7 +74,6 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
 
                 UI.getCurrent().navigate("BookMainPanel");
             }
-
         });
         return saveAndClose;
     }

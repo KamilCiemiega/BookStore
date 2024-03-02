@@ -2,24 +2,40 @@ package app.views.UserPanel.Books.BookCreator.EditBook;
 
 
 import app.service.BookService;
-import app.views.UserPanel.Books.Book;
-import app.views.UserPanel.Books.BookCreator.AddBook.SendBookToTheDatabase;
 import app.views.UserPanel.Books.BookCreator.ValidateBook;
+import app.views.UserPanel.Books.BookMainPanel;
+import app.views.UserPanel.Books.SendBook;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
-public class UpdateBook extends SendBookToTheDatabase {
+public class UpdateBook extends ValidateBook implements SendBook {
 
-    public UpdateBook(BookService bookService) {
-        super(bookService);
-
+    protected final BookService bookService;
+    private boolean dataBaseStatus = false;
+    private final SelectedBook selectedBook = BookMainPanel.selectedBook;
+    public UpdateBook(BookService bookService1) {
+        this.bookService = bookService1;
     }
 
     @Override
     public void validateBookData(String codeValue, String nameValue, String assortmentValue, String priceValue) {
         super.validateBookData(codeValue, nameValue, assortmentValue, priceValue);
+
+        matchingBook(nameValue, codeValue);
+    }
+
+    private void matchingBook(String nameValue, String codeValue){
+        if(!selectedBook.getBookName().equals(nameValue)){
+            if(bookService.bookExistsByCode(codeValue)){
+                errors.put("codeDuplicate", "Book with that code already exist");
+            }
+            //dodaj nazwę
+        } else if (!selectedBook.getCode().equals(codeValue)) {
+            if(bookService.bookExistsByName(nameValue)){
+                errors.put("nameDuplicate", "Book with that name already exist");
+            }
+            //dodaj kod
+        }
     }
 
     //    @Override
@@ -57,4 +73,13 @@ public class UpdateBook extends SendBookToTheDatabase {
 //    protected void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue) {
 //
 //    }
+    @Override
+    public void sendBookDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue) {
+
+    }
+    public boolean getDataBaseStatus() {
+        return dataBaseStatus;
+    }
+
+
 }

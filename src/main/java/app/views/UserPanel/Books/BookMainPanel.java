@@ -20,6 +20,7 @@ import java.util.List;
 @Route(value = "BookMainPanel", layout = UserPanel.class)
 public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final BookService bookService;
+    public static SelectedBook selectedBook;
     public BookMainPanel(BookService bookService) {
         this.bookService = bookService;
 
@@ -62,7 +63,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
             String code = e.getItem().getCode();
             BigDecimal price = e.getItem().getPrice();
 
-            SelectedBook selectedBook = new SelectedBook(bookName, code, price);
+            selectedBook = new SelectedBook(bookName, code, price);
             UI.getCurrent().getSession().setAttribute("selectedBook", selectedBook);
             UI.getCurrent().navigate("EditBook");
         });

@@ -2,13 +2,14 @@ package app.views.UserPanel.Books.BookCreator.AddBook;
 
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.ValidateBook;
+import app.views.UserPanel.Books.SendBook;
 
 import java.math.BigDecimal;
 
-public class SendBookToTheDatabase extends ValidateBook {
+public class SendBookToTheDatabase extends ValidateBook implements SendBook {
 
     protected final BookService bookService;
-    protected boolean dataBaseStatus = false;
+    private boolean dataBaseStatus = false;
     public SendBookToTheDatabase(BookService bookService) {
         this.bookService = bookService;
     }
@@ -24,16 +25,16 @@ public class SendBookToTheDatabase extends ValidateBook {
         }
         if(errors.isEmpty()){
             dataBaseStatus = true;
-            sendDataToDatabase(codeValue, nameValue, priceBigDecimal);
+            sendBookDataToDatabase(codeValue, nameValue, priceBigDecimal);
         }
     }
 
-    protected void sendDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue){
+    @Override
+    public void sendBookDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue) {
         bookService.insertBook(nameValue,codeValue, priceValue);
     }
+
     public boolean getDataBaseStatus() {
         return dataBaseStatus;
     }
-
-
 }
