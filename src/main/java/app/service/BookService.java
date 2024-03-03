@@ -92,5 +92,48 @@ public class BookService {
         }
     }
 
+    public void updateBookName(String newBookName, Integer bookId) {
+        String updateBookNameQuery = "UPDATE books SET book_name = ? WHERE book_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateBookNameQuery)) {
+            preparedStatement.setString(1, newBookName);
+            preparedStatement.setInt(2, bookId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            logger.info("Updated book_name in the database. Rows affected: {}", rowsAffected);
+        } catch (SQLException e) {
+            logger.error("Failed to update book_name in the database", e);
+        }
+    }
+
+    public void updateCode(String newCode,Integer bookId) {
+        String updateCodeQuery = "UPDATE books SET code = ? WHERE book_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateCodeQuery)) {
+            preparedStatement.setString(1, newCode);
+            preparedStatement.setInt(2, bookId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            logger.info("Updated code in the database. Rows affected: {}", rowsAffected);
+        } catch (SQLException e) {
+            logger.error("Failed to update code in the database", e);
+        }
+    }
+    public void updatePrice(BigDecimal newPrice,Integer bookId) {
+        String updateCodeQuery = "UPDATE books SET price = ? WHERE book_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateCodeQuery)) {
+            preparedStatement.setBigDecimal(1, newPrice);
+            preparedStatement.setInt(2, bookId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            logger.info("Updated code in the database. Rows affected: {}", rowsAffected);
+        } catch (SQLException e) {
+            logger.error("Failed to update code in the database", e);
+        }
+    }
 
 }

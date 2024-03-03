@@ -44,7 +44,7 @@ public class EditBook extends BookCreator {
                     codeField.getValue()
             );
             displayErrorMessage(updateBook.getErrors());
-            if (updateBook.getDataBaseStatus()){
+            if (updateBook.getDatabaseStatus()){
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.open();
@@ -65,27 +65,4 @@ public class EditBook extends BookCreator {
     protected void displayErrorMessage(Map<String, String> errors) {
         super.displayErrorMessage(errors);
     }
-
-    //    @Override
-//    protected Button savaAndClose() {
-////        Button saveAndClose = super.savaAndClose();
-//
-////        updateBook.validateBookData(
-////                "123",
-////                "asd",
-////                "",
-////                "123"
-////        );
-//
-////        if (updateBook.getDataBaseStatus()){
-////            Notification notification = new Notification("Save successfully", 3000, Notification.Position.TOP_CENTER);
-////            notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-////            notification.open();
-////
-////            UI.getCurrent().navigate("BookMainPanel");
-////        }
-//       return new Button();
-//    }
-
-
 }

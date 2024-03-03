@@ -3,14 +3,20 @@ package app.views.UserPanel.Books.BookCreator.EditBook;
 import java.math.BigDecimal;
 
 public class SelectedBook {
-    private String bookName;
-    private String code;
-    private BigDecimal price;
+    private final String bookName;
+    private final String code;
+    private final BigDecimal price;
+    private final Integer bookId;
 
-    public SelectedBook(String bookName, String code, BigDecimal price) {
+    public SelectedBook(Integer bookId, String bookName, String code, BigDecimal price) {
+        this.bookId = bookId;
         this.bookName = bookName;
         this.code = code;
         this.price = price;
+    }
+
+    public Integer getBookId() {
+        return bookId;
     }
 
     public String getBookName() {

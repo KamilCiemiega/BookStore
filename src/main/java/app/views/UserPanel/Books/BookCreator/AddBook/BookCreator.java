@@ -23,10 +23,10 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField priceField;
     protected TextField assortmentField;
 
-    private final SendBookToTheDatabase sendBookToTheDatabase;
+    private final AddBookToTheDatabase addBookToTheDatabase;
 
     public BookCreator(BookService bookService) {
-        sendBookToTheDatabase = new SendBookToTheDatabase(bookService);
+        addBookToTheDatabase = new AddBookToTheDatabase(bookService);
         configureView();
         add(bookCreatorContainer());
     }
@@ -60,14 +60,14 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         saveAndClose.addClassName("saveAndClose");
 
         saveAndClose.addClickListener(e -> {
-            sendBookToTheDatabase.validateBookData(
+            addBookToTheDatabase.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
                     priceField.getValue()
             );
-            displayErrorMessage(sendBookToTheDatabase.getErrors());
-            if (sendBookToTheDatabase.getDataBaseStatus()){
+            displayErrorMessage(addBookToTheDatabase.getErrors());
+            if (addBookToTheDatabase.getDatabaseStatus()){
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
                 notification.open();
@@ -114,7 +114,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         clearErrorMessages();
     }
     protected void clearErrorMessages() {
-        sendBookToTheDatabase.clearErrors();
+        addBookToTheDatabase.clearErrors();
     }
     protected FormLayout bookParameters() {
         FormLayout bookFormLayout = new FormLayout();

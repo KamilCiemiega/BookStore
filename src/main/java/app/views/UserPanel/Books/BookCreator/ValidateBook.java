@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 abstract public class ValidateBook {
-    public final Map<String, String> errors;
-    public BigDecimal priceBigDecimal;
+    protected final Map<String, String> errors;
+    protected BigDecimal priceBigDecimal;
     public ValidateBook() {
         this.errors = new HashMap<>();
     }
@@ -34,7 +34,7 @@ abstract public class ValidateBook {
     public void clearErrors(){
         errors.clear();
     }
-    public BigDecimal validatePrice(String priceValue) {
+    private BigDecimal validatePrice(String priceValue) {
             try {
                 return new BigDecimal(priceValue);
             } catch (NumberFormatException e) {

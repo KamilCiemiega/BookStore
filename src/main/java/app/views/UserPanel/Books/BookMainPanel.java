@@ -62,8 +62,9 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
             String bookName = e.getItem().getBookName();
             String code = e.getItem().getCode();
             BigDecimal price = e.getItem().getPrice();
+            Integer bookId = e.getItem().getId();
 
-            selectedBook = new SelectedBook(bookName, code, price);
+            selectedBook = new SelectedBook(bookId, bookName, code, price);
             UI.getCurrent().getSession().setAttribute("selectedBook", selectedBook);
             UI.getCurrent().navigate("EditBook");
         });
