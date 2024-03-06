@@ -1,6 +1,8 @@
 package app.views.UserPanel.Books.BookCreator.EditBook;
 
 import app.service.BookService;
+import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
+import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.SelectedBook;
 import app.views.UserPanel.Books.BookCreator.SendBookStatus;
 import app.views.UserPanel.Books.BookCreator.ValidateBook;
 import app.views.UserPanel.Books.BookMainPanel;
@@ -12,7 +14,7 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
 
     protected final BookService bookService;
     private boolean dataBaseStatus = false;
-    private final SelectedBook selectedBook = BookMainPanel.selectedBook;
+    private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
     public UpdateBook(BookService bookService) {
         this.bookService = bookService;
     }

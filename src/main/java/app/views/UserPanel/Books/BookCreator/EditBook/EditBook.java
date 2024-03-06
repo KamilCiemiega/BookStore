@@ -2,7 +2,8 @@ package app.views.UserPanel.Books.BookCreator.EditBook;
 
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.AddBook.BookCreator;
-import app.views.UserPanel.Books.BookCreator.ValidateBook;
+import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
+import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.SelectedBook;
 import app.views.UserPanel.Books.BookMainPanel;
 import app.views.UserPanel.UserPanel;
 import com.vaadin.flow.component.UI;
@@ -11,15 +12,13 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.router.Route;
 
-import java.util.Map;
-
 
 @Route(value = "EditBook", layout = UserPanel.class)
 public class EditBook extends BookCreator {
     
     private final UpdateBook updateBook;
 
-    private final SelectedBook selectedBook = BookMainPanel.selectedBook;
+    private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
     public EditBook(BookService bookService) {
         super(bookService);
         this.updateBook = new UpdateBook(bookService);

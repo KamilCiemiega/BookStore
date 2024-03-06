@@ -1,4 +1,4 @@
-package app.views.UserPanel.Books.BookCreator.EditBook;
+package app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook;
 
 import java.math.BigDecimal;
 

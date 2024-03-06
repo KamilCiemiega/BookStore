@@ -33,12 +33,25 @@ vaadin-grid::part(row):hover{
 .addButton{
     background: #565656;
     color: white;
+    margin: 0;
+}
+.deleteButton{
+     background: #565656;
+     color: white;
+     margin: 0;
 }
 .allBooksGrid{
    font-size: 12.5px;
 }
 vaadin-grid::part(cell){
     cursor: pointer;
+}
+.headerContainer{
+    height: 50px;
+    text-align: center;
+}
+.searchField{
+    padding:0;
 }
 
 

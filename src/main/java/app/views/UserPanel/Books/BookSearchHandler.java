@@ -11,21 +11,17 @@ import java.util.stream.Collectors;
 
 public class BookSearchHandler {
 
-    private final Grid<Book> grid;
-    private final List<Book> allBooks;
     private final ListDataProvider<Book> dataProvider;
 
     public BookSearchHandler(Grid<Book> grid, List<Book> allBooks) {
-        this.grid = grid;
-        this.allBooks = allBooks;
         this.dataProvider = new ListDataProvider<>(allBooks);
-        this.grid.setDataProvider(dataProvider);
+        grid.setDataProvider(dataProvider);
     }
 
     public TextField searchField() {
         TextField searchField = new TextField();
+        searchField.addClassName("searchField");
 
-        searchField.setWidth("50%");
         searchField.setPlaceholder("Search");
         searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
@@ -35,14 +31,13 @@ public class BookSearchHandler {
     }
 
     public void refreshGrid(String searchTerm) {
-        final String finalSearchTerm = searchTerm.trim().toLowerCase();
-        List<Book> filteredBooks = allBooks.stream()
-                .filter(book -> bookMatchesTerm(book, searchTerm))
-                .collect(Collectors.toList());
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            dataProvider.clearFilters();
+            return;
+        }
 
-        dataProvider.getItems().clear(); // Usuń istniejące elementy
-        dataProvider.getItems().addAll(filteredBooks); // Dodaj nowe elementy
-        dataProvider.refreshAll(); // Odśwież widok
+        String finalSearchTerm = searchTerm.trim().toLowerCase();
+        dataProvider.setFilter(book -> bookMatchesTerm(book, finalSearchTerm));
     }
     private boolean bookMatchesTerm(Book book, String term) {
         return book.getBookName().toLowerCase().contains(term) ||
