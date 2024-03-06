@@ -10,8 +10,10 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 
+
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 
 import java.math.BigDecimal;
@@ -21,8 +23,13 @@ import java.util.List;
 public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final BookService bookService;
     public static SelectedBook selectedBook;
+    private final BookSearchHandler searchHandler;
+    private final Grid<Book> grid;
+
     public BookMainPanel(BookService bookService) {
         this.bookService = bookService;
+        this.grid = allBooksTable();
+        this.searchHandler = new BookSearchHandler(grid, bookService.getAllBooks());
 
         configureView();
         add(splitLayout());
@@ -39,7 +46,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addClassName("splitLayout");
         splitLayout.addToPrimary(h2);
-        splitLayout.addToSecondary(header(), allBooksTable());
+        splitLayout.addToSecondary(header(), grid);
         splitLayout.setSplitterPosition(20);
 
         return splitLayout;
@@ -48,6 +55,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private VerticalLayout header(){
         VerticalLayout headerContainer = new VerticalLayout();
 
+        headerContainer.add(searchHandler.searchField());
         headerContainer.add(AddBookButton.addBookButton());
 
         return headerContainer;
@@ -71,21 +79,18 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
 
         grid.addColumn(Book::getBookName).setHeader("Name").setSortable(true).setResizable(true);
         grid.addColumn(Book::getCode).setHeader("Code").setSortable(true)
-                        .setWidth("11em").setFlexGrow(0).setResizable(true);
+                .setWidth("11em").setFlexGrow(0).setResizable(true);
         grid.addColumn(Book::getPrice).setHeader("Price").setSortable(true)
-                        .setWidth("11em").setFlexGrow(0).setResizable(true);
+                .setWidth("11em").setFlexGrow(0).setResizable(true);
         grid.addColumn(Book::getLastUpdate).setHeader("Last Update").setSortable(true)
-                        .setWidth("14em").setFlexGrow(0).setResizable(true);
+                .setWidth("14em").setFlexGrow(0).setResizable(true);
 
         grid.addThemeVariants(GridVariant.LUMO_COLUMN_BORDERS);
 
         List<Book> books = bookService.getAllBooks();
-//        BookSearchHandler searchHandler = new BookSearchHandler(grid, books);
-//        searchHandler.addSearchFilter(searchField);
+        searchHandler.refreshGrid("");
         grid.setItems(books);
 
         return grid;
     }
-
-
 }

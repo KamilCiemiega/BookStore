@@ -35,13 +35,14 @@ public class EditBook extends BookCreator {
 
     @Override
     protected Button savaAndClose() {
-        Button saveAndClose = super.savaAndClose();
+        Button saveAndClose = new Button("Save and Close");
+        saveAndClose.addClassName("saveAndClose");
         saveAndClose.addClickListener(e -> {
             updateBook.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
                     assortmentField.getValue(),
-                    codeField.getValue()
+                    priceField.getValue()
             );
             displayErrorMessage(updateBook.getErrors());
             if (updateBook.getDatabaseStatus()){
@@ -59,10 +60,5 @@ public class EditBook extends BookCreator {
     @Override
     protected void clearErrorMessages() {
         updateBook.clearErrors();
-    }
-
-    @Override
-    protected void displayErrorMessage(Map<String, String> errors) {
-        super.displayErrorMessage(errors);
     }
 }

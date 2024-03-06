@@ -1,6 +1,5 @@
 package app.views.UserPanel.Books.BookCreator.EditBook;
 
-
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.SendBookStatus;
 import app.views.UserPanel.Books.BookCreator.ValidateBook;
@@ -14,8 +13,8 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
     protected final BookService bookService;
     private boolean dataBaseStatus = false;
     private final SelectedBook selectedBook = BookMainPanel.selectedBook;
-    public UpdateBook(BookService bookService1) {
-        this.bookService = bookService1;
+    public UpdateBook(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @Override
@@ -26,24 +25,32 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
     }
 
     private void matchingBook(String nameValue, String codeValue,BigDecimal priceValue){
-        if(!selectedBook.getBookName().equals(nameValue)){
-            if(bookService.bookExistsByCode(codeValue)){
-                errors.put("codeDuplicate", "Book with that code already exist");
-            }else {
-                bookService.updateBookName(nameValue, selectedBook.getBookId());
-                dataBaseStatus = true;
-            }
-        } else if (!selectedBook.getCode().equals(codeValue)) {
-            if(bookService.bookExistsByName(nameValue)){
-                errors.put("nameDuplicate", "Book with that name already exist");
-            }else {
-                bookService.updateCode(codeValue, selectedBook.getBookId());
-                dataBaseStatus = true;
-            }
-        }else if (selectedBook.getPrice().compareTo(priceValue) !=0 ) {
+        boolean nameChanged = !selectedBook.getBookName().equals(nameValue);
+        boolean codeChanged = !selectedBook.getCode().equals(codeValue);
+        boolean priceChanged = selectedBook.getPrice().compareTo(priceValue) != 0;
+
+          if (nameChanged) {
+              if (bookService.bookExistsByName(nameValue)) {
+                  System.out.println(nameValue);
+                  errors.put("nameDuplicate", "Book with that name already exists");
+              } else {
+                  bookService.updateBookName(nameValue, selectedBook.getBookId());
+                  dataBaseStatus = true;
+              }
+          }
+          if (codeChanged) {
+                if (bookService.bookExistsByCode(codeValue)) {
+                    errors.put("codeDuplicate", "Book with that code already exists");
+                } else {
+                    bookService.updateCode(codeValue, selectedBook.getBookId());
+                    dataBaseStatus = true;
+                }
+          }
+          if (priceChanged) {
                 bookService.updatePrice(priceValue, selectedBook.getBookId());
                 dataBaseStatus = true;
-        }
+          }
+
     }
 
     @Override
