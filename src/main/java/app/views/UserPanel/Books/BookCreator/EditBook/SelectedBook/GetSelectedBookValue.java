@@ -7,6 +7,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GetSelectedBookValue {
@@ -19,6 +20,7 @@ public class GetSelectedBookValue {
     private BigDecimal price;
     private Integer bookId;
     private final DeleteBook deleteBook;
+    private Set<Book> previousSelection = new HashSet<>();
 
     public GetSelectedBookValue(BookService bookService, Grid<Book> grid) {
         this.grid = grid;
@@ -40,13 +42,25 @@ public class GetSelectedBookValue {
 
     public void checkBoxSelectedBook(){
         grid.addSelectionListener(e -> {
-            Set<Book> selectedBooks = e.getAllSelectedItems();
-            if (selectedBooks != null){
-                for (Book book : selectedBooks) {
-                    Integer bookId = book.getId();
-                    deleteBook.addBookToList(bookId);
-                }
+            Set<Book> currentSelection = e.getAllSelectedItems();
+
+            Set<Book> newlySelected = new HashSet<>(currentSelection);
+            newlySelected.removeAll(previousSelection);
+
+            Set<Book> newlyDeselected = new HashSet<>(previousSelection);
+            newlyDeselected.removeAll(currentSelection);
+
+            for (Book book : newlyDeselected) {
+                Integer bookId = book.getId();
+              deleteBook.removeBookFromList(bookId);
             }
+
+            for (Book book : newlySelected) {
+                Integer bookId = book.getId();
+              deleteBook.addBookToList(bookId);
+            }
+
+            previousSelection = currentSelection;
         });
 
     }

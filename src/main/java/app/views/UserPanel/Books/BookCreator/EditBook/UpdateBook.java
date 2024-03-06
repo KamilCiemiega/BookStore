@@ -14,6 +14,8 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
 
     protected final BookService bookService;
     private boolean dataBaseStatus = false;
+
+    private boolean noChanges = false;
     private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
     public UpdateBook(BookService bookService) {
         this.bookService = bookService;
@@ -31,6 +33,9 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
         boolean codeChanged = !selectedBook.getCode().equals(codeValue);
         boolean priceChanged = selectedBook.getPrice().compareTo(priceValue) != 0;
 
+            if (!nameChanged && !codeChanged && !priceChanged){
+                noChanges = true;
+            }
           if (nameChanged) {
               if (bookService.bookExistsByName(nameValue)) {
                   System.out.println(nameValue);
@@ -58,5 +63,9 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
     @Override
     public boolean getDatabaseStatus() {
         return dataBaseStatus;
+    }
+
+    public boolean isNoChanges() {
+        return noChanges;
     }
 }

@@ -44,6 +44,9 @@ public class EditBook extends BookCreator {
                     priceField.getValue()
             );
             displayErrorMessage(updateBook.getErrors());
+            if (updateBook.isNoChanges()){
+                UI.getCurrent().navigate("BookMainPanel");
+            }
             if (updateBook.getDatabaseStatus()){
                 Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
                 notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
