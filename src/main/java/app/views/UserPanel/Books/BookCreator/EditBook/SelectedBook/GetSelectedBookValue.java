@@ -1,8 +1,6 @@
 package app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook;
 
-import app.service.BookService;
 import app.views.UserPanel.Books.Book;
-import app.views.UserPanel.Books.DeleteBook.DeleteBook;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.grid.Grid;
 
@@ -19,12 +17,11 @@ public class GetSelectedBookValue {
     private String code;
     private BigDecimal price;
     private Integer bookId;
-    private final DeleteBook deleteBook;
+    public static Set<Integer> selectedBookIds = new HashSet<>();
     private Set<Book> previousSelection = new HashSet<>();
 
-    public GetSelectedBookValue(BookService bookService, Grid<Book> grid) {
+    public GetSelectedBookValue(Grid<Book> grid) {
         this.grid = grid;
-        this.deleteBook = new DeleteBook(bookService);
     }
 
     public void selectedBookValue(){
@@ -40,6 +37,10 @@ public class GetSelectedBookValue {
         });
     }
 
+    public static Set<Integer> getSelectedBookIds() {
+        return selectedBookIds;
+    }
+
     public void checkBoxSelectedBook(){
         grid.addSelectionListener(e -> {
             Set<Book> currentSelection = e.getAllSelectedItems();
@@ -52,16 +53,15 @@ public class GetSelectedBookValue {
 
             for (Book book : newlyDeselected) {
                 Integer bookId = book.getId();
-              deleteBook.removeBookFromList(bookId);
+                selectedBookIds.remove(bookId);
             }
 
             for (Book book : newlySelected) {
                 Integer bookId = book.getId();
-              deleteBook.addBookToList(bookId);
+                selectedBookIds.add(bookId);
             }
 
             previousSelection = currentSelection;
         });
-
     }
 }

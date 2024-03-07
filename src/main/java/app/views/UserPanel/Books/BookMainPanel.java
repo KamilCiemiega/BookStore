@@ -73,7 +73,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         grid.addClassName("allBooksGrid");
         grid.setSelectionMode(Grid.SelectionMode.MULTI);
 
-        GetSelectedBookValue getSelectedBookValue = new GetSelectedBookValue(bookService, grid);
+        GetSelectedBookValue getSelectedBookValue = new GetSelectedBookValue(grid);
         getSelectedBookValue.selectedBookValue();
         getSelectedBookValue.checkBoxSelectedBook();
 
