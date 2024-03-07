@@ -1,4 +1,4 @@
-#LogIn
+##LogIn
 ![LogIn](https://github.com/KamilCiemiega/BookStore/assets/55457173/f89fe2bb-13a3-47cc-bc3f-06ea0baf4595)
 
 ## User management
