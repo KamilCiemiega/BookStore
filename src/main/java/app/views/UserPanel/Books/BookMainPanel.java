@@ -92,4 +92,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
 
         return grid;
     }
+    public void refreshGrid() {
+        searchHandler.refreshGrid("");
+    }
 }

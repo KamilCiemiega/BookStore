@@ -7,7 +7,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookSearchHandler {
 

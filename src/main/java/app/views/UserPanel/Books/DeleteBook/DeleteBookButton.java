@@ -1,6 +1,7 @@
 package app.views.UserPanel.Books.DeleteBook;
 
 import app.service.BookService;
+import app.views.UserPanel.Books.BookMainPanel;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -10,8 +11,10 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 public class DeleteBookButton {
 
     private final DeleteBook deleteBook;
+    private final BookService bookService;
 
     public DeleteBookButton(BookService bookService) {
+        this.bookService= bookService;
         this.deleteBook = new DeleteBook(bookService);
     }
 
