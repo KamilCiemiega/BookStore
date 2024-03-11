@@ -11,11 +11,9 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 public class DeleteBookButton {
 
     private final DeleteBook deleteBook;
-    private final BookService bookService;
 
-    public DeleteBookButton(BookService bookService) {
-        this.bookService= bookService;
-        this.deleteBook = new DeleteBook(bookService);
+    public DeleteBookButton(BookService bookService, BookGridRefresher gridRefresher) {
+        this.deleteBook = new DeleteBook(bookService, gridRefresher);
     }
 
     public Button deleteButton(){

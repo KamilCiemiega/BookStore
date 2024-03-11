@@ -14,7 +14,7 @@ public class DeleteBook {
     private final BookGridRefresher gridRefresher;
 
     public DeleteBook(BookService bookService,BookGridRefresher gridRefresher) {
-        this.bookService =bookService;
+        this.bookService = bookService;
         this.gridRefresher = gridRefresher;
     }
 

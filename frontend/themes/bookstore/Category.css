@@ -1,0 +1,17 @@
+.Category{
+    height: 10%;
+    padding:0;
+}
+.categoryTitle{
+    font-size: 15px;
+    background: #565656;
+    width: 100%;
+    color: white;
+    font-weight: lighter;
+    cursor: pointer;
+    text-align: center;
+    padding: 2px;
+}
+.categoryContainer{
+margin-left: 18px;
+}

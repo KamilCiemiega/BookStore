@@ -3,12 +3,13 @@ package app.views.UserPanel.Books;
 import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.AddBook.AddBookButton;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
+import app.views.UserPanel.Books.DeleteBook.BookGridRefresher;
 import app.views.UserPanel.Books.DeleteBook.DeleteBookButton;
+import app.views.UserPanel.Category.Category;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-import com.vaadin.flow.component.html.H2;
 
 
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -24,13 +25,19 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final BookSearchHandler searchHandler;
     private final Grid<Book> grid;
 
+    private final Category category;
+
     private final DeleteBookButton deleteBookButton;
+    private final AddBookButton addBookButton;
 
     public BookMainPanel(BookService bookService) {
         this.bookService = bookService;
         this.grid = allBooksTable();
         this.searchHandler = new BookSearchHandler(grid, bookService.getAllBooks());
-        this.deleteBookButton = new DeleteBookButton(bookService);
+        BookGridRefresher bookGridRefresher = new BookGridRefresher(grid);
+        this.deleteBookButton = new DeleteBookButton(bookService,bookGridRefresher);
+        this.category = new Category();
+        this.addBookButton = new AddBookButton();
 
         configureView();
         add(splitLayout());
@@ -45,10 +52,9 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     }
 
     private SplitLayout splitLayout(){
-        H2 h2 = new H2("Test header");
         SplitLayout splitLayout = new SplitLayout();
         splitLayout.addClassName("splitLayout");
-        splitLayout.addToPrimary(h2);
+        splitLayout.addToPrimary(category);
         splitLayout.addToSecondary(header(), grid);
         splitLayout.setSplitterPosition(20);
 
@@ -60,7 +66,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         headerContainer.addClassName("headerContainer");
 
         headerContainer.add(
-                AddBookButton.addBookButton(),
+                addBookButton.addButton(),
                 deleteBookButton.deleteButton(),
                 searchHandler.searchField()
         );
@@ -90,9 +96,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         List<Book> books = bookService.getAllBooks();
         grid.setItems(books);
 
+
         return grid;
-    }
-    public void refreshGrid() {
-        searchHandler.refreshGrid("");
     }
 }

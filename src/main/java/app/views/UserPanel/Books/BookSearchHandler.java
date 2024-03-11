@@ -8,7 +8,7 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import java.util.List;
 
-public class BookSearchHandler {
+public class BookSearchHandler implements GridRefresher<String>{
 
     private final ListDataProvider<Book> dataProvider;
 
@@ -29,6 +29,7 @@ public class BookSearchHandler {
         return searchField;
     }
 
+    @Override
     public void refreshGrid(String searchTerm) {
         if (searchTerm == null || searchTerm.isEmpty()) {
             dataProvider.clearFilters();

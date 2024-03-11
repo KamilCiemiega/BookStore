@@ -2,6 +2,8 @@ package app.views.UserPanel.Books.BookCreator.AddBook;
 
 import app.service.BookService;
 import app.views.UserPanel.UserPanel;
+import app.views.UserPanel.Utils.BackToMainButton;
+import app.views.UserPanel.Utils.HiddenTextField;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -41,11 +43,8 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         VerticalLayout container = new VerticalLayout();
 
         HorizontalLayout buttonContainer = new HorizontalLayout();
-        Button backButton = new Button("Back");
-        backButton.addClassName("backButton");
-        backButton.addClickListener(e -> UI.getCurrent().navigate("BookMainPanel"));
 
-        buttonContainer.add(backButton, savaAndClose());
+        buttonContainer.add(BackToMainButton.backToMainButton(), savaAndClose());
 
         TabSheet tabSheet = new TabSheet();
         tabSheet.add("Book Parameters", bookParameters());
@@ -123,13 +122,13 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         codeField.setRequired(true);
         bookFormLayout.addFormItem(codeField, "Code");
 
-        bookFormLayout.addFormItem(createHiddenTextField(), "");
+        bookFormLayout.addFormItem(HiddenTextField.createHiddenTextField(), "");
 
         nameField = new TextField();
         nameField.setRequired(true);
         bookFormLayout.addFormItem(nameField, "Name");
 
-        bookFormLayout.addFormItem(createHiddenTextField(), "");
+        bookFormLayout.addFormItem(HiddenTextField.createHiddenTextField(), "");
 
         assortmentField = new TextField();
         bookFormLayout.addFormItem(assortmentField, "Assortment");
@@ -147,11 +146,5 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         priceFormLayout.addFormItem(priceField, "Price");
 
         return priceFormLayout;
-    }
-
-    TextField createHiddenTextField(){
-        TextField hiddenTextField = new TextField();
-        hiddenTextField.setVisible(false);
-        return hiddenTextField;
     }
 }
