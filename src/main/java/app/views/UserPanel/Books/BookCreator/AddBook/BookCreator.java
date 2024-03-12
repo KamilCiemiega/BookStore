@@ -3,7 +3,6 @@ package app.views.UserPanel.Books.BookCreator.AddBook;
 import app.service.BookService;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.BackToMainButton;
-import app.views.UserPanel.Utils.HiddenTextField;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -122,13 +121,13 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         codeField.setRequired(true);
         bookFormLayout.addFormItem(codeField, "Code");
 
-        bookFormLayout.addFormItem(HiddenTextField.createHiddenTextField(), "");
+        bookFormLayout.addFormItem(hiddenTextField(), "");
 
         nameField = new TextField();
         nameField.setRequired(true);
         bookFormLayout.addFormItem(nameField, "Name");
 
-        bookFormLayout.addFormItem(HiddenTextField.createHiddenTextField(), "");
+        bookFormLayout.addFormItem(hiddenTextField(), "");
 
         assortmentField = new TextField();
         bookFormLayout.addFormItem(assortmentField, "Assortment");
@@ -146,5 +145,10 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         priceFormLayout.addFormItem(priceField, "Price");
 
         return priceFormLayout;
+    }
+    private TextField hiddenTextField(){
+        TextField hiddenTextField = new TextField();
+        hiddenTextField.setVisible(false);
+        return hiddenTextField;
     }
 }

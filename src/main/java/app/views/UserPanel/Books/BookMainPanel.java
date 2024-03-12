@@ -56,6 +56,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         splitLayout.addClassName("splitLayout");
         splitLayout.addToPrimary(category);
         splitLayout.addToSecondary(header(), grid);
+
         splitLayout.setSplitterPosition(20);
 
         return splitLayout;

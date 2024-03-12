@@ -1,0 +1,27 @@
+.mainCategory{
+    padding: 0;
+    width: 30%;
+}
+.categoryName{
+    padding: 0;
+    width: 35.5%;
+}
+.mainCategoryContainer{
+    align-items: center;
+    width: 100%;
+}
+.categoryNameContainer{
+ align-items: center;
+ width:100%;
+}
+.firstFormLabelName{
+    margin-right: 0.9%;
+}
+.chooseCategory{
+    background: #7699b3;
+    border-radius: 0px;
+}
+.cleanCategory{
+    background: #405971;
+    border-radius: 0px;
+}
