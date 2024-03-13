@@ -2,6 +2,7 @@ package app.views.UserPanel.Users;
 
 import app.service.UsersService;
 import app.views.UserPanel.UserPanel;
+import app.views.UserPanel.Utils.ShowNotification;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
@@ -101,13 +102,9 @@ public class Users extends VerticalLayout {
                     if (modified[0]) {
                         try {
                             usersService.updateUserData(firstNameFieldValue, lastNameFieldValue, emailFieldValue, passwordFieldValue, newRoleNameValue, userId);
-                            Notification notification = new Notification("User data updated successfully", 3000, Notification.Position.TOP_CENTER);
-                            notification.addThemeName("success");
-                            notification.open();
+                            ShowNotification.showNotification("User data updated successfully", NotificationVariant.LUMO_SUCCESS);
                         } catch (Exception e) {
-                            Notification notification = new Notification("An error occurred, while trying to update data", 3000, Notification.Position.TOP_CENTER);
-                            notification.addThemeName("error");
-                            notification.open();
+                            ShowNotification.showNotification("An error occurred, while trying to update data", NotificationVariant.LUMO_ERROR);
                             logger.error("An error occurred, while trying to update data", e);
                         }
                         modified[0] = false;

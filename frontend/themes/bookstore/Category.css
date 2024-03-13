@@ -15,3 +15,21 @@
 .categoryContainer{
 margin-left: 18px;
 }
+.header{
+    align-items: center;
+}
+.overflowBackButton{
+    background: #6789a4;
+    color: white;
+    font-weight: 100;
+    width: 10px;
+}
+.mainTitle, .chooseInformation{
+    font-size: 14px;
+}
+.line{
+    background: #afa3a3;
+    width 100%;
+    height: 2px;
+}
+

@@ -1,6 +1,7 @@
 package app.views;
 
 import app.service.AuthenticationService;
+import app.views.UserPanel.Utils.ShowNotification;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Paragraph;
@@ -67,11 +68,11 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
         boolean loginSuccessful = authenticationService.authenticateUser(email, password);
 
         if (loginSuccessful) {
-            Notification.show("Login successful", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            ShowNotification.showNotification("Login successful", NotificationVariant.LUMO_SUCCESS);
             UI.getCurrent().navigate("BookMainPanel");
             logger.info("Authentication successful for user with email: {}", email);
         } else {
-            Notification.show("Login failed. Please check your credentials.", 5000, Notification.Position.TOP_CENTER).addThemeVariants(NotificationVariant.LUMO_WARNING);
+            ShowNotification.showNotification("Login failed. Please check your credentials.", NotificationVariant.LUMO_WARNING);
             loginForm.setEnabled(true);
         }
     }

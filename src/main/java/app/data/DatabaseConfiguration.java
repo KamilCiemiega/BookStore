@@ -7,14 +7,13 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DatabaseConfiguration {
-    private DataSource dataSource;
     @Bean
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/bookstore");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("admin");
-        return dataSource;
+        DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
+        driverManagerDataSource.setDriverClassName("org.postgresql.Driver");
+        driverManagerDataSource.setUrl("jdbc:postgresql://localhost:5432/bookstore");
+        driverManagerDataSource.setUsername("postgres");
+        driverManagerDataSource.setPassword("admin");
+        return driverManagerDataSource;
     }
 }

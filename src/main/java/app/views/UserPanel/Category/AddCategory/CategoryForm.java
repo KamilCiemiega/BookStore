@@ -1,5 +1,6 @@
 package app.views.UserPanel.Category.AddCategory;
 
+import app.views.UserPanel.Category.CategoryOverflow;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -23,6 +24,10 @@ public class CategoryForm extends VerticalLayout{
         chooseCategoryIcon.setColor("white");
         Button chooseCategory = new Button(chooseCategoryIcon);
         chooseCategory.addClassName("chooseCategory");
+        chooseCategory.addClickListener(e -> {
+            CategoryOverflow categoryOverflow = new CategoryOverflow();
+            categoryOverflow.open();
+        });
 
         Icon cleanCategoryIcon = new Icon(VaadinIcon.CLOSE);
         cleanCategoryIcon.setColor("white");

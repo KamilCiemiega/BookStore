@@ -19,11 +19,9 @@ public class AddBookToTheDatabase extends ValidateBook implements SendBookStatus
         super.validateBookData(codeValue, nameValue, assortmentValue, priceValue);
         if(bookService.bookExistsByCode(codeValue)){
             errors.put("codeDuplicate", "Book with that code already exist");
-            System.out.println(getClass());
         }
         if(bookService.bookExistsByName(nameValue)){
             errors.put("nameDuplicate", "Book with that name already exist");
-            System.out.println("name" + getClass());
         }
         if(errors.isEmpty()){
             dataBaseStatus = true;

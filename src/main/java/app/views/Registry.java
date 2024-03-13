@@ -1,13 +1,13 @@
 package app.views;
 
 import app.service.AuthenticationService;
+import app.views.UserPanel.Utils.ShowNotification;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
@@ -117,7 +117,7 @@ public class Registry extends VerticalLayout implements ViewConfigurator {
         if (areAllFieldsValid()) {
             boolean registrationSuccess =  authenticationService.insertData(firstNameValue, lastNameValue, passwordValue, emailValue);
             if (registrationSuccess) {
-                Notification.show("Registration successful!");
+                ShowNotification.showNotification("Registration successful!", NotificationVariant.LUMO_SUCCESS);
                 UI.getCurrent().navigate("");
             }
         }

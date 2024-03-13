@@ -2,6 +2,7 @@ package app.views.UserPanel.Books.DeleteBook;
 
 import app.service.BookService;
 import app.views.UserPanel.Books.BookMainPanel;
+import app.views.UserPanel.Utils.ShowNotification;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -23,22 +24,13 @@ public class DeleteBookButton {
         deleteButton.addClickListener(e -> {
             boolean deleteBookStatus = deleteBook.deleteBookFromDatabase();
             if (deleteBookStatus){
-                showNotification("Book deleted successfully", NotificationVariant.LUMO_SUCCESS);
+                ShowNotification.showNotification("Book deleted successfully",NotificationVariant.LUMO_SUCCESS );
             }else {
-                showNotification("Can't delete book", NotificationVariant.LUMO_ERROR);
+                ShowNotification.showNotification("Can't delete book",NotificationVariant.LUMO_ERROR );
             }
         });
         return deleteButton;
 
     }
 
-    private void showNotification(String message, NotificationVariant variant) {
-        Notification notification = new Notification(
-                message,
-                3000,
-                Notification.Position.TOP_CENTER
-        );
-        notification.addThemeVariants(variant);
-        notification.open();
-    }
 }

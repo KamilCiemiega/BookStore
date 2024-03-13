@@ -10,15 +10,12 @@ import com.vaadin.flow.router.Route;
 
 @Route(value = "UserPanel")
 public class UserPanel extends AppLayout {
-    private SideNavigation sideNavigation;
-    private final VerticalLayout contentContainer = new VerticalLayout();
-    private final BookService bookService;
 
     public UserPanel(BookService bookService) {
-        this.bookService = bookService;
         DrawerToggle toggle = new DrawerToggle();
-        sideNavigation = new SideNavigation();
+        SideNavigation sideNavigation = new SideNavigation();
         BookMainPanel bookPanel = new BookMainPanel(bookService);
+        VerticalLayout contentContainer = new VerticalLayout();
         contentContainer.add(bookPanel);
         contentContainer.addClassName("contentContainer");
         H1 title = new H1("Bookstore");

@@ -3,11 +3,11 @@ package app.views.UserPanel.Books.BookCreator.AddBook;
 import app.service.BookService;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.BackToMainButton;
+import app.views.UserPanel.Utils.ShowNotification;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -66,9 +66,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
             );
             displayErrorMessage(addBookToTheDatabase.getErrors());
             if (addBookToTheDatabase.getDatabaseStatus()){
-                Notification notification = new Notification("Save successfully", 3000,Notification.Position.TOP_CENTER);
-                notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-                notification.open();
+                ShowNotification.showNotification("Save successfully",NotificationVariant.LUMO_SUCCESS);
 
                 UI.getCurrent().navigate("BookMainPanel");
             }

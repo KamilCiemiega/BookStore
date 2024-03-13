@@ -2,6 +2,7 @@ package app.views.UserPanel.AccountSettings;
 
 import app.service.UserContext;
 import app.views.UserPanel.UserPanel;
+import app.views.UserPanel.Utils.ShowNotification;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -108,9 +109,7 @@ public class AccountSettings extends VerticalLayout {
         upload.addFileRejectedListener(event -> {
             String errorMessage = event.getErrorMessage();
             logger.warn(event.getErrorMessage());
-            Notification notification = createNotification(errorMessage, NotificationVariant.LUMO_ERROR);
-            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
-            notification.open();
+            ShowNotification.showNotification(errorMessage,NotificationVariant.LUMO_ERROR );
         });
         Image uploadedImage = new Image();
         upload.addSucceededListener(event -> {
@@ -120,8 +119,7 @@ public class AccountSettings extends VerticalLayout {
                 Path targetPath = Paths.get(uploadDirectory, event.getFileName());
 
                 if (Files.exists(targetPath)) {
-                    Notification notification = createNotification("File with this name already exists", NotificationVariant.LUMO_WARNING);
-                    notification.open();
+                    ShowNotification.showNotification("File with this name already exists",NotificationVariant.LUMO_WARNING);
                     logger.info("File with this name already exists");
                     return;
                 }
@@ -143,8 +141,7 @@ public class AccountSettings extends VerticalLayout {
                 }
 
             } catch (IOException e) {
-                Notification notification = createNotification("Couldn't save image to the database, please contact with support", NotificationVariant.LUMO_ERROR);
-                notification.open();
+                ShowNotification.showNotification("Couldn't save image to the database, please contact with support", NotificationVariant.LUMO_ERROR);
                 logger.error("Couldn't save image to the database", e);
             }
         });
@@ -159,8 +156,7 @@ public class AccountSettings extends VerticalLayout {
         URI fileURI = file.toURI();
 
         if (!file.exists()) {
-            Notification notification = createNotification("The image file does not exist", NotificationVariant.LUMO_ERROR);
-            notification.open();
+            ShowNotification.showNotification("The image file does not exist", NotificationVariant.LUMO_ERROR);
             logger.error("The image file does not exist at the path: {}", fullPath);
             return null;
         }
@@ -169,8 +165,7 @@ public class AccountSettings extends VerticalLayout {
             try {
                 return Files.newInputStream(file.toPath());
             } catch (IOException e) {
-                Notification notification = createNotification("We can't display your image please contact with support", NotificationVariant.LUMO_WARNING);
-                notification.open();
+                ShowNotification.showNotification("We can't display your image please contact with support", NotificationVariant.LUMO_WARNING);
                 logger.error("Can't find the image on the Path {}", fullPath, e);
                 return null;
             }
@@ -186,28 +181,19 @@ public class AccountSettings extends VerticalLayout {
                 try {
                     Files.delete(filePath);
 
-                    Notification notification = createNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
-                    notification.open();
+                    ShowNotification.showNotification("Image deleted successfully", NotificationVariant.LUMO_SUCCESS);
                     logger.info("Image deleted successfully");
                     return true;
                 } catch (IOException e) {
-                    Notification notification = createNotification("Failed to delete the image file", NotificationVariant.LUMO_ERROR);
-                    notification.open();
+                    ShowNotification.showNotification("Failed to delete the image file", NotificationVariant.LUMO_ERROR);
                     logger.error("Failed to delete the image file", e);
                 }
             } else {
-                Notification notification = createNotification("Something went wrong while trying to delete the image from the database. Please contact support.", NotificationVariant.LUMO_ERROR);
-                notification.open();
+                ShowNotification.showNotification("Something went wrong while trying to delete the image from the database. Please contact support.",NotificationVariant.LUMO_ERROR);
                 logger.error("Failed to delete the image from the database");
             }
         }
         return false;
-    }
-
-    public static Notification createNotification(String message, NotificationVariant variant) {
-        Notification notification = new Notification(message, 5000, Notification.Position.TOP_CENTER);
-        notification.addThemeVariants(variant);
-        return notification;
     }
     private VerticalLayout changeAccountData(){
 
@@ -269,8 +255,7 @@ public class AccountSettings extends VerticalLayout {
 
         if(validateFormData()) {
             accountSettingsService.updateUserData(name, surname, email, id);
-            Notification notification = createNotification("Data saved successfully", NotificationVariant.LUMO_SUCCESS);
-            notification.open();
+            ShowNotification.showNotification("Data saved successfully", NotificationVariant.LUMO_SUCCESS);
         } else if (name.equals(UserContext.getFirstName()) && surname.equals(UserContext.getLastName()) && email.equals(UserContext.getEmail())) {
             logger.info("User data doesn't change");
         }
