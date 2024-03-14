@@ -48,7 +48,7 @@ public class LogIn extends VerticalLayout implements ViewConfigurator {
         registrationContent.setWidth("360px");
 
         Button RegisterButton = new Button("Register");
-        RegisterButton.addClassName("RegistrybButton");
+        RegisterButton.addClassName("RegistryButton");
         RegisterButton.addClickListener(event ->
                 UI.getCurrent().navigate("Registration")
         );

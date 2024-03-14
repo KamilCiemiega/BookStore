@@ -6,8 +6,12 @@
     padding: 1.5rem;
 }
 
-.RegistrybButton {
+.RegistryButton {
     background:  var(--lumo-primary-color);
     color: white;
     cursor: pointer;
+}
+vaadin-login-form-wrapper vaadin-text-field{
+    padding: 0;
+    margin-top: 15px;
 }

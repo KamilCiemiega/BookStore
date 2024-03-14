@@ -1,6 +1,7 @@
 package app.views.UserPanel.Books;
 
 import app.service.BookService;
+import app.service.CategoryService;
 import app.views.UserPanel.Books.BookCreator.AddBook.AddBookButton;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
 import app.views.UserPanel.Books.DeleteBook.BookGridRefresher;
@@ -30,13 +31,13 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final DeleteBookButton deleteBookButton;
     private final AddBookButton addBookButton;
 
-    public BookMainPanel(BookService bookService) {
+    public BookMainPanel(BookService bookService, CategoryService categoryService) {
         this.bookService = bookService;
         this.grid = allBooksTable();
         this.searchHandler = new BookSearchHandler(grid, bookService.getAllBooks());
         BookGridRefresher bookGridRefresher = new BookGridRefresher(grid);
         this.deleteBookButton = new DeleteBookButton(bookService,bookGridRefresher);
-        this.category = new Category();
+        this.category = new Category(categoryService);
         this.addBookButton = new AddBookButton();
 
         configureView();

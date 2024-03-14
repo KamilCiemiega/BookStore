@@ -11,8 +11,8 @@ public class Category extends VerticalLayout implements ViewConfigurator {
 
     private final AddCategoryButton addCategoryButton;
     private final CategoryTreeView categoryTreeView;
-    public Category() {
-        this.categoryTreeView = new CategoryTreeView();
+    public Category(CategoryService categoryService) {
+        this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
         configureView();
         add(header(), CategoryList());
@@ -27,9 +27,8 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         VerticalLayout listContainer = new VerticalLayout();
         H2 categoryTitle = new H2("All category");
         categoryTitle.addClassName("categoryTitle");
-        categoryTreeView.displayTreeView();
 
-        listContainer.add(categoryTitle);
+        listContainer.add(categoryTitle, categoryTreeView.displayTreeView());
 
         return  listContainer;
     }
