@@ -22,7 +22,7 @@ public class AddCategory extends VerticalLayout {
 
     public AddCategory(CategoryService categoryService) {
         this.sendCategory = new SendCategory(categoryService);
-        CategoryForm categoryForm = new CategoryForm();
+        CategoryForm categoryForm = new CategoryForm(categoryService);
         add(buttonContainer(), categoryForm.formContainer(categoryName));
     }
 

@@ -1,5 +1,6 @@
 package app.views.UserPanel.Category.AddCategory;
 
+import app.service.CategoryService;
 import app.views.UserPanel.Category.CategoryOverflow;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Span;
@@ -9,7 +10,12 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 
-public class CategoryForm extends VerticalLayout{
+public class CategoryForm extends VerticalLayout {
+
+    private final CategoryService categoryService;
+    public CategoryForm(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     public VerticalLayout formContainer(TextField categoryName) {
         VerticalLayout categoryFormLayout = new VerticalLayout();
@@ -25,7 +31,7 @@ public class CategoryForm extends VerticalLayout{
         Button chooseCategory = new Button(chooseCategoryIcon);
         chooseCategory.addClassName("chooseCategory");
         chooseCategory.addClickListener(e -> {
-            CategoryOverflow categoryOverflow = new CategoryOverflow();
+            CategoryOverflow categoryOverflow = new CategoryOverflow(categoryService);
             categoryOverflow.open();
         });
 

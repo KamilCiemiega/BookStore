@@ -1,7 +1,6 @@
 package app.views.UserPanel.Category;
 import app.service.CategoryService;
 import app.views.UserPanel.Category.AddCategory.AddCategoryButton;
-import app.views.UserPanel.Category.AddCategory.CategoryTreeView;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -11,7 +10,11 @@ public class Category extends VerticalLayout implements ViewConfigurator {
 
     private final AddCategoryButton addCategoryButton;
     private final CategoryTreeView categoryTreeView;
+
+    private final CategoryService categoryService;
+
     public Category(CategoryService categoryService) {
+        this.categoryService = categoryService;
         this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
         configureView();
@@ -21,11 +24,13 @@ public class Category extends VerticalLayout implements ViewConfigurator {
     @Override
     public void configureView() {
         setSizeFull();
+        setPadding(false);
         setClassName("Category");
     }
     private VerticalLayout CategoryList(){
         VerticalLayout listContainer = new VerticalLayout();
-        H2 categoryTitle = new H2("All category");
+        listContainer.addClassName("listContainer");
+        H2 categoryTitle = new H2("All category: " + categoryService.getAllCategory().size());
         categoryTitle.addClassName("categoryTitle");
 
         listContainer.add(categoryTitle, categoryTreeView.displayTreeView());

@@ -1,0 +1,27 @@
+.childrenLayout{
+    margin-left: 15px;
+    padding: 0;
+    cursor:pointer;
+    width: 100%;
+}
+.treeView {
+ padding: 0;
+ background: #dbdfe4;
+}
+.categoryItem{
+    padding: 0;
+    cursor:pointer;
+    width: 100%;
+}
+.categoryItem:hover{
+    background:#b0b2b5;
+}
+.toggleButton{
+    cursor:pointer;
+}
+.arrow{
+    width: 12px;
+}
+.categoryName{
+ color:white;
+}
