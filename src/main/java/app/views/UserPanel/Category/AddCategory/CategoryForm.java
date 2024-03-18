@@ -2,6 +2,7 @@ package app.views.UserPanel.Category.AddCategory;
 
 import app.service.CategoryService;
 import app.views.UserPanel.Category.CategoryOverflow;
+import app.views.UserPanel.Category.CategoryTreeView;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -13,8 +14,12 @@ import com.vaadin.flow.component.textfield.TextField;
 public class CategoryForm extends VerticalLayout {
 
     private final CategoryService categoryService;
-    public CategoryForm(CategoryService categoryService) {
+    private final CategoryTreeView categoryTreeView;
+
+    private final TextField mainCategory = new TextField();
+    public CategoryForm(CategoryService categoryService ) {
         this.categoryService = categoryService;
+        this.categoryTreeView = new CategoryTreeView(categoryService);
     }
 
     public VerticalLayout formContainer(TextField categoryName) {
@@ -39,10 +44,10 @@ public class CategoryForm extends VerticalLayout {
         cleanCategoryIcon.setColor("white");
         Button cleanCategory = new Button(cleanCategoryIcon);
         cleanCategory.addClassName("cleanCategory");
-        TextField mainCategory = new TextField();
-        mainCategory.addClassName("mainCategory");
         mainCategory.setReadOnly(true);
-        mainCategory.setValue("It's gonna be main category");
+        mainCategory.addClassName("mainCategory");
+
+
 
         Span secondFormLabelName = new Span("Category Name");
         categoryName.addClassName("categoryName");
@@ -51,6 +56,7 @@ public class CategoryForm extends VerticalLayout {
         categoryNameContainer.add(secondFormLabelName, categoryName);
 
         mainCategoryContainer.add(firstFormLabelName, mainCategory, chooseCategory,cleanCategory);
+        categoryTreeView.setLastClickedCategoryValues();
 
         categoryFormLayout.add(mainCategoryContainer, categoryNameContainer);
 

@@ -4,6 +4,7 @@ import app.service.CategoryService;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,9 @@ public class CategoryTreeView extends VerticalLayout {
     private final Map<CategoryData, VerticalLayout> childrenLayoutMap;
     private final CategoryService categoryService;
     private final Map<CategoryData, Span> toggleButtons;
+    private CategoryData lastClickedCategory;
+    private Integer categoryId;
+    private String categoryName;
 
     public CategoryTreeView(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -49,14 +53,40 @@ public class CategoryTreeView extends VerticalLayout {
         } else {
             layout.add(new Span("  "));
         }
+        Span categoryName = new Span(category.name());
+        categoryName.addClassName("categoryName");
+        categoryName.setId("category-" + category.categoryId());
+        categoryName.addClickListener(e -> handleCategoryClick(category));
 
-        layout.add(new Span(category.name()));
+        layout.add(categoryName);
         treeView.add(layout);
 
         VerticalLayout childrenLayout = createChildrenLayout(children, allCategories, treeView);
         childrenLayoutMap.put(category, childrenLayout);
         treeView.add(childrenLayout);
         childrenLayout.setVisible(false);
+    }
+
+    private void handleCategoryClick(CategoryData category) {
+        lastClickedCategory = category;
+        categoryId = category.categoryId();
+        categoryName = category.name();
+        mainCategory.setValue(categoryName);
+    }
+
+    public CategoryData getLastClickedCategory() {
+        return lastClickedCategory;
+    }
+
+    public void setLastClickedCategoryValues() {
+        if (lastClickedCategory != null) {
+            categoryId = lastClickedCategory.categoryId();
+            categoryName = lastClickedCategory.name();
+            System.out.println("1 " + categoryName + "2 " + categoryId);
+            mainCategory.setValue(categoryName);
+        } else {
+            mainCategory.setValue("It's gonna be main category");
+        }
     }
 
     private VerticalLayout createChildrenLayout(List<CategoryData> children, List<CategoryData> allCategories, VerticalLayout treeView) {

@@ -32,8 +32,6 @@ public class AddCategory extends VerticalLayout {
         return buttonContainer;
     }
 
-
-
     private Button saveAndCloseButton() {
         Button saveAndClose = new Button("Save and Close");
         saveAndClose.addClassName("saveAndClose");

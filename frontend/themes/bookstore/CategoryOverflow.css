@@ -1,0 +1,12 @@
+vaadin-dialog-overlay::part(content){
+    padding: 0;
+}
+.mainTitle{
+    margin-right: 8px;
+}
+.header{
+    margin-bottom: 3px;
+}
+.line{
+    margin-bottom: 8px;
+}

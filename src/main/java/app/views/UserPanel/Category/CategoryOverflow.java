@@ -6,14 +6,15 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.router.Route;
 
+@Route("categoryOverflow")
 public class CategoryOverflow extends Dialog {
 
     public CategoryOverflow(CategoryService categoryService) {
 
         CategoryTreeView categoryTreeView = new CategoryTreeView(categoryService);
 
-        setHeight("500px");
         setHeight("450px");
         HorizontalLayout header = new HorizontalLayout();
         header.addClassName("header");

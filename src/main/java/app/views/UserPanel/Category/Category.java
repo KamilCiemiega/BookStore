@@ -1,4 +1,5 @@
 package app.views.UserPanel.Category;
+
 import app.service.CategoryService;
 import app.views.UserPanel.Category.AddCategory.AddCategoryButton;
 import app.views.ViewConfigurator;
@@ -10,7 +11,6 @@ public class Category extends VerticalLayout implements ViewConfigurator {
 
     private final AddCategoryButton addCategoryButton;
     private final CategoryTreeView categoryTreeView;
-
     private final CategoryService categoryService;
 
     public Category(CategoryService categoryService) {
