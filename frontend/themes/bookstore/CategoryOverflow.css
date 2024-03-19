@@ -10,3 +10,30 @@ vaadin-dialog-overlay::part(content){
 .line{
     margin-bottom: 8px;
 }
+.overflowBackButton{
+    background: #6789a4;
+    color: white;
+    font-size: 13px;
+    padding: 4px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.overflowConfirmButton{
+    background: #405971;
+    color: white;
+    font-weight: 100;
+    font-size: 13px;
+    padding: 4px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.chooseElement{
+    font-size: 15px;
+    font-weight: bold;
+    margin-left: 5px;
+}
+.chooseInformationContainer{
+    align-items: center;
+}

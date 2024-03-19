@@ -4,7 +4,6 @@ import app.service.CategoryService;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,12 +12,9 @@ import java.util.Map;
 
 public class CategoryTreeView extends VerticalLayout {
 
-    private final Map<CategoryData, VerticalLayout> childrenLayoutMap;
+    protected final Map<CategoryData, VerticalLayout> childrenLayoutMap;
     private final CategoryService categoryService;
-    private final Map<CategoryData, Span> toggleButtons;
-    private CategoryData lastClickedCategory;
-    private Integer categoryId;
-    private String categoryName;
+    protected final Map<CategoryData, Span> toggleButtons;
 
     public CategoryTreeView(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -39,22 +35,24 @@ public class CategoryTreeView extends VerticalLayout {
         return treeView;
     }
 
-    private void displayCategory(CategoryData category, List<CategoryData> allCategories, VerticalLayout treeView) {
+    protected void displayCategory(CategoryData category, List<CategoryData> allCategories, VerticalLayout treeView) {
         HorizontalLayout layout = new HorizontalLayout();
         layout.addClassName("categoryItem");
+        layout.getElement().setAttribute("tabindex", "0");
 
         List<CategoryData> children = findChildren(category, allCategories);
         if (!children.isEmpty()) {
             Span toggleButton = new Span("▶ ");
             toggleButton.addClassName("toggleButton");
-            toggleButton.addClickListener(e -> toggleChildrenVisibility(category));
+            toggleButton.addClickListener(e -> {
+                toggleChildrenVisibility(category);
+            });
             toggleButtons.put(category, toggleButton);
             layout.add(toggleButton);
         } else {
             layout.add(new Span("  "));
         }
         Span categoryName = new Span(category.name());
-        categoryName.addClassName("categoryName");
         categoryName.setId("category-" + category.categoryId());
         categoryName.addClickListener(e -> handleCategoryClick(category));
 
@@ -67,29 +65,12 @@ public class CategoryTreeView extends VerticalLayout {
         childrenLayout.setVisible(false);
     }
 
-    private void handleCategoryClick(CategoryData category) {
-        lastClickedCategory = category;
-        categoryId = category.categoryId();
-        categoryName = category.name();
-        mainCategory.setValue(categoryName);
+    protected void handleCategoryClick(CategoryData category){
+
     }
 
-    public CategoryData getLastClickedCategory() {
-        return lastClickedCategory;
-    }
 
-    public void setLastClickedCategoryValues() {
-        if (lastClickedCategory != null) {
-            categoryId = lastClickedCategory.categoryId();
-            categoryName = lastClickedCategory.name();
-            System.out.println("1 " + categoryName + "2 " + categoryId);
-            mainCategory.setValue(categoryName);
-        } else {
-            mainCategory.setValue("It's gonna be main category");
-        }
-    }
-
-    private VerticalLayout createChildrenLayout(List<CategoryData> children, List<CategoryData> allCategories, VerticalLayout treeView) {
+    protected VerticalLayout createChildrenLayout(List<CategoryData> children, List<CategoryData> allCategories, VerticalLayout treeView) {
         VerticalLayout childrenLayout = new VerticalLayout();
         childrenLayout.addClassName("childrenLayout");
 
@@ -100,7 +81,7 @@ public class CategoryTreeView extends VerticalLayout {
         return childrenLayout;
     }
 
-    private void toggleChildrenVisibility(CategoryData parent) {
+    protected void toggleChildrenVisibility(CategoryData parent) {
         VerticalLayout childrenLayout = childrenLayoutMap.get(parent);
         Span toggleButton = toggleButtons.get(parent);
 
@@ -124,7 +105,7 @@ public class CategoryTreeView extends VerticalLayout {
         return roots;
     }
 
-    private List<CategoryData> findChildren(CategoryData parent, List<CategoryData> categories) {
+    protected List<CategoryData> findChildren(CategoryData parent, List<CategoryData> categories) {
         List<CategoryData> children = new ArrayList<>();
         for (CategoryData category : categories) {
             if (category.parentId() == parent.categoryId()) {
