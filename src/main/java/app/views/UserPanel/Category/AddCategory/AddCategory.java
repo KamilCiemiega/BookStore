@@ -22,17 +22,15 @@ import com.vaadin.flow.router.Route;
 public class AddCategory extends VerticalLayout {
 
     private final TextField  categoryName = new TextField();
-    private final SendCategory sendCategory;
+    private final AddCategoryServiceAction addCategoryServiceAction;
     private final TextField mainCategory;
     private final CategoryOverflow categoryOverflow;
-
-    private final AddCategoryTreeView addCategoryTreeView;
+    public static int categoryId;
 
     public AddCategory(CategoryService categoryService) {
         this.mainCategory = new TextField();
-        this.sendCategory = new SendCategory(categoryService);
+        this.addCategoryServiceAction = new AddCategoryServiceAction(categoryService);
         this.categoryOverflow = new CategoryOverflow(categoryService, mainCategory);
-        addCategoryTreeView = new AddCategoryTreeView(categoryService, mainCategory, categoryOverflow);
         add(buttonContainer(), formContainer());
     }
 
@@ -69,7 +67,7 @@ public class AddCategory extends VerticalLayout {
         cleanCategory.addClickListener(e -> mainCategory.setValue("It's gonna be main category"));
 
         Span secondFormLabelName = new Span("Category Name");
-        categoryName.addClassName("categoryName");
+        categoryName.addClassName("categoryNameField");
         HorizontalLayout categoryNameContainer = new HorizontalLayout();
         categoryNameContainer.addClassName("categoryNameContainer");
         categoryNameContainer.add(secondFormLabelName, categoryName);
@@ -86,21 +84,25 @@ public class AddCategory extends VerticalLayout {
         saveAndClose.addClickListener(e -> {
             if(validateCategoryName(categoryName)) {
                 String categoryNameValue = categoryName.getValue();
-                if (mainCategory.getValue().equals("It's gonna be main category")){
 
-                sendCategory.sendCategory(categoryNameValue, null);
-                sentStatusNotification(sendCategory);
-            }else {
-                    sendCategory.sendCategory(categoryNameValue, addCategoryTreeView.getCategoryId());
+                if (mainCategory.getValue().equals("It's gonna be main category")){
+                    addCategoryServiceAction.sendCategory(categoryNameValue, null);
+                    sentStatusNotification(addCategoryServiceAction);
                 }
+                    else {
+                    addCategoryServiceAction.sendCategory(categoryNameValue, categoryId);
+                        sentStatusNotification(addCategoryServiceAction);
+                    }
             }
 
         });
 
         return saveAndClose;
     }
-
-    private void sentStatusNotification(SendCategory sendCategory){
+    public static void addCategoryParentId(int categoryParentId){
+         categoryId = categoryParentId;
+    }
+    private void sentStatusNotification(AddCategoryServiceAction sendCategory){
         if (sendCategory.isSendCategoryStatus()) {
             ShowNotification.showNotification("Save Successfully", NotificationVariant.LUMO_SUCCESS);
             UI.getCurrent().navigate("BookMainPanel");
@@ -110,10 +112,14 @@ public class AddCategory extends VerticalLayout {
     }
 
     private boolean validateCategoryName(TextField categoryField) {
-        boolean isEmpty = categoryField.getValue().isEmpty();
-        if (isEmpty) {
+        String categoryFieldValue = categoryField.getValue();
+        if (categoryFieldValue.isEmpty()) {
             categoryField.setInvalid(true);
             categoryField.setErrorMessage("Cannot be empty");
+            return false;
+        } else if(addCategoryServiceAction.isNameExist(categoryFieldValue)){
+            categoryField.setInvalid(true);
+            categoryField.setErrorMessage("Category with that name already exist");
             return false;
         }
         return true;

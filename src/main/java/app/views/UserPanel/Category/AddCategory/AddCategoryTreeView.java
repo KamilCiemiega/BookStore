@@ -14,6 +14,7 @@ public class AddCategoryTreeView extends CategoryTreeView {
     private final CategoryOverflow categoryOverflow;
 
 
+
     public AddCategoryTreeView(CategoryService categoryService, TextField mainCategory, CategoryOverflow categoryOverflow) {
         super(categoryService);
         this.mainCategory = mainCategory;
@@ -22,13 +23,12 @@ public class AddCategoryTreeView extends CategoryTreeView {
 
     @Override
     protected void handleCategoryClick(CategoryData category) {
-
         lastClickedCategory = category;
         categoryId = category.categoryId();
         categoryName = category.name();
         setLastClickedCategoryValues();
+        AddCategory.addCategoryParentId(categoryId);
         categoryOverflow.updateChooseInformation(categoryName);
-
     }
 
     public void setLastClickedCategoryValues() {

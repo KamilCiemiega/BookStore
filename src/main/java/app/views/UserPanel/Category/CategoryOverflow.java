@@ -45,6 +45,8 @@ public class CategoryOverflow extends Dialog {
         chooseInformationContainer.add(chooseInformation, chooseElement);
 
         header.add(backButton, confirmButton, mainTitle);
+        setCloseOnEsc(false);
+        setCloseOnOutsideClick(false);
 
         add(header, line, chooseInformationContainer, addCategoryTreeView.displayTreeView());
     }

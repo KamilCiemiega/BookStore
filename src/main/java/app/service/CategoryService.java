@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -20,16 +21,18 @@ public class CategoryService {
     public CategoryService(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
-    public <T> boolean addCategory(String categoryName, T parentId) {
+    @Transactional
+    public <T> boolean addCategory(String categoryName, Integer parentId) {
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO category (name, parent_id, creationdate) VALUES (?, ?, CURRENT_DATE)");
             if (parentId == null) {
-                preparedStatement.setObject(2, null);
+                preparedStatement.setNull(2, Types.NULL);
             } else {
-                preparedStatement.setObject(2, parentId);
+                preparedStatement.setInt(2, parentId);
             }
             preparedStatement.setString(1, categoryName);
+            preparedStatement.executeUpdate();
+
             logger.info("Category added" + categoryName);
             return true;
         } catch (SQLException ex) {

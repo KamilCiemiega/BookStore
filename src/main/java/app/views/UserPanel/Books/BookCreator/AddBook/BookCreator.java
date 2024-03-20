@@ -8,6 +8,9 @@ import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -112,25 +115,43 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected void clearErrorMessages() {
         addBookToTheDatabase.clearErrors();
     }
-    protected FormLayout bookParameters() {
-        FormLayout bookFormLayout = new FormLayout();
+    protected VerticalLayout bookParameters() {
+//        FormLayout bookFormLayout = new FormLayout();
+//
+//        codeField = new TextField();
+//        codeField.setRequired(true);
+//        bookFormLayout.addFormItem(codeField, "Code");
+//
+//        bookFormLayout.addFormItem(hiddenTextField(), "");
+//
+//        nameField = new TextField();
+//        nameField.setRequired(true);
+//        bookFormLayout.addFormItem(nameField, "Name");
+//
+//        bookFormLayout.addFormItem(hiddenTextField(), "");
+//        assortmentField = new TextField();
+//        bookFormLayout.addFormItem(assortmentField, "Assortment");
+//        return bookFormLayout;
 
-        codeField = new TextField();
-        codeField.setRequired(true);
-        bookFormLayout.addFormItem(codeField, "Code");
+        VerticalLayout bookParamContainer = new VerticalLayout();
+        
+        HorizontalLayout categoryFieldContainer = new HorizontalLayout();
+        categoryFieldContainer.addClassName("categoryFieldContainer");
+        categoryFieldContainer.setSpacing(false);
 
-        bookFormLayout.addFormItem(hiddenTextField(), "");
+        Span categoryLabel = new Span("Category");
+        categoryLabel.addClassName("categoryLabel");
+        TextField categoryField = new TextField();
+        Icon chooseCategoryIcon = new Icon(VaadinIcon.FOLDER);
+        chooseCategoryIcon.setColor("white");
+        Button chooseCategory = new Button(chooseCategoryIcon);
+        chooseCategory.addClassName("chooseCategory");
 
-        nameField = new TextField();
-        nameField.setRequired(true);
-        bookFormLayout.addFormItem(nameField, "Name");
+        categoryFieldContainer.add(categoryLabel,categoryField, chooseCategory);
+        
+        bookParamContainer.add(categoryFieldContainer);
 
-        bookFormLayout.addFormItem(hiddenTextField(), "");
-
-        assortmentField = new TextField();
-        bookFormLayout.addFormItem(assortmentField, "Assortment");
-
-        return bookFormLayout;
+        return bookParamContainer;
     }
 
     private FormLayout bookPrice() {
