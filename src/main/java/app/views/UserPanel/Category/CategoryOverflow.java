@@ -8,13 +8,16 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route("categoryOverflow")
 public class CategoryOverflow extends Dialog {
     private final Span chooseElement;
-
+    private AddCategoryTreeView myAddCategoryTreeView;
+    @Autowired
     public CategoryOverflow(CategoryService categoryService, TextField mainCategory) {
-        AddCategoryTreeView addCategoryTreeView = new AddCategoryTreeView(categoryService, mainCategory, this);
+        this.myAddCategoryTreeView = addCategoryTreeView;
+//        AddCategoryTreeView addCategoryTreeView = new AddCategoryTreeView(categoryService, mainCategory, this);
 
         setHeight("450px");
         HorizontalLayout header = new HorizontalLayout();
@@ -48,8 +51,14 @@ public class CategoryOverflow extends Dialog {
         setCloseOnEsc(false);
         setCloseOnOutsideClick(false);
 
-        add(header, line, chooseInformationContainer, addCategoryTreeView.displayTreeView());
+        add(header, line, chooseInformationContainer, myAddCategoryTreeView.displayTreeView());
     }
+
+
+//    @Autowired
+//    private void displayTreeView(@Qualifier("addCategoryTreeView") AddCategoryTreeView addCategoryTreeView){
+//        myAddCategoryTreeView = addCategoryTreeView;
+//    }
 
     public void updateChooseInformation(String categoryName) {
         chooseElement.setText(categoryName);

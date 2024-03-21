@@ -4,7 +4,6 @@ import app.service.BookService;
 import app.views.UserPanel.Books.BookCreator.AddBook.BookCreator;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.SelectedBook;
-import app.views.UserPanel.Books.BookMainPanel;
 import app.views.UserPanel.UserPanel;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -40,7 +39,7 @@ public class EditBook extends BookCreator {
             updateBook.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
-                    assortmentField.getValue(),
+                    categoryField.getValue(),
                     priceField.getValue()
             );
             displayErrorMessage(updateBook.getErrors());

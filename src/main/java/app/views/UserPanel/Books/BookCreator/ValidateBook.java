@@ -1,7 +1,5 @@
 package app.views.UserPanel.Books.BookCreator;
 
-import app.service.BookService;
-
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,14 +11,18 @@ abstract public class ValidateBook {
         this.errors = new HashMap<>();
     }
 
-    public void validateBookData(String codeValue, String nameValue, String assortmentValue,
+    public void validateBookData(String codeValue, String nameValue, String categoryValue,
                                  String priceValue){
         priceBigDecimal = validatePrice(priceValue);
+        System.out.println(categoryValue);
         if(codeValue.isEmpty()){
             errors.put("code", "Code field cannot be empty");
         }
         if(nameValue.isEmpty()){
             errors.put("name", "Book name field cannot be empty");
+        }
+        if(categoryValue.equals("Choose category from list")){
+            errors.put("category", "Please choose category");
         }
         if(!priceValue.isEmpty()) {
             if (priceBigDecimal == null) {

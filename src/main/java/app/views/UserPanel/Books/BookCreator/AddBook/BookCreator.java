@@ -7,7 +7,6 @@ import app.views.UserPanel.Utils.ShowNotification;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -17,6 +16,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.tabs.TabSheet;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+
 import java.util.Map;
 
 
@@ -25,7 +25,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField codeField;
     protected TextField nameField;
     protected TextField priceField;
-    protected TextField assortmentField;
+    protected TextField categoryField;
 
     private final AddBookToTheDatabase addBookToTheDatabase;
 
@@ -51,6 +51,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         TabSheet tabSheet = new TabSheet();
         tabSheet.add("Book Parameters", bookParameters());
         tabSheet.add("Book Price", bookPrice());
+        tabSheet.addClassName("tabSheet");
 
 
         container.add(buttonContainer, tabSheet);
@@ -64,7 +65,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
             addBookToTheDatabase.validateBookData(
                     codeField.getValue(),
                     nameField.getValue(),
-                    assortmentField.getValue(),
+                    categoryField.getValue(),
                     priceField.getValue()
             );
             displayErrorMessage(addBookToTheDatabase.getErrors());
@@ -94,6 +95,10 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     priceField.setInvalid(true);
                     priceField.setErrorMessage(errorMessage);
                     break;
+                case "category":
+                    categoryField.setInvalid(true);
+                    categoryField.setErrorMessage(errorMessage);
+                    break;
                 case "pricePositiveNumber":
                     priceField.setInvalid(true);
                     priceField.setErrorMessage(errorMessage);
@@ -116,32 +121,38 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         addBookToTheDatabase.clearErrors();
     }
     protected VerticalLayout bookParameters() {
-//        FormLayout bookFormLayout = new FormLayout();
-//
-//        codeField = new TextField();
-//        codeField.setRequired(true);
-//        bookFormLayout.addFormItem(codeField, "Code");
-//
-//        bookFormLayout.addFormItem(hiddenTextField(), "");
-//
-//        nameField = new TextField();
-//        nameField.setRequired(true);
-//        bookFormLayout.addFormItem(nameField, "Name");
-//
-//        bookFormLayout.addFormItem(hiddenTextField(), "");
-//        assortmentField = new TextField();
-//        bookFormLayout.addFormItem(assortmentField, "Assortment");
-//        return bookFormLayout;
-
         VerticalLayout bookParamContainer = new VerticalLayout();
-        
+        bookParamContainer.addClassName("bookParamContainer");
+
+        //Code field
+        Span codeLabel = new Span("Code");
+        codeLabel.addClassName("codeLabel");
+        codeField = new TextField();
+        codeField.addClassName("codeField");
+        HorizontalLayout bookCodeContainer = new HorizontalLayout();
+        bookCodeContainer.addClassName("categoryCodeContainer");
+        bookCodeContainer.add(codeLabel, codeField);
+
+        //Name field
+        Span nameLabel = new Span("Name");
+        nameLabel.addClassName("nameLabel");
+        nameField = new TextField();
+        nameField.addClassName("nameField");
+        HorizontalLayout bookNameContainer = new HorizontalLayout();
+        bookNameContainer.addClassName("categoryNameContainer");
+        bookNameContainer.add(nameLabel, nameField);
+
+        //Category field
         HorizontalLayout categoryFieldContainer = new HorizontalLayout();
         categoryFieldContainer.addClassName("categoryFieldContainer");
         categoryFieldContainer.setSpacing(false);
 
         Span categoryLabel = new Span("Category");
         categoryLabel.addClassName("categoryLabel");
-        TextField categoryField = new TextField();
+        categoryField = new TextField();
+        categoryField.addClassName("categoryField");
+        categoryField.setReadOnly(true);
+        categoryField.setValue("Choose category from list");
         Icon chooseCategoryIcon = new Icon(VaadinIcon.FOLDER);
         chooseCategoryIcon.setColor("white");
         Button chooseCategory = new Button(chooseCategoryIcon);
@@ -149,25 +160,22 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
 
         categoryFieldContainer.add(categoryLabel,categoryField, chooseCategory);
         
-        bookParamContainer.add(categoryFieldContainer);
+        bookParamContainer.add(bookCodeContainer,bookNameContainer, categoryFieldContainer);
 
         return bookParamContainer;
     }
 
-    private FormLayout bookPrice() {
-        FormLayout priceFormLayout = new FormLayout();
-        priceFormLayout.addClassName("priceFormLayout");
-
+    private HorizontalLayout bookPrice() {
+        Span priceLabel = new Span("Price");
+        priceLabel.addClassName("priceLabel");
         priceField = new TextField();
         priceField.setValue("0.00");
-        priceField.addClassName("priceTextField");
-        priceFormLayout.addFormItem(priceField, "Price");
+        priceField.addClassName("priceField");
+        HorizontalLayout categoryPriceContainer = new HorizontalLayout();
+        categoryPriceContainer.addClassName("categoryPriceContainer");
+        categoryPriceContainer.add(priceLabel, priceField);
 
-        return priceFormLayout;
+        return categoryPriceContainer;
     }
-    private TextField hiddenTextField(){
-        TextField hiddenTextField = new TextField();
-        hiddenTextField.setVisible(false);
-        return hiddenTextField;
-    }
+
 }

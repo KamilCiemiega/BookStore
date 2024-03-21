@@ -5,7 +5,9 @@ import app.views.UserPanel.Category.CategoryData;
 import app.views.UserPanel.Category.CategoryOverflow;
 import app.views.UserPanel.Category.CategoryTreeView;
 import com.vaadin.flow.component.textfield.TextField;
+import org.springframework.stereotype.Component;
 
+@Component("addCategoryTreeView")
 public class AddCategoryTreeView extends CategoryTreeView {
     private final TextField mainCategory;
     private CategoryData lastClickedCategory;

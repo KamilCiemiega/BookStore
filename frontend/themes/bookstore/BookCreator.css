@@ -1,3 +1,6 @@
+.tabSheet{
+    width: 100%;
+}
 .priceTextField{
     padding: 0;
 }
@@ -8,4 +11,46 @@
         background: #7699b3;
         color: white;
         font-weight: 400;
+}
+.codeLabel, .nameLabel, .categoryLabel{
+    margin-top: 0.3%;
+}
+.categoryField, .codeField, .nameField{
+    padding: 0;
+}
+.codeField{
+    width: 23%;
+    margin-left: 2.8%;
+}
+.nameField{
+    width: 23%;
+    margin-left: 2.5%;
+}
+.categoryField{
+     width: 20%;
+     margin-left: 2.2%;
+}
+.chooseCategory{
+    margin:0;
+}
+.categoryCodeContainer, .categoryNameContainer{
+    width:100%;
+    margin-top: 2%;
+}
+.categoryPriceContainer{
+    padding: 0;
+    width:100%;
+    align-items: center;
+    margin-top: 1%;
+}
+.priceField{
+    width: 20%;
+    margin-left: 2.5%;
+}
+.bookParamContainer{
+    padding: 0;
+}
+.categoryFieldContainer{
+    width: 100%;
+    margin-top: 2%;
 }
