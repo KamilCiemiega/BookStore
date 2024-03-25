@@ -25,7 +25,9 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField codeField;
     protected TextField nameField;
     protected TextField priceField;
-    protected TextField categoryField;
+    protected TextField categoryField = new TextField();
+
+//    protected BookCategoryOverflow bookCategoryOverflow;
 
     private final AddBookToTheDatabase addBookToTheDatabase;
 
@@ -33,6 +35,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         addBookToTheDatabase = new AddBookToTheDatabase(bookService);
         configureView();
         add(bookCreatorContainer());
+//        this.bookCategoryOverflow = new BookCategoryOverflow(categoryField);
     }
 
     @Override
@@ -149,13 +152,13 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
 
         Span categoryLabel = new Span("Category");
         categoryLabel.addClassName("categoryLabel");
-        categoryField = new TextField();
         categoryField.addClassName("categoryField");
         categoryField.setReadOnly(true);
         categoryField.setValue("Choose category from list");
         Icon chooseCategoryIcon = new Icon(VaadinIcon.FOLDER);
         chooseCategoryIcon.setColor("white");
         Button chooseCategory = new Button(chooseCategoryIcon);
+//        chooseCategoryIcon.addClickListener(e -> bookCategoryOverflow.open());
         chooseCategory.addClassName("chooseCategory");
 
         categoryFieldContainer.add(categoryLabel,categoryField, chooseCategory);

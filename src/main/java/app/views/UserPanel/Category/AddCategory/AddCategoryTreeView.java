@@ -2,35 +2,31 @@ package app.views.UserPanel.Category.AddCategory;
 
 import app.service.CategoryService;
 import app.views.UserPanel.Category.CategoryData;
-import app.views.UserPanel.Category.CategoryOverflow;
 import app.views.UserPanel.Category.CategoryTreeView;
 import com.vaadin.flow.component.textfield.TextField;
-import org.springframework.stereotype.Component;
 
-@Component("addCategoryTreeView")
 public class AddCategoryTreeView extends CategoryTreeView {
     private final TextField mainCategory;
     private CategoryData lastClickedCategory;
     private Integer categoryId;
     private String categoryName;
-    private final CategoryOverflow categoryOverflow;
+    private final AddCategoryOverflow addCategoryOverflow;
 
 
-
-    public AddCategoryTreeView(CategoryService categoryService, TextField mainCategory, CategoryOverflow categoryOverflow) {
+    public AddCategoryTreeView(CategoryService categoryService, TextField mainCategory, AddCategoryOverflow addCategoryOverflow) {
         super(categoryService);
         this.mainCategory = mainCategory;
-        this.categoryOverflow = categoryOverflow;
+        this.addCategoryOverflow = addCategoryOverflow;
     }
 
     @Override
-    protected void handleCategoryClick(CategoryData category) {
+    public void handleCategoryClick(CategoryData category) {
         lastClickedCategory = category;
         categoryId = category.categoryId();
         categoryName = category.name();
         setLastClickedCategoryValues();
         AddCategory.addCategoryParentId(categoryId);
-        categoryOverflow.updateChooseInformation(categoryName);
+        addCategoryOverflow.updateChooseInformation(categoryName);
     }
 
     public void setLastClickedCategoryValues() {
@@ -41,9 +37,5 @@ public class AddCategoryTreeView extends CategoryTreeView {
         } else {
             mainCategory.setValue("It's gonna be main category");
         }
-    }
-
-    public Integer getCategoryId() {
-        return categoryId;
     }
 }

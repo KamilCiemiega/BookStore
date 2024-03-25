@@ -2,7 +2,6 @@ package app.views.UserPanel.Category.AddCategory;
 
 
 import app.service.CategoryService;
-import app.views.UserPanel.Category.CategoryOverflow;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.BackToMainButton;
 import app.views.UserPanel.Utils.ShowNotification;
@@ -24,13 +23,13 @@ public class AddCategory extends VerticalLayout {
     private final TextField  categoryName = new TextField();
     private final AddCategoryServiceAction addCategoryServiceAction;
     private final TextField mainCategory;
-    private final CategoryOverflow categoryOverflow;
+    private final AddCategoryOverflow addCategoryOverflow;
     public static int categoryId;
 
     public AddCategory(CategoryService categoryService) {
         this.mainCategory = new TextField();
         this.addCategoryServiceAction = new AddCategoryServiceAction(categoryService);
-        this.categoryOverflow = new CategoryOverflow(categoryService, mainCategory);
+        this.addCategoryOverflow = new AddCategoryOverflow(categoryService, mainCategory);
         add(buttonContainer(), formContainer());
     }
 
@@ -57,7 +56,7 @@ public class AddCategory extends VerticalLayout {
         Button chooseCategory = new Button(chooseCategoryIcon);
         chooseCategory.addClassName("chooseCategory");
         chooseCategory.addClickListener(e -> {
-            categoryOverflow.open();
+            addCategoryOverflow.open();
         });
 
         Icon cleanCategoryIcon = new Icon(VaadinIcon.CLOSE);
