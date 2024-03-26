@@ -17,6 +17,7 @@ public class GetSelectedBookValue {
     private String code;
     private BigDecimal price;
     private Integer bookId;
+    private Integer categoryId;
     public static Set<Integer> selectedBookIds = new HashSet<>();
     private Set<Book> previousSelection = new HashSet<>();
 
@@ -30,8 +31,9 @@ public class GetSelectedBookValue {
             code = e.getItem().getCode();
             price = e.getItem().getPrice();
             bookId = e.getItem().getId();
+            categoryId = e.getItem().getCategoryId();
 
-            selectedBook = new SelectedBook(bookId, bookName, code, price);
+            selectedBook = new SelectedBook(bookId, bookName, code, price, categoryId);
             UI.getCurrent().getSession().setAttribute("selectedBook", selectedBook);
             UI.getCurrent().navigate("EditBook");
         });

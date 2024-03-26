@@ -1,6 +1,7 @@
 package app.views.UserPanel.Books.BookCreator.EditBook;
 
 import app.service.BookService;
+import app.service.CategoryService;
 import app.views.UserPanel.Books.BookCreator.AddBook.BookCreator;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.SelectedBook;
@@ -18,8 +19,8 @@ public class EditBook extends BookCreator {
     private final UpdateBook updateBook;
 
     private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
-    public EditBook(BookService bookService) {
-        super(bookService);
+    public EditBook(CategoryService categoryService, BookService bookService) {
+        super(categoryService, bookService);
         this.updateBook = new UpdateBook(bookService);
         setBookFields();
     }
@@ -28,6 +29,7 @@ public class EditBook extends BookCreator {
                 nameField.setValue(selectedBook.getBookName());
                 priceField.setValue(selectedBook.getPrice().toString());
                 codeField.setValue(selectedBook.getCode());
+                System.out.println(selectedBook.getCategoryId());
             }
     }
 
@@ -40,7 +42,8 @@ public class EditBook extends BookCreator {
                     codeField.getValue(),
                     nameField.getValue(),
                     categoryField.getValue(),
-                    priceField.getValue()
+                    priceField.getValue(),
+                    categoryId
             );
             displayErrorMessage(updateBook.getErrors());
             if (updateBook.isNoChanges()){

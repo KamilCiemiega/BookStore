@@ -24,7 +24,7 @@ public class AddCategory extends VerticalLayout {
     private final AddCategoryServiceAction addCategoryServiceAction;
     private final TextField mainCategory;
     private final AddCategoryOverflow addCategoryOverflow;
-    public static int categoryId;
+    private static int categoryId;
 
     public AddCategory(CategoryService categoryService) {
         this.mainCategory = new TextField();

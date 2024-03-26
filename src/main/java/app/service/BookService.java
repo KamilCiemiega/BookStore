@@ -23,7 +23,7 @@ public class BookService {
     }
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
-        String sql = "SELECT book_id, book_name, code, price, last_update FROM books";
+        String sql = "SELECT book_id, book_name, code, price, last_update, category_id FROM books";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -33,8 +33,9 @@ public class BookService {
                 String code = resultSet.getString("code");
                 BigDecimal price = resultSet.getBigDecimal("price");
                 Timestamp lastUpdate = resultSet.getTimestamp("last_update");
+                Integer categoryId = resultSet.getInt("category_id");
 
-                books.add(new Book(id, bookName, code, price, lastUpdate));
+                books.add(new Book(id, bookName, code, price, lastUpdate, categoryId));
             }
         } catch (SQLException e) {
             logger.error("Failed while trying to connect to the database", e);
@@ -75,13 +76,14 @@ public class BookService {
         return false;
     }
 
-    public void insertBook(String bookName, String code, BigDecimal price) {
-        String sql = "INSERT INTO books (book_name, code, price) VALUES (?, ?, ?)";
+    public void insertBook(String bookName, String code, BigDecimal price, Integer categoryId) {
+        String sql = "INSERT INTO books (book_name, code, price, category_id) VALUES (?, ?, ?, ?)";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, bookName);
             preparedStatement.setString(2, code);
             preparedStatement.setBigDecimal(3, price);
+            preparedStatement.setInt(4,categoryId);
 
             int rowsAffected = preparedStatement.executeUpdate();
 
@@ -156,6 +158,22 @@ public class BookService {
                 logger.error("Failed to delete book", e);
                 return false;
         }
+    }
+
+    public String categoryName(Integer categoryId) {
+        String sql = "SELECT category_name FROM books WHERE category_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, categoryId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getString("category_name");
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Failed to retrieve category name by category ID", e);
+        }
+        return null;
     }
 
 }

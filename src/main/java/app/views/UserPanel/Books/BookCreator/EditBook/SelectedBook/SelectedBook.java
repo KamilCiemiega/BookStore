@@ -8,11 +8,14 @@ public class SelectedBook {
     private final BigDecimal price;
     private final Integer bookId;
 
-    public SelectedBook(Integer bookId, String bookName, String code, BigDecimal price) {
+    private final Integer categoryId;
+
+    public SelectedBook(Integer bookId, String bookName, String code, BigDecimal price, Integer categoryId) {
         this.bookId = bookId;
         this.bookName = bookName;
         this.code = code;
         this.price = price;
+        this.categoryId = categoryId;
     }
 
     public Integer getBookId() {
@@ -29,5 +32,9 @@ public class SelectedBook {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
     }
 }

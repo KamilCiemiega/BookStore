@@ -1,6 +1,8 @@
 package app.views.UserPanel.Books.BookCreator.AddBook;
 
 import app.service.BookService;
+import app.service.CategoryService;
+import app.views.UserPanel.Books.BookCategoryOverflow;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.BackToMainButton;
 import app.views.UserPanel.Utils.ShowNotification;
@@ -26,16 +28,16 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField nameField;
     protected TextField priceField;
     protected TextField categoryField = new TextField();
-
-//    protected BookCategoryOverflow bookCategoryOverflow;
+    protected BookCategoryOverflow bookCategoryOverflow;
+    protected static int categoryId;
 
     private final AddBookToTheDatabase addBookToTheDatabase;
 
-    public BookCreator(BookService bookService) {
+    public BookCreator(CategoryService categoryService, BookService bookService) {
         addBookToTheDatabase = new AddBookToTheDatabase(bookService);
         configureView();
         add(bookCreatorContainer());
-//        this.bookCategoryOverflow = new BookCategoryOverflow(categoryField);
+        this.bookCategoryOverflow = new BookCategoryOverflow(categoryService, categoryField);
     }
 
     @Override
@@ -69,7 +71,8 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
                     codeField.getValue(),
                     nameField.getValue(),
                     categoryField.getValue(),
-                    priceField.getValue()
+                    priceField.getValue(),
+                    categoryId
             );
             displayErrorMessage(addBookToTheDatabase.getErrors());
             if (addBookToTheDatabase.getDatabaseStatus()){
@@ -79,6 +82,10 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
             }
         });
         return saveAndClose;
+    }
+
+    public static void setCategoryId(int theCategoryId){
+        categoryId = theCategoryId;
     }
 
     protected void displayErrorMessage(Map<String, String> errors) {
@@ -158,7 +165,7 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
         Icon chooseCategoryIcon = new Icon(VaadinIcon.FOLDER);
         chooseCategoryIcon.setColor("white");
         Button chooseCategory = new Button(chooseCategoryIcon);
-//        chooseCategoryIcon.addClickListener(e -> bookCategoryOverflow.open());
+        chooseCategoryIcon.addClickListener(e -> bookCategoryOverflow.open());
         chooseCategory.addClassName("chooseCategory");
 
         categoryFieldContainer.add(categoryLabel,categoryField, chooseCategory);

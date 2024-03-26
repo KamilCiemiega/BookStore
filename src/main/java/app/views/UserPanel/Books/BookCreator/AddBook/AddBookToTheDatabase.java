@@ -15,8 +15,8 @@ public class AddBookToTheDatabase extends ValidateBook implements SendBookStatus
     }
 
     @Override
-    public void validateBookData(String codeValue, String nameValue, String assortmentValue, String priceValue) {
-        super.validateBookData(codeValue, nameValue, assortmentValue, priceValue);
+    public void validateBookData(String codeValue, String nameValue, String categoryValue, String priceValue, Integer categoryId) {
+        super.validateBookData(codeValue, nameValue, categoryValue, priceValue, categoryId);
         if(bookService.bookExistsByCode(codeValue)){
             errors.put("codeDuplicate", "Book with that code already exist");
         }
@@ -25,12 +25,12 @@ public class AddBookToTheDatabase extends ValidateBook implements SendBookStatus
         }
         if(errors.isEmpty()){
             dataBaseStatus = true;
-            sendBookDataToDatabase(codeValue, nameValue, priceBigDecimal);
+            sendBookDataToDatabase(codeValue, nameValue, priceBigDecimal, categoryId);
         }
     }
 
-    public void sendBookDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue) {
-        bookService.insertBook(nameValue,codeValue, priceValue);
+    public void sendBookDataToDatabase(String codeValue, String nameValue, BigDecimal priceValue, Integer categoryId) {
+        bookService.insertBook(nameValue,codeValue, priceValue, categoryId);
     }
 
     @Override

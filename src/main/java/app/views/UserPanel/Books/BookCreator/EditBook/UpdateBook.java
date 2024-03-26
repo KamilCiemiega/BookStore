@@ -5,8 +5,6 @@ import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBo
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.SelectedBook;
 import app.views.UserPanel.Books.BookCreator.SendBookStatus;
 import app.views.UserPanel.Books.BookCreator.ValidateBook;
-import app.views.UserPanel.Books.BookMainPanel;
-
 
 import java.math.BigDecimal;
 
@@ -22,8 +20,8 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
     }
 
     @Override
-    public void validateBookData(String codeValue, String nameValue, String assortmentValue, String priceValue) {
-        super.validateBookData(codeValue, nameValue, assortmentValue, priceValue);
+    public void validateBookData(String codeValue, String nameValue, String assortmentValue, String priceValue, Integer categoryId) {
+        super.validateBookData(codeValue, nameValue, assortmentValue, priceValue, categoryId);
 
         matchingBook(nameValue, codeValue, priceBigDecimal);
     }
@@ -38,7 +36,6 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
             }
           if (nameChanged) {
               if (bookService.bookExistsByName(nameValue)) {
-                  System.out.println(nameValue);
                   errors.put("nameDuplicate", "Book with that name already exists");
               } else {
                   bookService.updateBookName(nameValue, selectedBook.getBookId());
