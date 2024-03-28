@@ -17,11 +17,13 @@ import com.vaadin.flow.router.Route;
 public class EditBook extends BookCreator {
     
     private final UpdateBook updateBook;
-
+    private final GetCategoryName getCategoryName;
     private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
+
     public EditBook(CategoryService categoryService, BookService bookService) {
         super(categoryService, bookService);
         this.updateBook = new UpdateBook(bookService);
+        this.getCategoryName = new GetCategoryName(bookService);
         setBookFields();
     }
     public void setBookFields() {
@@ -29,7 +31,10 @@ public class EditBook extends BookCreator {
                 nameField.setValue(selectedBook.getBookName());
                 priceField.setValue(selectedBook.getPrice().toString());
                 codeField.setValue(selectedBook.getCode());
-                System.out.println(selectedBook.getCategoryId());
+                String categoryName = getCategoryName.getCategoryNameById(selectedBook.getCategoryId());
+                if(categoryName != null){
+                    categoryField.setValue(categoryName);
+                }
             }
     }
 

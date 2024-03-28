@@ -123,6 +123,21 @@ public class BookService {
             logger.error("Failed to update code in the database", e);
         }
     }
+
+    public void updateCategory(Integer categoryId,Integer bookId) {
+        String updateCodeQuery = "UPDATE books SET category_id = ? WHERE book_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(updateCodeQuery)) {
+            preparedStatement.setInt(1, categoryId);
+            preparedStatement.setInt(2, bookId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            logger.info("Updated code in the database. Rows affected: {}", rowsAffected);
+        } catch (SQLException e) {
+            logger.error("Failed to update category in the database", e);
+        }
+    }
     public void updatePrice(BigDecimal newPrice,Integer bookId) {
         String updateCodeQuery = "UPDATE books SET price = ? WHERE book_id = ?";
         try (Connection connection = dataSource.getConnection();
@@ -161,13 +176,13 @@ public class BookService {
     }
 
     public String categoryName(Integer categoryId) {
-        String sql = "SELECT category_name FROM books WHERE category_id = ?";
+        String sql = "SELECT name FROM category WHERE category_id = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, categoryId);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 if (resultSet.next()) {
-                    return resultSet.getString("category_name");
+                    return resultSet.getString("name");
                 }
             }
         } catch (SQLException e) {

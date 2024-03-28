@@ -12,26 +12,28 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
 
     protected final BookService bookService;
     private boolean dataBaseStatus = false;
-
     private boolean noChanges = false;
+    private final GetCategoryName getCategoryName;
     private final SelectedBook selectedBook = GetSelectedBookValue.selectedBook;
     public UpdateBook(BookService bookService) {
         this.bookService = bookService;
+        this.getCategoryName = new GetCategoryName(bookService);
     }
 
     @Override
-    public void validateBookData(String codeValue, String nameValue, String assortmentValue, String priceValue, Integer categoryId) {
-        super.validateBookData(codeValue, nameValue, assortmentValue, priceValue, categoryId);
+    public void validateBookData(String codeValue, String nameValue, String categoryValue, String priceValue, Integer categoryId) {
+        super.validateBookData(codeValue, nameValue, categoryValue, priceValue, categoryId);
 
-        matchingBook(nameValue, codeValue, priceBigDecimal);
+        matchingBook(nameValue, codeValue, priceBigDecimal, categoryId);
     }
 
-    private void matchingBook(String nameValue, String codeValue,BigDecimal priceValue){
+    private void matchingBook(String nameValue, String codeValue,BigDecimal priceValue, Integer categoryId){
         boolean nameChanged = !selectedBook.getBookName().equals(nameValue);
         boolean codeChanged = !selectedBook.getCode().equals(codeValue);
+        boolean categoryChanged = !categoryId.equals(selectedBook.getCategoryId());
         boolean priceChanged = selectedBook.getPrice().compareTo(priceValue) != 0;
 
-            if (!nameChanged && !codeChanged && !priceChanged){
+            if (!nameChanged && !codeChanged && !priceChanged && !categoryChanged){
                 noChanges = true;
             }
           if (nameChanged) {
@@ -49,6 +51,11 @@ public class UpdateBook extends ValidateBook implements SendBookStatus {
                     bookService.updateCode(codeValue, selectedBook.getBookId());
                     dataBaseStatus = true;
                 }
+          }
+          if (categoryChanged){
+              bookService.updateCategory(categoryId ,selectedBook.getBookId());
+              dataBaseStatus = true;
+
           }
           if (priceChanged) {
                 bookService.updatePrice(priceValue, selectedBook.getBookId());

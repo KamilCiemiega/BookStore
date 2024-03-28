@@ -15,6 +15,7 @@ public class CategoryTreeView extends VerticalLayout {
     protected final Map<CategoryData, VerticalLayout> childrenLayoutMap;
     private final CategoryService categoryService;
     protected final Map<CategoryData, Span> toggleButtons;
+    private CategoryData selectedCategory;
 
     public CategoryTreeView(CategoryService categoryService) {
         this.categoryService = categoryService;
@@ -37,8 +38,14 @@ public class CategoryTreeView extends VerticalLayout {
 
     protected void displayCategory(CategoryData category, List<CategoryData> allCategories, VerticalLayout treeView) {
         HorizontalLayout layout = new HorizontalLayout();
-        layout.addClassName("categoryItem");
-        layout.getElement().setAttribute("tabindex", "0");
+//        layout.addClassName("categoryItem");
+//        layout.getElement().setAttribute("tabindex", "0");
+
+        System.out.println(category);
+        System.out.println(selectedCategory);
+        if (category.equals(selectedCategory)) {
+            layout.getStyle().set("background-color", "lightgrey");
+        }
 
         List<CategoryData> children = findChildren(category, allCategories);
         if (!children.isEmpty()) {
@@ -66,7 +73,8 @@ public class CategoryTreeView extends VerticalLayout {
     }
 
     protected void handleCategoryClick(CategoryData category){
-
+//        System.out.println(category);
+        selectedCategory = category;
     }
 
 

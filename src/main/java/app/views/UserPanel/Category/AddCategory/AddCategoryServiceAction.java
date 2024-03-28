@@ -27,6 +27,6 @@ public class AddCategoryServiceAction {
     public boolean isNameExist(String categoryName){
         List<CategoryData> allCategory = categoryService.getAllCategory();
         return allCategory.stream()
-                .anyMatch(category -> category.name().equals(categoryName));
+                .anyMatch(category -> category.name().equalsIgnoreCase(categoryName));
     }
 }

@@ -30,7 +30,7 @@ vaadin-grid::part(cell-content-checkbox){
 vaadin-grid::part(row):hover{
     background:#565656;
 }
-.addButton{
+.addButton, .editButton{
     background: #565656;
     color: white;
     margin: 0;

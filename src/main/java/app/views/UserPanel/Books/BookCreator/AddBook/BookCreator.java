@@ -29,8 +29,8 @@ public class BookCreator extends VerticalLayout implements ViewConfigurator {
     protected TextField priceField;
     protected TextField categoryField = new TextField();
     protected BookCategoryOverflow bookCategoryOverflow;
-    protected static int categoryId;
 
+    protected static int categoryId;
     private final AddBookToTheDatabase addBookToTheDatabase;
 
     public BookCreator(CategoryService categoryService, BookService bookService) {

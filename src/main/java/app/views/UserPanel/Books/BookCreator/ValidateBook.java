@@ -14,7 +14,6 @@ abstract public class ValidateBook {
     public void validateBookData(String codeValue, String nameValue, String categoryValue,
                                  String priceValue, Integer categoryId){
         priceBigDecimal = validatePrice(priceValue);
-        System.out.println(categoryValue);
         if(codeValue.isEmpty()){
             errors.put("code", "Code field cannot be empty");
         }
