@@ -1,2 +1,2 @@
 package app.views.UserPanel.Category;
-public record CategoryData(int categoryId, String name, int parentId) {}
+public record CategoryData(int categoryId, String name, Integer parentId) {}

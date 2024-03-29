@@ -5,8 +5,10 @@ import app.views.UserPanel.Category.AddCategory.AddCategoryButton;
 import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Category extends VerticalLayout implements ViewConfigurator {
 
@@ -15,13 +17,17 @@ public class Category extends VerticalLayout implements ViewConfigurator {
     private final CategoryTreeView categoryTreeView;
     private final CategoryService categoryService;
 
-    public Category(CategoryService categoryService) {
+    @Autowired
+    public Category(CategoryService categoryService, EditCategoryButton editCategoryButton) {
         this.categoryService = categoryService;
         this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
-        this.editCategoryButton = new EditCategoryButton();
+        this.editCategoryButton = editCategoryButton;
         configureView();
+
+
         add(header(), CategoryList());
+
     }
 
     @Override
@@ -29,6 +35,22 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         setSizeFull();
         setPadding(false);
         setClassName("Category");
+    }
+    private HorizontalLayout header(){
+        HorizontalLayout headerContainer = new HorizontalLayout();
+        headerContainer.addClassName("categoryContainer");
+
+
+        headerContainer.add(addCategoryButton.addButton(), editCategoryButton.editButton());
+
+        return headerContainer;
+    }
+
+    private Span categoryError(){
+        Span errorMessage = new Span("Please choose the category");
+        errorMessage.addClassName("errorMessage");
+
+        return errorMessage;
     }
     private VerticalLayout CategoryList(){
         VerticalLayout listContainer = new VerticalLayout();
@@ -41,13 +63,6 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         return  listContainer;
     }
 
-    private HorizontalLayout header(){
-        HorizontalLayout headerContainer = new HorizontalLayout();
-        headerContainer.addClassName("categoryContainer");
 
-        headerContainer.add(addCategoryButton.addButton(), editCategoryButton.editButton());
-
-        return headerContainer;
-    }
 
 }

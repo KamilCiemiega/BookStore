@@ -13,12 +13,6 @@
     cursor:pointer;
     width: 100%;
 }
-.categoryItem:focus{
-    background:#777879;
-}
-.categoryItem:hover{
-    background:#b0b2b5;
-}
 .toggleButton{
     cursor:pointer;
 }

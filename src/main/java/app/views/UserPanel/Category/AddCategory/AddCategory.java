@@ -2,6 +2,7 @@ package app.views.UserPanel.Category.AddCategory;
 
 
 import app.service.CategoryService;
+import app.views.UserPanel.Category.CategoryData;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.BackToMainButton;
 import app.views.UserPanel.Utils.ShowNotification;
@@ -22,9 +23,9 @@ public class AddCategory extends VerticalLayout {
 
     private final TextField  categoryName = new TextField();
     private final AddCategoryServiceAction addCategoryServiceAction;
-    private final TextField mainCategory;
+    protected final TextField mainCategory;
     private final AddCategoryOverflow addCategoryOverflow;
-    private static int categoryId;
+    protected CategoryData categoryData;
 
     public AddCategory(CategoryService categoryService) {
         this.mainCategory = new TextField();
@@ -39,7 +40,7 @@ public class AddCategory extends VerticalLayout {
         return buttonContainer;
     }
 
-    public VerticalLayout formContainer() {
+    protected VerticalLayout formContainer() {
         VerticalLayout categoryFormLayout = new VerticalLayout();
 
         HorizontalLayout mainCategoryContainer = new HorizontalLayout();
@@ -89,7 +90,7 @@ public class AddCategory extends VerticalLayout {
                     sentStatusNotification(addCategoryServiceAction);
                 }
                     else {
-                    addCategoryServiceAction.sendCategory(categoryNameValue, categoryId);
+                    addCategoryServiceAction.sendCategory(categoryNameValue, categoryData.categoryId());
                         sentStatusNotification(addCategoryServiceAction);
                     }
             }
@@ -98,8 +99,8 @@ public class AddCategory extends VerticalLayout {
 
         return saveAndClose;
     }
-    public static void addCategoryParentId(int categoryParentId){
-         categoryId = categoryParentId;
+    public void getCategoryData(CategoryData theCategoryData){
+         categoryData = theCategoryData;
     }
     private void sentStatusNotification(AddCategoryServiceAction sendCategory){
         if (sendCategory.isSendCategoryStatus()) {
