@@ -12,6 +12,7 @@ public class CategoryTreeView extends AbstractCategoryTreeView {
 
     private HorizontalLayout currentlyHighlightedLayout = null;
     private final List<CategoryData> listOfClickedCategorise = new ArrayList<>();
+
     private final EditCategoryButton editCategoryButton;
     public CategoryTreeView(CategoryService categoryService) {
         super(categoryService);

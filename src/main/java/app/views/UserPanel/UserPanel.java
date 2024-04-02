@@ -3,7 +3,6 @@ package app.views.UserPanel;
 import app.service.BookService;
 import app.service.CategoryService;
 import app.views.UserPanel.Books.BookMainPanel;
-import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.html.H1;
@@ -15,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserPanel extends AppLayout {
 
     @Autowired
-    public UserPanel(BookService bookService, CategoryService categoryService, EditCategoryButton editCategoryButton) {
+    public UserPanel(BookService bookService, CategoryService categoryService) {
         DrawerToggle toggle = new DrawerToggle();
         SideNavigation sideNavigation = new SideNavigation();
-        BookMainPanel bookPanel = new BookMainPanel(bookService, categoryService, editCategoryButton);
+        BookMainPanel bookPanel = new BookMainPanel(bookService, categoryService);
         VerticalLayout contentContainer = new VerticalLayout();
         contentContainer.add(bookPanel);
         contentContainer.addClassName("contentContainer");

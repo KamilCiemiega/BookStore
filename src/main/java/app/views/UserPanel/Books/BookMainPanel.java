@@ -7,13 +7,10 @@ import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBo
 import app.views.UserPanel.Books.DeleteBook.BookGridRefresher;
 import app.views.UserPanel.Books.DeleteBook.DeleteBookButton;
 import app.views.UserPanel.Category.Category;
-import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
-
-
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
@@ -34,13 +31,13 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final AddBookButton addBookButton;
 
     @Autowired
-    public BookMainPanel(BookService bookService, CategoryService categoryService, EditCategoryButton editCategoryButton) {
+    public BookMainPanel(BookService bookService, CategoryService categoryService) {
         this.bookService = bookService;
         this.grid = allBooksTable();
         this.searchHandler = new BookSearchHandler(grid, bookService.getAllBooks());
         BookGridRefresher bookGridRefresher = new BookGridRefresher(grid);
         this.deleteBookButton = new DeleteBookButton(bookService,bookGridRefresher);
-        this.category = new Category(categoryService, editCategoryButton);
+        this.category = new Category(categoryService);
         this.addBookButton = new AddBookButton();
 
         configureView();

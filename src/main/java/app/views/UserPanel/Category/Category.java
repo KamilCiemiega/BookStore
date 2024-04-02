@@ -8,7 +8,6 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class Category extends VerticalLayout implements ViewConfigurator {
 
@@ -17,12 +16,11 @@ public class Category extends VerticalLayout implements ViewConfigurator {
     private final CategoryTreeView categoryTreeView;
     private final CategoryService categoryService;
 
-    @Autowired
-    public Category(CategoryService categoryService, EditCategoryButton editCategoryButton) {
+    public Category(CategoryService categoryService) {
         this.categoryService = categoryService;
         this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
-        this.editCategoryButton = editCategoryButton;
+        this.editCategoryButton = new EditCategoryButton();
         configureView();
 
 

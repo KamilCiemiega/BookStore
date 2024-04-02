@@ -5,15 +5,18 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import org.springframework.stereotype.Component;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.List;
 
-@Component
-public class EditCategoryButton {
+public class EditCategoryButton extends VerticalLayout {
 
     private boolean goToEditClassStatus;
     private CategoryData lastCategory;
+
+    public EditCategoryButton() {
+        add(editButton());
+    }
 
     public Button editButton(){
         Button editButton = new Button(new Icon(VaadinIcon.EDIT));

@@ -5,24 +5,25 @@ import app.views.UserPanel.Category.AddCategory.AddCategory;
 import app.views.UserPanel.UserPanel;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "EditCategory", layout = UserPanel.class)
 public class EditCategory extends AddCategory {
 
+
     private final EditCategoryButton editCategoryButton;
 
-    @Autowired
-    public EditCategory(CategoryService categoryService, EditCategoryButton editCategoryButton) {
+    public EditCategory(CategoryService categoryService) {
         super(categoryService);
-        this.editCategoryButton = editCategoryButton;
-        test();
+        this.editCategoryButton = new EditCategoryButton();
     }
 
     @Override
     protected VerticalLayout formContainer() {
         VerticalLayout formLayout = super.formContainer();
 
+        if(editCategoryButton.getLastCategory() != null){
+            System.out.println(editCategoryButton.getLastCategory());
+        }
 
 //        if (editCategoryButton.getLastCategory().parentId() == null){
 //            mainCategory.setValue("It's main category");
@@ -31,7 +32,5 @@ public class EditCategory extends AddCategory {
         return formLayout;
     }
 
-    private void test(){
-        editCategoryButton.editButton();
-    }
+
 }
