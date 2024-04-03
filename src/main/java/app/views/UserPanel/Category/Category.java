@@ -2,6 +2,7 @@ package app.views.UserPanel.Category;
 
 import app.service.CategoryService;
 import app.views.UserPanel.Category.AddCategory.AddCategoryButton;
+import app.views.UserPanel.Category.DeleteCategory.DeleteCategoryButton;
 import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.html.H2;
@@ -13,14 +14,16 @@ public class Category extends VerticalLayout implements ViewConfigurator {
 
     private final AddCategoryButton addCategoryButton;
     private final EditCategoryButton editCategoryButton;
+    private final DeleteCategoryButton deleteCategoryButton;
     private final CategoryTreeView categoryTreeView;
     private final CategoryService categoryService;
 
-    public Category(CategoryService categoryService) {
+    public Category(CategoryService categoryService ) {
         this.categoryService = categoryService;
         this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
         this.editCategoryButton = new EditCategoryButton();
+        this.deleteCategoryButton = new DeleteCategoryButton();
         configureView();
 
 
@@ -39,7 +42,7 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         headerContainer.addClassName("categoryContainer");
 
 
-        headerContainer.add(addCategoryButton.addButton(), editCategoryButton.editButton());
+        headerContainer.add(addCategoryButton.addButton(), editCategoryButton.editButton(), deleteCategoryButton.deleteButton());
 
         return headerContainer;
     }

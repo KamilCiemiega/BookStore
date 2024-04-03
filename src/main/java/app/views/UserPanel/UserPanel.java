@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserPanel extends AppLayout {
 
     @Autowired
-    public UserPanel(BookService bookService, CategoryService categoryService) {
+    public UserPanel(BookService bookService, CategoryService categoryService ) {
         DrawerToggle toggle = new DrawerToggle();
         SideNavigation sideNavigation = new SideNavigation();
         BookMainPanel bookPanel = new BookMainPanel(bookService, categoryService);

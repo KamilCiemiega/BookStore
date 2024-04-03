@@ -1,7 +1,7 @@
 package app.views.UserPanel.Category;
 
 import app.service.CategoryService;
-import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
+import app.views.UserPanel.Category.EditCategory.EditCategory;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 
 import java.util.ArrayList;
@@ -12,11 +12,13 @@ public class CategoryTreeView extends AbstractCategoryTreeView {
 
     private HorizontalLayout currentlyHighlightedLayout = null;
     private final List<CategoryData> listOfClickedCategorise = new ArrayList<>();
+    private final EditCategory editCategory;
 
-    private final EditCategoryButton editCategoryButton;
     public CategoryTreeView(CategoryService categoryService) {
         super(categoryService);
-        this.editCategoryButton = new EditCategoryButton();
+
+        this.editCategory = new EditCategory(categoryService);
+
     }
 
     protected void handleCategoryClick(CategoryData category, HorizontalLayout layout){
@@ -40,7 +42,7 @@ public class CategoryTreeView extends AbstractCategoryTreeView {
                     currentlyHighlightedLayout = layout;
                 }
             }
-            editCategoryButton.getCategoryData(listOfClickedCategorise);
+//            editCategory.getCategoryData();
         }
     }
     private void highlightSelectedCategory(HorizontalLayout layout) {
