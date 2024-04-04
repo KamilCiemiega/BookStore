@@ -16,17 +16,19 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 @Route(value = "AddCategory", layout = UserPanel.class)
 public class AddCategory extends VerticalLayout {
 
-    private final TextField  categoryName = new TextField();
+    protected final TextField  categoryName = new TextField();
     private final AddCategoryServiceAction addCategoryServiceAction;
     protected final TextField mainCategory;
     private final AddCategoryOverflow addCategoryOverflow;
     protected CategoryData categoryData;
 
+    @Autowired
     public AddCategory(CategoryService categoryService) {
         this.mainCategory = new TextField();
         this.addCategoryServiceAction = new AddCategoryServiceAction(categoryService);

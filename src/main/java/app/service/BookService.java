@@ -154,7 +154,6 @@ public class BookService {
     }
 
     public boolean deleteBook(int bookId) {
-        System.out.println(bookId);
         String deleteBookQuery = "DELETE FROM books WHERE book_id = ?";
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(deleteBookQuery)) {
@@ -163,7 +162,6 @@ public class BookService {
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 logger.info("Book deleted successfully. Rows affected: " + rowsAffected);
-                System.out.println(rowsAffected);
                 return true;
             } else {
                 logger.info("No book found with id: " + bookId);

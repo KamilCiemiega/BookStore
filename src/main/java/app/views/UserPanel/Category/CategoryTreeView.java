@@ -1,24 +1,23 @@
 package app.views.UserPanel.Category;
 
 import app.service.CategoryService;
-import app.views.UserPanel.Category.EditCategory.EditCategory;
+import app.views.UserPanel.Category.DeleteCategory.CategoryDeletedListener;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class CategoryTreeView extends AbstractCategoryTreeView {
+public class CategoryTreeView extends AbstractCategoryTreeView implements CategoryDeletedListener {
 
     private HorizontalLayout currentlyHighlightedLayout = null;
-    private final List<CategoryData> listOfClickedCategorise = new ArrayList<>();
-    private final EditCategory editCategory;
+    public static List<CategoryData> listOfClickedCategorise = new ArrayList<>();
 
+    private final CategoryService categoryService;
     public CategoryTreeView(CategoryService categoryService) {
         super(categoryService);
-
-        this.editCategory = new EditCategory(categoryService);
-
+        this.categoryService = categoryService;
     }
 
     protected void handleCategoryClick(CategoryData category, HorizontalLayout layout){
@@ -42,9 +41,9 @@ public class CategoryTreeView extends AbstractCategoryTreeView {
                     currentlyHighlightedLayout = layout;
                 }
             }
-//            editCategory.getCategoryData();
         }
     }
+
     private void highlightSelectedCategory(HorizontalLayout layout) {
         if (layout != null) {
             layout.getStyle().set("background-color", "#b0b2b5");
@@ -55,6 +54,24 @@ public class CategoryTreeView extends AbstractCategoryTreeView {
         layout.getStyle().remove("background-color");
     }
 
+    public static List<CategoryData> getListOfClickedCategorise() {
+        return listOfClickedCategorise;
+    }
 
+    @Override
+    public void categoryDeleted(CategoryData deletedCategory) {
+//        System.out.println("categoryDeleded" + deletedCategory);
+        removeCategoryFromTreeView(deletedCategory);
+        displayTreeView();
+    }
+
+    public void removeCategoryFromTreeView(CategoryData deletedCategory) {
+        VerticalLayout childrenLayout = childrenLayoutMap.remove(deletedCategory);
+//        System.out.println("childrenleyout" + childrenLayoutMap);
+        if (childrenLayout != null) {
+            treeView.remove(childrenLayout);
+//            System.out.println("treeView" + treeView);
+        }
+    }
 
 }

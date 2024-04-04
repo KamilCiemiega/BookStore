@@ -12,6 +12,7 @@ public abstract class AbstractCategoryTreeView {
         protected final Map<CategoryData, VerticalLayout> childrenLayoutMap;
         private final CategoryService categoryService;
         protected final Map<CategoryData, Span> toggleButtons;
+        protected VerticalLayout treeView;
 
         public AbstractCategoryTreeView(CategoryService categoryService) {
             this.categoryService = categoryService;
@@ -23,16 +24,17 @@ public abstract class AbstractCategoryTreeView {
         public VerticalLayout displayTreeView() {
             List<CategoryData> allCategoriesData = categoryService.getAllCategory();
             List<CategoryData> roots = findRootCategories(allCategoriesData);
-            VerticalLayout treeView = new VerticalLayout();
+            treeView = new VerticalLayout();
             treeView.addClassName("treeView");
 
             for (CategoryData root : roots) {
                 displayCategory(root, allCategoriesData, treeView);
             }
+//            System.out.println("displayTreeView" + allCategoriesData);
             return treeView;
         }
 
-        protected void displayCategory(CategoryData category, List<CategoryData> allCategories, VerticalLayout treeView) {
+        public void displayCategory(CategoryData category, List<CategoryData> allCategories, VerticalLayout treeView) {
 
             HorizontalLayout layout = new HorizontalLayout();
             layout.addClassName("categoryItem");
@@ -88,7 +90,7 @@ public abstract class AbstractCategoryTreeView {
             }
         }
 
-        private List<CategoryData> findRootCategories(List<CategoryData> categories) {
+        protected List<CategoryData> findRootCategories(List<CategoryData> categories) {
             List<CategoryData> roots = new ArrayList<>();
             for (CategoryData category : categories) {
                 if (category.parentId() == 0) {

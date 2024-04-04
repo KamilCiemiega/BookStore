@@ -23,11 +23,13 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         this.categoryTreeView = new CategoryTreeView(categoryService);
         this.addCategoryButton = new AddCategoryButton();
         this.editCategoryButton = new EditCategoryButton();
-        this.deleteCategoryButton = new DeleteCategoryButton();
+        this.deleteCategoryButton = new DeleteCategoryButton(categoryService);
+
+        deleteCategoryButton.addCategoryDeletedListener(categoryTreeView);
         configureView();
 
 
-        add(header(), CategoryList());
+        add(header(), categoryList());
 
     }
 
@@ -53,7 +55,7 @@ public class Category extends VerticalLayout implements ViewConfigurator {
 
         return errorMessage;
     }
-    private VerticalLayout CategoryList(){
+    public VerticalLayout categoryList(){
         VerticalLayout listContainer = new VerticalLayout();
         listContainer.addClassName("listContainer");
         H2 categoryTitle = new H2("All category: " + categoryService.getAllCategory().size());

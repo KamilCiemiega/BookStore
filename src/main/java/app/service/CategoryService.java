@@ -58,4 +58,43 @@ public class CategoryService {
         }
         return categoryList;
     }
+
+    public boolean checkIfBookWithCategoryExist(int categoryId) {
+        String sql = "SELECT * FROM books WHERE category_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, categoryId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    if(count > 0){
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Cant' find book", e);
+            return false;
+        }
+        return false;
+    }
+    public boolean deleteCategory(int categoryId) {
+        String deleteBookQuery = "DELETE FROM category WHERE category_id = ?";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(deleteBookQuery)) {
+            preparedStatement.setInt(1, categoryId);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.info("Book deleted successfully. Rows affected: " + rowsAffected);
+                return true;
+            } else {
+                logger.info("No book found with id: " + categoryId);
+                return false;
+            }
+        } catch (SQLException e){
+            logger.error("Failed to delete book", e);
+            return false;
+        }
+    }
 }
