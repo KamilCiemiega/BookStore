@@ -14,6 +14,7 @@ public class AddCategoryServiceAction {
     }
 
     public void sendCategory(String categoryName, Integer parentId ){
+        System.out.println("sendCategory" + parentId);
         boolean sendStatus = categoryService.addCategory(categoryName, parentId);
         if(sendStatus){
             sendCategoryStatus = true;

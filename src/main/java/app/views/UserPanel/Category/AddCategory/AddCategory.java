@@ -16,20 +16,25 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 
 @Route(value = "AddCategory", layout = UserPanel.class)
 public class AddCategory extends VerticalLayout {
 
     protected final TextField  categoryName = new TextField();
-    private final AddCategoryServiceAction addCategoryServiceAction;
+    protected final AddCategoryServiceAction addCategoryServiceAction;
     protected final TextField mainCategory;
     private final AddCategoryOverflow addCategoryOverflow;
-    protected CategoryData categoryData;
 
-    @Autowired
+    protected int categoryID;
+    protected List<CategoryData> allCategoryFromService;
+
+    private final CategoryService categoryService;
+
     public AddCategory(CategoryService categoryService) {
+        this.categoryService = categoryService;
         this.mainCategory = new TextField();
         this.addCategoryServiceAction = new AddCategoryServiceAction(categoryService);
         this.addCategoryOverflow = new AddCategoryOverflow(categoryService, mainCategory);
@@ -43,8 +48,9 @@ public class AddCategory extends VerticalLayout {
     }
 
     protected VerticalLayout formContainer() {
-        VerticalLayout categoryFormLayout = new VerticalLayout();
+        allCategoryFromService = categoryService.getAllCategory();
 
+        VerticalLayout categoryFormLayout = new VerticalLayout();
         HorizontalLayout mainCategoryContainer = new HorizontalLayout();
         mainCategoryContainer.addClassName("mainCategoryContainer");
         mainCategoryContainer.setSpacing(false);
@@ -85,24 +91,28 @@ public class AddCategory extends VerticalLayout {
         saveAndClose.addClassName("saveAndClose");
         saveAndClose.addClickListener(e -> {
             if(validateCategoryName(categoryName)) {
+                System.out.println("test2");
                 String categoryNameValue = categoryName.getValue();
 
                 if (mainCategory.getValue().equals("It's gonna be main category")){
                     addCategoryServiceAction.sendCategory(categoryNameValue, null);
                     sentStatusNotification(addCategoryServiceAction);
                 }
-                    else {
-                    addCategoryServiceAction.sendCategory(categoryNameValue, categoryData.categoryId());
-                        sentStatusNotification(addCategoryServiceAction);
-                    }
+                else {
+                    System.out.println("test3");
+                    addCategoryServiceAction.sendCategory(categoryNameValue, categoryID);
+                    sentStatusNotification(addCategoryServiceAction);
+                }
             }
 
         });
 
         return saveAndClose;
     }
+
     public void getCategoryData(CategoryData theCategoryData){
-         categoryData = theCategoryData;
+        categoryID = theCategoryData.categoryId();
+        System.out.println("Add Category" + categoryID);
     }
     private void sentStatusNotification(AddCategoryServiceAction sendCategory){
         if (sendCategory.isSendCategoryStatus()) {
@@ -113,7 +123,7 @@ public class AddCategory extends VerticalLayout {
         }
     }
 
-    private boolean validateCategoryName(TextField categoryField) {
+    protected boolean validateCategoryName(TextField categoryField) {
         String categoryFieldValue = categoryField.getValue();
         if (categoryFieldValue.isEmpty()) {
             categoryField.setInvalid(true);
