@@ -17,13 +17,10 @@ public class EditCategory extends AddCategory {
 
     private CategoryData lastCategory;
 
-    private final CategoryService categoryService;
-
     private String initialMainCategoryValue;
 
     public EditCategory(CategoryService categoryService) {
         super(categoryService);
-        this.categoryService = categoryService;
     }
 
     @Override
@@ -69,15 +66,13 @@ public class EditCategory extends AddCategory {
             categoryField.setErrorMessage("Cannot be empty");
             return false;
         }else if (allCategoryFromService != null){
-
             if (addCategoryServiceAction.isNameExist(categoryFieldValue)){
-                System.out.println(initialMainCategoryValue + mainCategory.getValue());
+                System.out.println("test" + initialMainCategoryValue + mainCategory.getValue());
                 if(initialMainCategoryValue.equals(mainCategory.getValue())){
                     categoryField.setInvalid(true);
                     categoryField.setErrorMessage("Category with that name already exist");
                     return false;
                 }
-               System.out.println("test");
             }
 
         }

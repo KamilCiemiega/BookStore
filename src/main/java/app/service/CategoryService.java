@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CategoryService {
@@ -96,5 +98,22 @@ public class CategoryService {
             logger.error("Failed to delete book", e);
             return false;
         }
+    }
+
+    public Map<Integer, Integer> getBooksByCategory() {
+        Map<Integer, Integer> booksByCategory = new HashMap<>();
+        String sql = "SELECT category_id, COUNT(book_id) AS booksNumber FROM books GROUP BY category_id";
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                int categoryId = resultSet.getInt("category_id");
+                int booksNumber = resultSet.getInt("booksNumber");
+                booksByCategory.put(categoryId, booksNumber);
+            }
+        } catch (SQLException e) {
+            logger.error("Error while fetching books by category", e);
+        }
+        return booksByCategory;
     }
 }

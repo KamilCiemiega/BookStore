@@ -28,7 +28,7 @@ public class AddCategory extends VerticalLayout {
     protected final TextField mainCategory;
     private final AddCategoryOverflow addCategoryOverflow;
 
-    protected int categoryID;
+    public static int categoryID;
     protected List<CategoryData> allCategoryFromService;
 
     private final CategoryService categoryService;
@@ -110,7 +110,7 @@ public class AddCategory extends VerticalLayout {
         return saveAndClose;
     }
 
-    public void getCategoryData(CategoryData theCategoryData){
+    public static void getCategoryData(CategoryData theCategoryData){
         categoryID = theCategoryData.categoryId();
         System.out.println("Add Category" + categoryID);
     }

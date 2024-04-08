@@ -14,10 +14,8 @@ public class CategoryTreeView extends AbstractCategoryTreeView implements Catego
     private HorizontalLayout currentlyHighlightedLayout = null;
     public static List<CategoryData> listOfClickedCategorise = new ArrayList<>();
 
-    private final CategoryService categoryService;
     public CategoryTreeView(CategoryService categoryService) {
         super(categoryService);
-        this.categoryService = categoryService;
     }
 
     protected void handleCategoryClick(CategoryData category, HorizontalLayout layout){

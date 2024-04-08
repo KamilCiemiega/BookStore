@@ -56,7 +56,18 @@ public abstract class AbstractCategoryTreeView {
             categoryName.setId("category-" + category.categoryId());
             categoryName.addClickListener(e -> handleCategoryClick(category, layout));
 
-            layout.add(categoryName);
+            Span bookCounter = new Span();
+
+            for (Integer booksNumber : categoryService.getBooksByCategory().keySet()) {
+                String categoryIdString = categoryName.getId().orElse("");
+                String categoryNumberString = categoryIdString.replace("category-", "");
+                Integer categoryNumber = Integer.parseInt(categoryNumberString);
+                if (categoryNumber.equals(booksNumber)) {
+                    bookCounter.setText("[" + booksNumber.toString() + "]");
+                }
+            }
+
+            layout.add(categoryName, bookCounter);
             treeView.add(layout);
 
             VerticalLayout childrenLayout = createChildrenLayout(children, allCategories, treeView);

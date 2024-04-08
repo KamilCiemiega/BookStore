@@ -29,7 +29,7 @@ public class AddCategoryTreeView<T extends CategoryOverflow> extends AbstractCat
         categoryId = category.categoryId();
         categoryName = category.name();
         setLastClickedCategoryValues();
-        new AddCategory(categoryService).getCategoryData(category);
+        AddCategory.getCategoryData(category);
         BookCreator.setCategoryId(categoryId);
         categoryOverflow.updateChooseInformation(categoryName);
     }
