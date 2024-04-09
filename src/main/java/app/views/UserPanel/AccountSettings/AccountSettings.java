@@ -1,5 +1,6 @@
 package app.views.UserPanel.AccountSettings;
 
+import app.service.AccountSettingsService;
 import app.service.UserContext;
 import app.views.UserPanel.UserPanel;
 import app.views.UserPanel.Utils.ShowNotification;
@@ -9,10 +10,10 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -20,11 +21,11 @@ import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.upload.Upload;
 import com.vaadin.flow.component.upload.receivers.MultiFileMemoryBuffer;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,10 +34,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-
-import app.service.AccountSettingsService;
-import org.springframework.stereotype.Component;
 
 
 @Component
@@ -151,6 +148,8 @@ public class AccountSettings extends VerticalLayout {
     private StreamResource getStreamResource(String basePath) {
         String fileName = accountSettingsService.getAccountImageName(UserContext.getUserID());
         String fullPath = basePath + fileName;
+
+        System.out.println(fullPath);
 
         File file = new File(fullPath);
         URI fileURI = file.toURI();

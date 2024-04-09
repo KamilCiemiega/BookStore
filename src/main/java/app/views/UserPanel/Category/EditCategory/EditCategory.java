@@ -68,7 +68,11 @@ public class EditCategory extends AddCategory {
         }else if (allCategoryFromService != null){
             if (addCategoryServiceAction.isNameExist(categoryFieldValue)){
                 System.out.println("test" + initialMainCategoryValue + mainCategory.getValue());
-                if(initialMainCategoryValue.equals(mainCategory.getValue())){
+                if ("It's main category".equals(mainCategory.getValue())){
+                    categoryField.setInvalid(true);
+                    categoryField.setErrorMessage("Category with that name already exist");
+                    return false;
+                }else if(initialMainCategoryValue.equals(mainCategory.getValue())){
                     categoryField.setInvalid(true);
                     categoryField.setErrorMessage("Category with that name already exist");
                     return false;

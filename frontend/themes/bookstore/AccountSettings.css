@@ -26,6 +26,8 @@ vaadin-text-field, vaadin-password-field, vaadin-email-field{
     border-radius: 50%;
     overflow: hidden;
     background: #7699b3;
+    display: flex;
+    justify-content: center;
 }
 .pictureContainer{
     width: 100%;

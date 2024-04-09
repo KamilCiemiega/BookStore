@@ -1,6 +1,7 @@
 package app.views.UserPanel.Category;
 
 import app.service.CategoryService;
+import app.views.UserPanel.Books.Book;
 import app.views.UserPanel.Category.DeleteCategory.CategoryDeletedListener;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -14,8 +15,11 @@ public class CategoryTreeView extends AbstractCategoryTreeView implements Catego
     private HorizontalLayout currentlyHighlightedLayout = null;
     public static List<CategoryData> listOfClickedCategorise = new ArrayList<>();
 
+    private final CategoryService categoryService;
+
     public CategoryTreeView(CategoryService categoryService) {
         super(categoryService);
+        this.categoryService = categoryService;
     }
 
     protected void handleCategoryClick(CategoryData category, HorizontalLayout layout){
@@ -40,6 +44,9 @@ public class CategoryTreeView extends AbstractCategoryTreeView implements Catego
                 }
             }
         }
+        List<Book> booksInCategory = categoryService.getBooksByCategoryId(category.categoryId());
+        BookListByCategory.updateBooksByCategory(booksInCategory);
+
     }
 
     private void highlightSelectedCategory(HorizontalLayout layout) {
@@ -58,17 +65,13 @@ public class CategoryTreeView extends AbstractCategoryTreeView implements Catego
 
     @Override
     public void categoryDeleted(CategoryData deletedCategory) {
-//        System.out.println("categoryDeleded" + deletedCategory);
         removeCategoryFromTreeView(deletedCategory);
-        displayTreeView();
     }
 
     public void removeCategoryFromTreeView(CategoryData deletedCategory) {
         VerticalLayout childrenLayout = childrenLayoutMap.remove(deletedCategory);
-//        System.out.println("childrenleyout" + childrenLayoutMap);
         if (childrenLayout != null) {
             treeView.remove(childrenLayout);
-//            System.out.println("treeView" + treeView);
         }
     }
 

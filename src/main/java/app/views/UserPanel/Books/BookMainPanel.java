@@ -6,6 +6,7 @@ import app.views.UserPanel.Books.BookCreator.AddBook.AddBookButton;
 import app.views.UserPanel.Books.BookCreator.EditBook.SelectedBook.GetSelectedBookValue;
 import app.views.UserPanel.Books.DeleteBook.BookGridRefresher;
 import app.views.UserPanel.Books.DeleteBook.DeleteBookButton;
+import app.views.UserPanel.Category.BookListByCategory;
 import app.views.UserPanel.Category.Category;
 import app.views.UserPanel.UserPanel;
 import app.views.ViewConfigurator;
@@ -30,6 +31,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
     private final DeleteBookButton deleteBookButton;
     private final AddBookButton addBookButton;
 
+
     @Autowired
     public BookMainPanel(BookService bookService, CategoryService categoryService) {
         this.bookService = bookService;
@@ -39,6 +41,7 @@ public class BookMainPanel extends VerticalLayout implements ViewConfigurator {
         this.deleteBookButton = new DeleteBookButton(bookService,bookGridRefresher);
         this.category = new Category(categoryService);
         this.addBookButton = new AddBookButton();
+        new BookListByCategory(grid, bookService);
 
         configureView();
         add(splitLayout());

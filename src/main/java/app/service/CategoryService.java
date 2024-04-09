@@ -1,5 +1,6 @@
 package app.service;
 
+import app.views.UserPanel.Books.Book;
 import app.views.UserPanel.Category.CategoryData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -115,5 +117,32 @@ public class CategoryService {
             logger.error("Error while fetching books by category", e);
         }
         return booksByCategory;
+    }
+
+    public List<Book> getBooksByCategoryId(int theCategoryId) {
+        List<Book> books = new ArrayList<>();
+        String sql = "SELECT book_id, book_name, code, price, last_update, category_id FROM books where category_id = ?";
+        final int categoryId = theCategoryId;
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, categoryId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("book_id");
+                    String bookName = resultSet.getString("book_name");
+                    String code = resultSet.getString("code");
+                    BigDecimal price = resultSet.getBigDecimal("price");
+                    Timestamp lastUpdate = resultSet.getTimestamp("last_update");
+                    Integer categoryIdResult = resultSet.getInt("category_id");
+
+                    books.add(new Book(id, bookName, code, price, lastUpdate, categoryIdResult));
+                }
+            }
+        } catch (SQLException e) {
+            logger.error("Failed while trying to connect to the database", e);
+        }
+        return books;
     }
 }

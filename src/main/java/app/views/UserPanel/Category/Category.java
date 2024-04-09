@@ -6,7 +6,6 @@ import app.views.UserPanel.Category.DeleteCategory.DeleteCategoryButton;
 import app.views.UserPanel.Category.EditCategory.EditCategoryButton;
 import app.views.ViewConfigurator;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
@@ -49,17 +48,13 @@ public class Category extends VerticalLayout implements ViewConfigurator {
         return headerContainer;
     }
 
-    private Span categoryError(){
-        Span errorMessage = new Span("Please choose the category");
-        errorMessage.addClassName("errorMessage");
 
-        return errorMessage;
-    }
     public VerticalLayout categoryList(){
         VerticalLayout listContainer = new VerticalLayout();
         listContainer.addClassName("listContainer");
         H2 categoryTitle = new H2("All category: " + categoryService.getAllCategory().size());
         categoryTitle.addClassName("categoryTitle");
+        BookListByCategory.allCategoryListener(categoryTitle);
 
         listContainer.add(categoryTitle, categoryTreeView.displayTreeView());
 

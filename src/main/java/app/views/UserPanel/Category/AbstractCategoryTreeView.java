@@ -5,7 +5,10 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractCategoryTreeView {
 
@@ -30,7 +33,6 @@ public abstract class AbstractCategoryTreeView {
             for (CategoryData root : roots) {
                 displayCategory(root, allCategoriesData, treeView);
             }
-//            System.out.println("displayTreeView" + allCategoriesData);
             return treeView;
         }
 
@@ -58,11 +60,14 @@ public abstract class AbstractCategoryTreeView {
 
             Span bookCounter = new Span();
 
-            for (Integer booksNumber : categoryService.getBooksByCategory().keySet()) {
+            for (Map.Entry<Integer, Integer> entry : categoryService.getBooksByCategory().entrySet()) {
+                int categoryId = entry.getKey();
+                Integer booksNumber = entry.getValue();
+
                 String categoryIdString = categoryName.getId().orElse("");
                 String categoryNumberString = categoryIdString.replace("category-", "");
                 Integer categoryNumber = Integer.parseInt(categoryNumberString);
-                if (categoryNumber.equals(booksNumber)) {
+                if (categoryNumber.equals(categoryId)) {
                     bookCounter.setText("[" + booksNumber.toString() + "]");
                 }
             }

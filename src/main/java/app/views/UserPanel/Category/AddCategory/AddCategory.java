@@ -91,7 +91,6 @@ public class AddCategory extends VerticalLayout {
         saveAndClose.addClassName("saveAndClose");
         saveAndClose.addClickListener(e -> {
             if(validateCategoryName(categoryName)) {
-                System.out.println("test2");
                 String categoryNameValue = categoryName.getValue();
 
                 if (mainCategory.getValue().equals("It's gonna be main category")){
@@ -99,7 +98,6 @@ public class AddCategory extends VerticalLayout {
                     sentStatusNotification(addCategoryServiceAction);
                 }
                 else {
-                    System.out.println("test3");
                     addCategoryServiceAction.sendCategory(categoryNameValue, categoryID);
                     sentStatusNotification(addCategoryServiceAction);
                 }

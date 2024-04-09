@@ -18,7 +18,6 @@ public class DeleteCategoryButton implements CategoryDeletedListener {
     private final List<CategoryData> clickedCategoryData = CategoryTreeView.getListOfClickedCategorise();
     private final CategoryService categoryService;
     private final DeleteCategoryOverflow deleteCategoryOverflow;
-
     private final List<CategoryDeletedListener> listeners = new ArrayList<>();
 
     public DeleteCategoryButton(CategoryService categoryService) {
@@ -37,13 +36,11 @@ public class DeleteCategoryButton implements CategoryDeletedListener {
                 if(categoryService.checkIfBookWithCategoryExist(categoryId)){
                     deleteCategoryOverflow.open();
                 }else {
-
                   if (categoryService.deleteCategory(categoryId)){
+                      ShowNotification.showNotification("Category deleted successfully", NotificationVariant.LUMO_SUCCESS);
                       for (CategoryDeletedListener listener : listeners) {
                           listener.categoryDeleted(lastCategory);
                       }
-                      ShowNotification.showNotification("Category deleted successfully", NotificationVariant.LUMO_SUCCESS);
-
                   }else {
                       ShowNotification.showNotification("Something get wrong please contact with support", NotificationVariant.LUMO_ERROR);
                   }
