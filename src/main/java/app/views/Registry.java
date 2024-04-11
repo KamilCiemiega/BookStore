@@ -50,6 +50,7 @@ public class Registry extends VerticalLayout implements ViewConfigurator {
         registerFieldsContainer.setJustifyContentMode(JustifyContentMode.CENTER);
         registerFieldsContainer.setWidth("360px");
         header.getStyle().set("color", "white");
+        email.getElement().getStyle().set("margin", "0");
 
         registerFieldsContainer.add(firstName, lastName, email, password, confirmPassword);
 

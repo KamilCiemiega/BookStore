@@ -3,6 +3,7 @@ package app.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import app.views.UserPanel.Users.User;
 
@@ -53,12 +54,15 @@ public class UsersService {
     }
 
     public void updateUserData(String name, String surname, String email, String password, Integer roleId, Integer userId) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hashedPassword = encoder.encode(password);
+
         try (Connection connection = dataSource.getConnection()) {
             String sql = "UPDATE users SET first_name = ?, last_name = ?, password = ?, email_address = ?, role_id = ?  WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, surname);
-                preparedStatement.setString(3, password);
+                preparedStatement.setString(3, hashedPassword);
                 preparedStatement.setString(4, email);
                 preparedStatement.setInt(5, roleId);
                 preparedStatement.setInt(6, userId);
@@ -97,12 +101,15 @@ public class UsersService {
         }
     }
     public void insertNewUser(String firstName, String lastName, String password, String emailAddress, int roleId) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String hashedPassword = encoder.encode(password);
+
         try (Connection connection = dataSource.getConnection()) {
             String sql = "INSERT INTO users (first_name, last_name, password, email_address, role_id) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, firstName);
                 preparedStatement.setString(2, lastName);
-                preparedStatement.setString(3, password);
+                preparedStatement.setString(3, hashedPassword);
                 preparedStatement.setString(4, emailAddress);
                 preparedStatement.setInt(5, roleId);
 

@@ -3,6 +3,7 @@ package app.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -124,11 +125,14 @@ public class AccountSettingsService {
         }
     }
     public void updateUserPassword(String password, Integer userId) {
+
         try (Connection connection = dataSource.getConnection()) {
+            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            String hashedPassword = encoder.encode(password);
             String sql = "UPDATE users SET password = ? WHERE user_id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-                preparedStatement.setString(1, password);
+                preparedStatement.setString(1, hashedPassword);
                 preparedStatement.setInt(2, userId);
 
                 int rowsAffected = preparedStatement.executeUpdate();

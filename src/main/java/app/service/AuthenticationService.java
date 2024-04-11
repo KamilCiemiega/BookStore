@@ -53,6 +53,7 @@ public class AuthenticationService {
         return false;
     }
     public boolean authenticateUser(String email, String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         try (Connection connection = dataSource.getConnection()) {
             String sql = "SELECT user_id, first_name, last_name, password, email_address FROM users WHERE email_address = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -60,7 +61,7 @@ public class AuthenticationService {
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         String storedPassword = resultSet.getString("password");
-                        if (password.equals(storedPassword)) {
+                        if (encoder.matches(password, storedPassword)) {
                             String firstName = resultSet.getString("first_name");
                             String lastName = resultSet.getString("last_name");
                             Integer userID = resultSet.getInt("user_id");
