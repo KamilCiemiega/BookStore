@@ -1,3 +1,5 @@
+Hello there it's my first project written in java
+
 ## Frontend
 
 - Vaadin
