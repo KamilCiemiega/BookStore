@@ -1,4 +1,4 @@
-Hello there it's my first project written in java
+Hello there it's my first project written in JAVA.
 
 ## Frontend
 
